@@ -1,7 +1,7 @@
 import { TableCell, TableRow } from '@mui/material';
 import React from 'react'
 
-function Openphone(props) {
+function OpenPhone(props) {
 
   const {no, telCom, openCom, type, openDate, openType, phoneModel, phoneSerial, phoneColor, customerName, phoneNo, birthday, callingPlan, controlNo, memo, sellCom} = props;
 
@@ -28,4 +28,4 @@ function Openphone(props) {
   )
 }
 
-export default Openphone
+export default OpenPhone
