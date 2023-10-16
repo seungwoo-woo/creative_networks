@@ -15,14 +15,12 @@ import Slide from '@mui/material/Slide';
 
 
 
-
-
 // firestore ============================================================
 import { initializeApp } from "firebase/app";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { firebaseConfig } from '../firebase';
-import { getFirestore, collection, addDoc, getDocs, query, where, orderBy } from "firebase/firestore";
-import { DialogContent, DialogTitle, DialogContentText, DialogActions, Paper, Table, TableBody, TableCell, TableHead, TableRow, TextField } from "@mui/material";
+import { getFirestore, collection, addDoc, getDocs, query, where, orderBy, limit } from "firebase/firestore";
+import { DialogContent, DialogTitle, DialogContentText, DialogActions, Paper, Table, TableBody, TableCell, TableHead, TableRow, TextField, Select, MenuItem, Box, FormControl, InputLabel } from "@mui/material";
 // ======================================================================
 
 // Initialize Firebase ==================================================
@@ -41,7 +39,9 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 
 
 
-function OpenPhoneAdd() {
+function OpenPhoneAdd(props) {
+
+  const getDataRefresh = props.getDataRefresh
 
   const [openPhoneCase, setOpenPhoneCase] = 
     useState({ no: '', telCom: '', openCom: '', type: '', openDate: '', openType: '', phoneModel: '', phoneSerial: '', phoneColor: '', customerName: '', phoneNo: '', birthday: '', callingPlan: '', controlNo: '', memo: '', sellCom: '', isDeleted: 0});
@@ -57,18 +57,31 @@ function OpenPhoneAdd() {
     setIsDialogOpen(false);
   };
 
-  const handleValueChenge = (e) => {
+  const handleValueChange = (e) => {
     const keyValue = e.target.id;
     const openPhoneCaseCopy = {...openPhoneCase, [keyValue]: e.target.value };
+
+    // console.log(e.target.id);
+    // console.log(e.target.value);
     setOpenPhoneCase(openPhoneCaseCopy);
   };
+
+  const handleSelectChange = (e) => {
+    const keyValue = "sellCom";
+    const openPhoneCaseCopy = {...openPhoneCase, [keyValue]: e.target.value };
+
+    // console.log(keyValue);
+    // console.log(e.target.value);
+    setOpenPhoneCase(openPhoneCaseCopy);
+  };
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     let maxNo = [];
 
-    const querySnapshot = await getDocs(query(collection(db, "CreativeNetworks"), orderBy("no", "desc"), where("isDeleted", "==", 0)));
+    const querySnapshot = await getDocs(query(collection(db, "CreativeNetworks"), orderBy("no", "desc"), limit(2), where("isDeleted", "==", 0)));
 
     querySnapshot.forEach((doc) => {
       maxNo.push(Number(doc.data().no))
@@ -100,7 +113,9 @@ function OpenPhoneAdd() {
       // console.log("Document written with ID: ", docRef.id);
       alert("신규 개통내역이 등록되었습니다.");
       // navigate('/recipe/'+ docRef.id);
-      window.location.reload();
+      // window.location.reload();
+      getDataRefresh();
+      handleClickClose();
     } catch (e) {
       console.error("Error adding document: ", e);
     }
@@ -145,71 +160,91 @@ function OpenPhoneAdd() {
           <DialogContentText>
             신규개통 상세내역을 입력하세요.
           </DialogContentText>
+
           <Table>
-
+            <TableBody>
             <TableRow>
               <TableCell>
-                <TextField id="telCom" label="통신사" type="text" value={openPhoneCase.telCom} onChange={handleValueChenge} autoFocus margin="dense" fullWidth variant="standard" />
+                <TextField id="telCom" label="통신사" type="text" value={openPhoneCase.telCom} onChange={handleValueChange} autoFocus margin="dense" fullWidth variant="standard" />
               </TableCell>
               <TableCell>
-                <TextField id="openCom" label="개통처" type="text" value={openPhoneCase.openCom} onChange={handleValueChenge} autoFocus margin="dense" fullWidth variant="standard" />
+                <TextField id="openCom" label="개통처" type="text" value={openPhoneCase.openCom} onChange={handleValueChange} autoFocus margin="dense" fullWidth variant="standard" />
               </TableCell>
               <TableCell>
-                <TextField id="type" label="타입" type="text" value={openPhoneCase.type} onChange={handleValueChenge} autoFocus margin="dense" fullWidth variant="standard" />
+                <TextField id="type" label="타입" type="text" value={openPhoneCase.type} onChange={handleValueChange} autoFocus margin="dense" fullWidth variant="standard" />
               </TableCell>
               <TableCell>
-                <TextField id="openDate" label="개통일" type="text" value={openPhoneCase.openDate} onChange={handleValueChenge} autoFocus margin="dense" fullWidth variant="standard" />
+                <TextField id="openDate" label="개통일" type="text" value={openPhoneCase.openDate} onChange={handleValueChange} autoFocus margin="dense" fullWidth variant="standard" />
               </TableCell>
             </TableRow>
 
             <TableRow>
               <TableCell>
-                <TextField id="openType" label="유형" type="text" value={openPhoneCase.openType} onChange={handleValueChenge} autoFocus margin="dense" fullWidth variant="standard" />
+                <TextField id="openType" label="유형" type="text" value={openPhoneCase.openType} onChange={handleValueChange} autoFocus margin="dense" fullWidth variant="standard" />
               </TableCell>
               <TableCell>
-                <TextField id="phoneModel" label="개통모델" type="text" value={openPhoneCase.phoneModel} onChange={handleValueChenge} autoFocus margin="dense" fullWidth variant="standard" />
+                <TextField id="phoneModel" label="개통모델" type="text" value={openPhoneCase.phoneModel} onChange={handleValueChange} autoFocus margin="dense" fullWidth variant="standard" />
               </TableCell>
               <TableCell>
-                <TextField id="phoneSerial" label="일련번호" type="text" value={openPhoneCase.phoneSerial} onChange={handleValueChenge} autoFocus margin="dense" fullWidth variant="standard" />
+                <TextField id="phoneSerial" label="일련번호" type="text" value={openPhoneCase.phoneSerial} onChange={handleValueChange} autoFocus margin="dense" fullWidth variant="standard" />
               </TableCell>
               <TableCell>
-                <TextField id="phoneColor" label="색상" type="text" value={openPhoneCase.phoneColor} onChange={handleValueChenge} autoFocus margin="dense" fullWidth variant="standard" />
+                <TextField id="phoneColor" label="색상" type="text" value={openPhoneCase.phoneColor} onChange={handleValueChange} autoFocus margin="dense" fullWidth variant="standard" />
               </TableCell>
             </TableRow>
 
             <TableRow>
               <TableCell>
-                <TextField id="customerName" label="고객명" type="text" value={openPhoneCase.customerName} onChange={handleValueChenge} autoFocus margin="dense" fullWidth variant="standard" />
+                <TextField id="customerName" label="고객명" type="text" value={openPhoneCase.customerName} onChange={handleValueChange} autoFocus margin="dense" fullWidth variant="standard" />
               </TableCell>
               <TableCell>
-                <TextField id="phoneNo" label="이동번호" type="text" value={openPhoneCase.phoneNo} onChange={handleValueChenge} autoFocus margin="dense" fullWidth variant="standard" />
+                <TextField id="phoneNo" label="이동번호" type="text" value={openPhoneCase.phoneNo} onChange={handleValueChange} autoFocus margin="dense" fullWidth variant="standard" />
               </TableCell>
               <TableCell>
-                <TextField id="birthday" label="생년월일" type="text" value={openPhoneCase.birthday} onChange={handleValueChenge} autoFocus margin="dense" fullWidth variant="standard" />
+                <TextField id="birthday" label="생년월일" type="text" value={openPhoneCase.birthday} onChange={handleValueChange} autoFocus margin="dense" fullWidth variant="standard" />
               </TableCell>
               <TableCell>
-                <TextField id="callingPlan" label="요금제" type="text" value={openPhoneCase.callingPlan} onChange={handleValueChenge} autoFocus margin="dense" fullWidth variant="standard" />
+                <TextField id="callingPlan" label="요금제" type="text" value={openPhoneCase.callingPlan} onChange={handleValueChange} autoFocus margin="dense" fullWidth variant="standard" />
               </TableCell>
             </TableRow>
 
             <TableRow>
               <TableCell>
-                <TextField id="controlNo" label="관리번호" type="text" value={openPhoneCase.controlNo} onChange={handleValueChenge} autoFocus margin="dense" fullWidth variant="standard" />
+                <TextField id="controlNo" label="관리번호" type="text" value={openPhoneCase.controlNo} onChange={handleValueChange} autoFocus margin="dense" fullWidth variant="standard" />
               </TableCell>
               <TableCell>
-                <TextField id="memo" label="메모" type="text" value={openPhoneCase.memo} onChange={handleValueChenge} autoFocus margin="dense" fullWidth variant="standard" />
+                <TextField id="memo" label="메모" type="text" value={openPhoneCase.memo} onChange={handleValueChange} autoFocus margin="dense" fullWidth variant="standard" />
               </TableCell>
               <TableCell>
-                <TextField id="sellCom" label="판매처" type="text" value={openPhoneCase.sellCom} onChange={handleValueChenge} autoFocus margin="dense" fullWidth variant="standard" />
+                aaa
+                {/* <TextField id="sellCom" label="판매처" type="text" value={openPhoneCase.sellCom} onChange={handleValueChange} autoFocus margin="dense" fullWidth variant="standard" /> */}
               </TableCell>
-              <TableCell>
 
+              <TableCell>
+                {/* <TextField  label="판매처" autoFocus margin="dense" fullWidth variant="standard" /> */}
+                <Box >
+                  <FormControl sx={{ m: 1, minWidth: 120 }} size="small" fullWidth>
+                    <InputLabel id="demo-simple-select">판매처</InputLabel>
+                    <Select
+                      labelId="demo-simple-select-label"
+                      label="판매처"
+                      id="sellCom"                      
+                      value={openPhoneCase.sellCom}
+                      onChange={handleSelectChange}
+                    >
+                      <MenuItem value="셀타운">셀타운</MenuItem>
+                      <MenuItem value="셀타운2">셀타운2</MenuItem>
+                      <MenuItem value="셀타운3">셀타운3</MenuItem>
+                    </Select>
+                  </FormControl>
+                </Box>
+            
               </TableCell>
 
             </TableRow>
 
 
-
+          </TableBody>
           </Table>
         </DialogContent>
         <DialogActions>
