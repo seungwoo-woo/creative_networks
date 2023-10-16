@@ -7,16 +7,15 @@ import LastPageIcon from '@mui/icons-material/LastPage';
 import FirstPageIcon from '@mui/icons-material/FirstPage';
 import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft';
 import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
-
+import OpenPhone from  '../components/OpenPhone'
 import OpenPhoneAdd from '../components/OpenPhoneAdd';
-import OpenPhone from '../components/OpenPhone';
+
 
 
 // firestore ============================================================
 import { initializeApp } from "firebase/app";
 import { getFirestore, collection, getDocs, query, where, orderBy } from "firebase/firestore";
 import { firebaseConfig } from '../firebase';
-import { blue } from '@mui/material/colors';
 // ======================================================================
 
 // Initialize Firebase ==================================================
