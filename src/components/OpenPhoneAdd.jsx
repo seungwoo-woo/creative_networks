@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
@@ -39,6 +39,8 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 
 
 
+
+
 function OpenPhoneAdd(props) {
 
   const getDataRefresh = props.getDataRefresh
@@ -47,6 +49,27 @@ function OpenPhoneAdd(props) {
     useState({ no: '', telCom: '', openCom: '', type: '', openDate: '', openType: '', phoneModel: '', phoneSerial: '', phoneColor: '', customerName: '', phoneNo: '', birthday: '', callingPlan: '', controlNo: '', memo: '', sellCom: '', isDeleted: 0});
 
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [sellComNameList, setSellComNameList] = useState([]);
+
+
+
+
+  useEffect(()=>{
+
+    const getSellComName = async () => {
+      let data = [];
+      const querySnapshot = await getDocs(query(collection(db, "sellComName"), orderBy("comName", "asc"), where("isDeleted", "==", 0)));
+
+      querySnapshot.forEach((doc) => {
+        data.push({...doc.data(), id: doc.id,})
+      });
+      setSellComNameList(data);
+    }
+    
+    getSellComName();
+
+  }, []);
+
 
   const handleClickOpen = () => {
     setIsDialogOpen(true);
@@ -61,17 +84,13 @@ function OpenPhoneAdd(props) {
     const keyValue = e.target.id;
     const openPhoneCaseCopy = {...openPhoneCase, [keyValue]: e.target.value };
 
-    // console.log(e.target.id);
-    // console.log(e.target.value);
     setOpenPhoneCase(openPhoneCaseCopy);
   };
 
-  const handleSelectChange = (e) => {
-    const keyValue = "sellCom";
+  const handleSelectChange = (e) => {  
+    const keyValue = e.target.name
     const openPhoneCaseCopy = {...openPhoneCase, [keyValue]: e.target.value };
 
-    // console.log(keyValue);
-    // console.log(e.target.value);
     setOpenPhoneCase(openPhoneCaseCopy);
   };
 
@@ -92,7 +111,6 @@ function OpenPhoneAdd(props) {
     try {
       const docRef = await addDoc(collection(db, "CreativeNetworks"), {
         no: maxNo[0] + 1,
-        // no: 5,
         telCom: openPhoneCase.telCom,
         openCom: openPhoneCase.openCom,
         type: openPhoneCase.type,
@@ -221,24 +239,22 @@ function OpenPhoneAdd(props) {
               </TableCell>
 
               <TableCell>
-                {/* <TextField  label="판매처" autoFocus margin="dense" fullWidth variant="standard" /> */}
                 <Box >
-                  <FormControl sx={{ m: 1, minWidth: 120 }} size="small" fullWidth>
+                  <FormControl sx={{ m: 0, minWidth: 210 }} size="small" fullWidth>
                     <InputLabel id="demo-simple-select">판매처</InputLabel>
                     <Select
                       labelId="demo-simple-select-label"
                       label="판매처"
-                      id="sellCom"                      
+                      name="sellCom"                      
                       value={openPhoneCase.sellCom}
                       onChange={handleSelectChange}
                     >
-                      <MenuItem value="셀타운">셀타운</MenuItem>
-                      <MenuItem value="셀타운2">셀타운2</MenuItem>
-                      <MenuItem value="셀타운3">셀타운3</MenuItem>
+                      {sellComNameList.map((com) => (
+                        <MenuItem key={com.id} value={com.comName}>{com.comName}</MenuItem>)
+                      )}
                     </Select>
                   </FormControl>
-                </Box>
-            
+                </Box>            
               </TableCell>
 
             </TableRow>
