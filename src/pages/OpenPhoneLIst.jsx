@@ -95,14 +95,13 @@ TablePaginationActions.propTypes = {
 
 
 
-
-
-const tableHeadList = ['No.', '통신사', '개통처', '타입', '개통일', '유형', '모델명', '일련번호', '색상', '고객명', '이동번호', '생년월일', '음성요금제', '관리번호', '메모', '판매처'];
+//  ======================================================================================
+// Function 시작 =========================================================================
+// =======================================================================================
 
 function OpenPhoneList() {
 
   const [openPhoneList, setOpenPhoneList] = useState([]);
-  // const [progress, setProgress] = useState(0);
 
   const getDataRefresh = async () => {
     let data = [];
@@ -110,11 +109,10 @@ function OpenPhoneList() {
 
     querySnapshot.forEach((doc) => {
       data.push({...doc.data(), id: doc.id,})
-      // console.log(doc.id)
     });
+
     setOpenPhoneList(data);
   }
-
 
 
   useEffect(()=>{
@@ -125,8 +123,8 @@ function OpenPhoneList() {
 
       querySnapshot.forEach((doc) => {
         data.push({...doc.data(), id: doc.id,})
-        // console.log(doc.id)
       });
+
       setOpenPhoneList(data);
     }
     
@@ -136,8 +134,7 @@ function OpenPhoneList() {
 
 
 
-
-    // Table Pagination ----------------------------------------
+    // Table Pagination Start ----------------------------------------
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(5);
   
@@ -152,13 +149,11 @@ function OpenPhoneList() {
     const handleChangeRowsPerPage = (event) => {
       setRowsPerPage(parseInt(event.target.value, 10));
       setPage(0);
-    };
-  
-    // Table Pagination ----------------------------------------
+    };  
+    // Table Pagination End ----------------------------------------
 
 
     // Table customize Start ------------------------------------------
-
     const StyledTableCell = styled(TableCell)(({ theme }) => ({
       [`&.${tableCellClasses.head}`]: {
         backgroundColor: '#1976d2',
@@ -169,16 +164,12 @@ function OpenPhoneList() {
         fontSize: 14,
       },
     }));
-
     // Table customize End ------------------------------------------
 
-    
 
-
-
-
-
-
+// ------------------------------------------------------------------------------------
+// return 시작 ------------------------------------------------------------------------
+// ------------------------------------------------------------------------------------
 
   return (
     <>
@@ -190,10 +181,27 @@ function OpenPhoneList() {
       <Table stickyHeader aria-label="sticky table">        
         <TableHead>
           <TableRow>
-            {tableHeadList.map((item) => {
-                return <StyledTableCell key={item} style={{fontWeight: 400}} align='center'>{item}</StyledTableCell>
-            })}
+            <StyledTableCell style={{fontWeight: 400}} align='center' rowSpan={2}>No.</StyledTableCell>
+            <StyledTableCell style={{fontWeight: 400}} align='center' rowSpan={2}>통신사</StyledTableCell>
+            <StyledTableCell style={{fontWeight: 400}} align='center' rowSpan={2}>개통처</StyledTableCell>
+            <StyledTableCell style={{fontWeight: 400}} align='center' rowSpan={2}>타입</StyledTableCell>
+            <StyledTableCell style={{fontWeight: 400}} align='center' rowSpan={2}>개통일</StyledTableCell>
+            <StyledTableCell style={{fontWeight: 400}} align='center' rowSpan={2}>유형</StyledTableCell>
+            <StyledTableCell style={{fontWeight: 400}} align='center' colSpan={3}>개통모델</StyledTableCell>
+            <StyledTableCell style={{fontWeight: 400}} align='center' rowSpan={2}>고객명</StyledTableCell>
+            <StyledTableCell style={{fontWeight: 400}} align='center' rowSpan={2}>이동번호</StyledTableCell>
+            <StyledTableCell style={{fontWeight: 400}} align='center' rowSpan={2}>생년월일</StyledTableCell>
+            <StyledTableCell style={{fontWeight: 400}} align='center' rowSpan={2}>음성요금제</StyledTableCell>
+            <StyledTableCell style={{fontWeight: 400}} align='center' rowSpan={2}>메모</StyledTableCell>
+            <StyledTableCell style={{fontWeight: 400}} align='center' rowSpan={2}>판매처</StyledTableCell>
+            <StyledTableCell style={{fontWeight: 400}} align='center' rowSpan={2}>EDIT</StyledTableCell>
           </TableRow>
+          <TableRow>
+            <StyledTableCell style={{fontWeight: 400}} align='center'>모델명</StyledTableCell>
+            <StyledTableCell style={{fontWeight: 400}} align='center'>일련번호</StyledTableCell>
+            <StyledTableCell style={{fontWeight: 400}} align='center'>색상</StyledTableCell>
+          </TableRow>
+
         </TableHead>
 
         <TableBody>
@@ -202,6 +210,7 @@ function OpenPhoneList() {
             : openPhoneList).map((op) => {
                 return (<OpenPhone 
                   key = {op.id}
+                  id = {op.id} 
                   no = {op.no}
                   telCom = {op.telCom}
                   openCom = {op.openCom}
@@ -217,7 +226,8 @@ function OpenPhoneList() {
                   callingPlan = {op.callingPlan}
                   controlNo = {op.controlNo}
                   memo = {op.memo}
-                  sellCom = {op.sellCom} 
+                  sellCom = {op.sellCom}
+                  getDataRefresh = {getDataRefresh} 
                   />
                 );    // return ----------
             })
@@ -252,7 +262,6 @@ function OpenPhoneList() {
 
       </Table>
     </Paper>
-
     </>
   );
 }

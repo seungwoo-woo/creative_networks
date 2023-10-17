@@ -17,10 +17,9 @@ import Slide from '@mui/material/Slide';
 
 // firestore ============================================================
 import { initializeApp } from "firebase/app";
-import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { firebaseConfig } from '../firebase';
 import { getFirestore, collection, addDoc, getDocs, query, where, orderBy, limit } from "firebase/firestore";
-import { DialogContent, DialogTitle, DialogContentText, DialogActions, Paper, Table, TableBody, TableCell, TableHead, TableRow, TextField, Select, MenuItem, Box, FormControl, InputLabel } from "@mui/material";
+import { DialogContent, DialogTitle, DialogContentText, DialogActions, Table, TableBody, TableCell, TableRow, TextField, Select, MenuItem, Box, FormControl, InputLabel } from "@mui/material";
 // ======================================================================
 
 // Initialize Firebase ==================================================
@@ -38,8 +37,9 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 
 
 
-
-
+//  ======================================================================================
+// Function 시작 =========================================================================
+// =======================================================================================
 
 function OpenPhoneAdd(props) {
 
@@ -49,9 +49,8 @@ function OpenPhoneAdd(props) {
     useState({ no: '', telCom: '', openCom: '', type: '', openDate: '', openType: '', phoneModel: '', phoneSerial: '', phoneColor: '', customerName: '', phoneNo: '', birthday: '', callingPlan: '', controlNo: '', memo: '', sellCom: '', isDeleted: 0});
 
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+
   const [sellComNameList, setSellComNameList] = useState([]);
-
-
 
 
   useEffect(()=>{
@@ -94,7 +93,6 @@ function OpenPhoneAdd(props) {
     setOpenPhoneCase(openPhoneCaseCopy);
   };
 
-
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -104,7 +102,6 @@ function OpenPhoneAdd(props) {
 
     querySnapshot.forEach((doc) => {
       maxNo.push(Number(doc.data().no))
-      // console.log(maxNo)
 
     });
 
@@ -128,10 +125,9 @@ function OpenPhoneAdd(props) {
         sellCom: openPhoneCase.sellCom,
         isDeleted: 0 
       });
-      // console.log("Document written with ID: ", docRef.id);
+
       alert("신규 개통내역이 등록되었습니다.");
-      // navigate('/recipe/'+ docRef.id);
-      // window.location.reload();
+
       getDataRefresh();
       handleClickClose();
     } catch (e) {
@@ -142,7 +138,9 @@ function OpenPhoneAdd(props) {
   };
 
 
-
+// ------------------------------------------------------------------------------------
+// return 시작 ------------------------------------------------------------------------
+// ------------------------------------------------------------------------------------
 
   return (
     <>
@@ -161,17 +159,16 @@ function OpenPhoneAdd(props) {
         <AppBar sx={{ position: 'relative' }}>
           <Toolbar>
             <IconButton edge="start" color="inherit" onClick={handleClickClose} aria-label="close">
-              <CloseIcon />
+              <CloseIcon onClick={handleClickClose} />
             </IconButton>
             <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
               개통내역 신규등록
             </Typography>
             <Button autoFocus color="inherit" onClick={handleSubmit}>
-              save
+              Save
             </Button>
           </Toolbar>
         </AppBar>
-
 
         <DialogTitle>개통 상세 내역</DialogTitle>
         <DialogContent>
@@ -233,10 +230,6 @@ function OpenPhoneAdd(props) {
               <TableCell>
                 <TextField id="memo" label="메모" type="text" value={openPhoneCase.memo} onChange={handleValueChange} autoFocus margin="dense" fullWidth variant="standard" />
               </TableCell>
-              <TableCell>
-                aaa
-                {/* <TextField id="sellCom" label="판매처" type="text" value={openPhoneCase.sellCom} onChange={handleValueChange} autoFocus margin="dense" fullWidth variant="standard" /> */}
-              </TableCell>
 
               <TableCell>
                 <Box >
@@ -259,7 +252,6 @@ function OpenPhoneAdd(props) {
 
             </TableRow>
 
-
           </TableBody>
           </Table>
         </DialogContent>
@@ -268,17 +260,8 @@ function OpenPhoneAdd(props) {
           <Button onClick={handleSubmit}>등록</Button>
         </DialogActions>
 
-
- 
-
-        
-
-
-
     </Dialog>
-
     </>
-
   )
 }
 

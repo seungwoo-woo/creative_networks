@@ -1,10 +1,16 @@
 import { TableCell, TableRow } from '@mui/material';
 import React from 'react'
 import { styled } from '@mui/material/styles';
+import OpenPhoneEdit from './OpenPhoneEdit';
+
+
+//  ======================================================================================
+// Function 시작 =========================================================================
+// =======================================================================================
 
 function OpenPhone(props) {
 
-  const {no, telCom, openCom, type, openDate, openType, phoneModel, phoneSerial, phoneColor, customerName, phoneNo, birthday, callingPlan, controlNo, memo, sellCom} = props;
+  const {id, no, telCom, openCom, type, openDate, openType, phoneModel, phoneSerial, phoneColor, customerName, phoneNo, birthday, callingPlan, controlNo, memo, sellCom, getDataRefresh} = props;
 
   const StyledTableRow = styled(TableRow)(({ theme }) => ({
     '&:nth-of-type(odd)': {
@@ -17,6 +23,9 @@ function OpenPhone(props) {
   }));
 
 
+// ------------------------------------------------------------------------------------
+// return 시작 ------------------------------------------------------------------------
+// ------------------------------------------------------------------------------------
 
   return (
     <StyledTableRow>
@@ -33,9 +42,10 @@ function OpenPhone(props) {
       <TableCell>{phoneNo}</TableCell>
       <TableCell>{birthday}</TableCell>
       <TableCell>{callingPlan}</TableCell>
-      <TableCell>{controlNo}</TableCell>
+      {/* <TableCell>{controlNo}</TableCell> */}
       <TableCell>{memo}</TableCell>
       <TableCell>{sellCom}</TableCell>
+      <TableCell><OpenPhoneEdit id={id} getDataRefresh={getDataRefresh}/></TableCell>
     </StyledTableRow>
   )
 }
