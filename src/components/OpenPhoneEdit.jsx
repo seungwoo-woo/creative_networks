@@ -230,6 +230,7 @@ function OpenPhoneEdit(props) {
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                   <DemoContainer components={['DatePicker']}>
                     <DesktopDatePicker label={["개통일"]}
+                                format="YYYY-MM-DD"
                                 id="openDate" 
                                 value={dayjs(openPhoneEditCase.openDate)} onChange={(newValue) => setOpenPhoneEditCase({...openPhoneEditCase, openDate: dayjs(newValue).format("YYYY-MM-DD")})} />
                   </DemoContainer>
