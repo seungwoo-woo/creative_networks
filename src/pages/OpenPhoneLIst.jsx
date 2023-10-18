@@ -1,3 +1,4 @@
+// import ============================================================
 import React, { useEffect, useState } from 'react';
 import { useTheme } from '@emotion/react';
 import { styled } from '@mui/material/styles';
@@ -9,7 +10,7 @@ import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft';
 import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
 import OpenPhone from  '../components/OpenPhone';
 import OpenPhoneAdd from '../components/OpenPhoneAdd';
-
+// ======================================================================
 
 
 // firestore ============================================================
@@ -105,7 +106,7 @@ function OpenPhoneList() {
 
   const getDataRefresh = async () => {
     let data = [];
-    const querySnapshot = await getDocs(query(collection(db, "CreativeNetworks"), orderBy("no", "desc"), where("isDeleted", "==", 0)));
+    const querySnapshot = await getDocs(query(collection(db, "CreativeNetworks"), orderBy("openDate", "desc"), where("isDeleted", "==", 0)));
 
     querySnapshot.forEach((doc) => {
       data.push({...doc.data(), id: doc.id,})
@@ -119,7 +120,7 @@ function OpenPhoneList() {
 
     const getData = async () => {
       let data = [];
-      const querySnapshot = await getDocs(query(collection(db, "CreativeNetworks"), orderBy("no", "desc"), where("isDeleted", "==", 0)));
+      const querySnapshot = await getDocs(query(collection(db, "CreativeNetworks"), orderBy("openDate", "desc"), where("isDeleted", "==", 0)));
 
       querySnapshot.forEach((doc) => {
         data.push({...doc.data(), id: doc.id,})
@@ -207,11 +208,11 @@ function OpenPhoneList() {
         <TableBody>
           {(rowsPerPage > 0 ?
             openPhoneList.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)              
-            : openPhoneList).map((op) => {
+            : openPhoneList).map((op, index) => {
                 return (<OpenPhone 
                   key = {op.id}
                   id = {op.id} 
-                  no = {op.no}
+                  no = {index + 1 + (page * rowsPerPage)}
                   telCom = {op.telCom}
                   openCom = {op.openCom}
                   type = {op.type}

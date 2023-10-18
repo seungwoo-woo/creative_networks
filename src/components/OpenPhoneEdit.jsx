@@ -1,11 +1,7 @@
+// import ============================================================
 import React, { useEffect, useState } from "react";
-
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
-import ListItemText from '@mui/material/ListItemText';
-import ListItem from '@mui/material/ListItem';
-import List from '@mui/material/List';
-import Divider from '@mui/material/Divider';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
@@ -15,7 +11,12 @@ import Slide from '@mui/material/Slide';
 import EditCalendarTwoToneIcon from '@mui/icons-material/EditCalendarTwoTone';
 import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
 import { pink } from '@mui/material/colors';
-
+import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
+import dayjs from "dayjs";
+// ======================================================================
 
 
 // firestore ============================================================
@@ -33,11 +34,11 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 // ======================================================================
 
-
+// Modal Transiton ==================================================
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
-
+// ======================================================================
 
 
 
@@ -225,7 +226,14 @@ function OpenPhoneEdit(props) {
                 <TextField id="type" label="타입" type="text" value={openPhoneEditCase.type} onChange={handleValueChange} autoFocus margin="dense" fullWidth variant="standard" />
               </TableCell>
               <TableCell>
-                <TextField id="openDate" label="개통일" type="text" value={openPhoneEditCase.openDate} onChange={handleValueChange} autoFocus margin="dense" fullWidth variant="standard" />
+                {/* <TextField id="openDate" label="개통일" type="text" value={openPhoneEditCase.openDate} onChange={handleValueChange} autoFocus margin="dense" fullWidth variant="standard" /> */}
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <DemoContainer components={['DatePicker']}>
+                    <DesktopDatePicker label={["개통일"]}
+                                id="openDate" 
+                                value={dayjs(openPhoneEditCase.openDate)} onChange={(newValue) => setOpenPhoneEditCase({...openPhoneEditCase, openDate: dayjs(newValue).format("YYYY-MM-DD")})} />
+                  </DemoContainer>
+                </LocalizationProvider> 
               </TableCell>
             </TableRow>
 

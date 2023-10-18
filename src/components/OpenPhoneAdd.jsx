@@ -1,24 +1,25 @@
+// import ============================================================
 import React, { useEffect, useState } from "react";
-
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
-import ListItemText from '@mui/material/ListItemText';
-import ListItem from '@mui/material/ListItem';
-import List from '@mui/material/List';
-import Divider from '@mui/material/Divider';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import CloseIcon from '@mui/icons-material/Close';
 import Slide from '@mui/material/Slide';
-
+import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
+import dayjs from "dayjs";
+// ======================================================================
 
 
 // firestore ============================================================
 import { initializeApp } from "firebase/app";
 import { firebaseConfig } from '../firebase';
-import { getFirestore, collection, addDoc, getDocs, query, where, orderBy, limit } from "firebase/firestore";
+import { getFirestore, collection, addDoc, getDocs, query, where, orderBy} from "firebase/firestore";
 import { DialogContent, DialogTitle, DialogContentText, DialogActions, Table, TableBody, TableCell, TableRow, TextField, Select, MenuItem, Box, FormControl, InputLabel } from "@mui/material";
 // ======================================================================
 
@@ -30,10 +31,11 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 // ======================================================================
 
-
+// Modal Transition ==================================================
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
+// ======================================================================
 
 
 
@@ -96,18 +98,11 @@ function OpenPhoneAdd(props) {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    let maxNo = [];
-
-    const querySnapshot = await getDocs(query(collection(db, "CreativeNetworks"), orderBy("no", "desc"), limit(2), where("isDeleted", "==", 0)));
-
-    querySnapshot.forEach((doc) => {
-      maxNo.push(Number(doc.data().no))
-
-    });
+    console.log(openPhoneCase.openDate);
 
     try {
       const docRef = await addDoc(collection(db, "CreativeNetworks"), {
-        no: maxNo[0] + 1,
+        // no: maxNo[0] + 1,
         telCom: openPhoneCase.telCom,
         openCom: openPhoneCase.openCom,
         type: openPhoneCase.type,
@@ -189,7 +184,14 @@ function OpenPhoneAdd(props) {
                 <TextField id="type" label="타입" type="text" value={openPhoneCase.type} onChange={handleValueChange} autoFocus margin="dense" fullWidth variant="standard" />
               </TableCell>
               <TableCell>
-                <TextField id="openDate" label="개통일" type="text" value={openPhoneCase.openDate} onChange={handleValueChange} autoFocus margin="dense" fullWidth variant="standard" />
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <DemoContainer components={['DatePicker']}>
+                    <DesktopDatePicker label={["개통일"]}
+                                format="YYYY-MM-DD"
+                                id="openDate" 
+                                value={dayjs(openPhoneCase.openDate)} onChange={(newValue) => setOpenPhoneCase({...openPhoneCase, openDate: dayjs(newValue).format("YYYY-MM-DD")})} />
+                  </DemoContainer>
+                </LocalizationProvider>         
               </TableCell>
             </TableRow>
 
