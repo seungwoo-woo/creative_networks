@@ -13,6 +13,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
 import dayjs from "dayjs";
+import Autocomplete from '@mui/material/Autocomplete';
 // ======================================================================
 
 
@@ -54,6 +55,8 @@ function OpenPhoneAdd(props) {
 
   const [sellComNameList, setSellComNameList] = useState([]);
 
+  const [inputValue, setInputValue] = useState('');    // sellComName
+
 
   useEffect(()=>{
 
@@ -62,7 +65,9 @@ function OpenPhoneAdd(props) {
       const querySnapshot = await getDocs(query(collection(db, "sellComName"), orderBy("comName", "asc"), where("isDeleted", "==", 0)));
 
       querySnapshot.forEach((doc) => {
-        data.push({...doc.data(), id: doc.id,})
+        // data.push({...doc.data(), id: doc.id,})
+        data.push(doc.data().comName);
+
       });
       setSellComNameList(data);
     }
@@ -99,6 +104,7 @@ function OpenPhoneAdd(props) {
     e.preventDefault();
 
     console.log(openPhoneCase.openDate);
+    console.log(openPhoneCase.sellCom);
 
     try {
       const docRef = await addDoc(collection(db, "CreativeNetworks"), {
@@ -133,6 +139,7 @@ function OpenPhoneAdd(props) {
   };
 
 
+  
 // ------------------------------------------------------------------------------------
 // return 시작 ------------------------------------------------------------------------
 // ------------------------------------------------------------------------------------
@@ -234,7 +241,7 @@ function OpenPhoneAdd(props) {
               </TableCell>
 
               <TableCell>
-                <Box >
+                {/* <Box >
                   <FormControl sx={{ m: 0, minWidth: 210 }} size="small" fullWidth>
                     <InputLabel id="demo-simple-select">판매처</InputLabel>
                     <Select
@@ -249,7 +256,24 @@ function OpenPhoneAdd(props) {
                       )}
                     </Select>
                   </FormControl>
-                </Box>            
+                </Box>             */}
+
+                <Autocomplete
+                  value={openPhoneCase.sellCom}
+                  onChange={(event, newValue) => {
+                    setOpenPhoneCase({...openPhoneCase, 'sellCom': newValue });
+                  }}  
+
+                  inputValue={inputValue}
+                  onInputChange={(event, newInputValue) => {
+                    setInputValue(newInputValue);
+                  }}
+                  id="controllable-states-demo"
+                  options={sellComNameList}
+                  sx={{ width: 250 }}
+                  renderInput={(params) => <TextField {...params} label="판매처" />}
+                />
+
               </TableCell>
 
             </TableRow>

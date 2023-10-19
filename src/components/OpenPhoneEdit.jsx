@@ -16,6 +16,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
 import dayjs from "dayjs";
+import Autocomplete from '@mui/material/Autocomplete';
 // ======================================================================
 
 
@@ -57,6 +58,7 @@ function OpenPhoneEdit(props) {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [sellComNameList, setSellComNameList] = useState([]);
+  const [inputValue, setInputValue] = useState('');
 
 
   useEffect(()=>{
@@ -76,7 +78,9 @@ function OpenPhoneEdit(props) {
       const querySnapshot = await getDocs(query(collection(db, "sellComName"), orderBy("comName", "asc"), where("isDeleted", "==", 0)));
 
       querySnapshot.forEach((doc) => {
-        data.push({...doc.data(), id: doc.id,})
+        // data.push({...doc.data(), id: doc.id,})
+        data.push(doc.data().comName);
+
       });
       setSellComNameList(data);
     }
@@ -277,7 +281,7 @@ function OpenPhoneEdit(props) {
               </TableCell>
 
               <TableCell>
-                <Box >
+                {/* <Box >
                   <FormControl sx={{ m: 0, minWidth: 210 }} size="small" fullWidth>
                     <InputLabel id="demo-simple-select">판매처</InputLabel>
                     <Select
@@ -292,7 +296,25 @@ function OpenPhoneEdit(props) {
                       )}
                     </Select>
                   </FormControl>
-                </Box>            
+                </Box>             */}
+
+
+                <Autocomplete
+                  value={openPhoneEditCase.sellCom}
+                  onChange={(event, newValue) => {
+                    setOpenPhoneEditCase({...openPhoneEditCase, 'sellCom': newValue });
+                  }}  
+
+                  inputValue={inputValue}
+                  onInputChange={(event, newInputValue) => {
+                    setInputValue(newInputValue);
+                  }}
+                  id="controllable-states-demo"
+                  options={sellComNameList}
+                  sx={{ width: 250 }}
+                  renderInput={(params) => <TextField {...params} label="판매처" />}
+                />
+
               </TableCell>
 
             </TableRow>
