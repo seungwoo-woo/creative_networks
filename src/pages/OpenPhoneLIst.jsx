@@ -174,12 +174,13 @@ function OpenPhoneList() {
 
   return (
     <>
+
     <div style={{marginTop: 30}}>
       <OpenPhoneAdd getDataRefresh = {getDataRefresh} />
     </div>
 
     <Paper style={{marginTop: 10, marginLeft: 10, marginRight: 10}} elevation={3}>
-      <Table stickyHeader aria-label="sticky table">        
+      <Table stickyHeader size='small' aria-label="sticky table">        
         <TableHead>
           <TableRow>
             <StyledTableCell style={{fontWeight: 400}} align='center' rowSpan={2}>No.</StyledTableCell>
@@ -191,11 +192,11 @@ function OpenPhoneList() {
             <StyledTableCell style={{fontWeight: 400}} align='center' colSpan={3}>개통모델</StyledTableCell>
             <StyledTableCell style={{fontWeight: 400}} align='center' rowSpan={2}>고객명</StyledTableCell>
             <StyledTableCell style={{fontWeight: 400}} align='center' rowSpan={2}>이동번호</StyledTableCell>
-            <StyledTableCell style={{fontWeight: 400}} align='center' rowSpan={2}>생년월일</StyledTableCell>
+            {/* <StyledTableCell style={{fontWeight: 400}} align='center' rowSpan={2}>생년월일</StyledTableCell> */}
             <StyledTableCell style={{fontWeight: 400}} align='center' rowSpan={2}>음성요금제</StyledTableCell>
             <StyledTableCell style={{fontWeight: 400}} align='center' rowSpan={2}>메모</StyledTableCell>
             <StyledTableCell style={{fontWeight: 400}} align='center' rowSpan={2}>판매처</StyledTableCell>
-            <StyledTableCell style={{fontWeight: 400}} align='center' rowSpan={2}>EDIT</StyledTableCell>
+            <StyledTableCell style={{fontWeight: 400}} align='center' rowSpan={2}>ACTION</StyledTableCell>
           </TableRow>
           <TableRow>
             <StyledTableCell style={{fontWeight: 400}} align='center'>모델명</StyledTableCell>

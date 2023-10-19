@@ -58,36 +58,85 @@ function OpenPhoneEdit(props) {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [sellComNameList, setSellComNameList] = useState([]);
+  const [telComNameList, setTelComNameList] = useState([]);
+  const [openComNameList, setOpenComNameList] = useState([]);
+  const [openCallingPlanList, setOpenCallingPlanList] = useState([]);
   const [inputValue, setInputValue] = useState('');
 
+  const getPhoneCaseEdit = async () => {
+    const querySnapshot = await getDoc(doc(db, "CreativeNetworks", id));
+    setOpenPhoneEditCase(querySnapshot.data());
+  }
 
   useEffect(()=>{
 
-    const getPhoneCaseEdit = async () => {
-
-      const querySnapshot = await getDoc(doc(db, "CreativeNetworks", id));
-
-      setOpenPhoneEditCase(querySnapshot.data());
-    }
-
+    // const getPhoneCaseEdit = async () => {
+    //   const querySnapshot = await getDoc(doc(db, "CreativeNetworks", id));
+    //   setOpenPhoneEditCase(querySnapshot.data());
+    // }
     getPhoneCaseEdit();
 
+    const getTelComName = async () => {
+      let data = [];
+      const querySnapshot = await getDocs(query(collection(db, "telComName"), orderBy("comName", "asc"), where("isDeleted", "==", 0)));
+
+      querySnapshot.forEach((doc) => {
+        data.push({...doc.data(), id: doc.id,})
+        // data.push(doc.data().comName);
+      });
+      setTelComNameList(data);
+    }    
+    getTelComName();
 
     const getSellComName = async () => {
       let data = [];
       const querySnapshot = await getDocs(query(collection(db, "sellComName"), orderBy("comName", "asc"), where("isDeleted", "==", 0)));
-
       querySnapshot.forEach((doc) => {
         // data.push({...doc.data(), id: doc.id,})
         data.push(doc.data().comName);
-
       });
       setSellComNameList(data);
-    }
-    
+    }    
     getSellComName();
 
   }, []);
+  // -----------------------------------------------------------
+
+
+  useEffect(()=>{
+
+    const getOpenComName = async () => {
+      let data = [];
+      const querySnapshot = await getDocs(query(collection(db, "openComName"), orderBy("comName", "asc"), where("telComName", "==", openPhoneEditCase.telCom)));
+
+      querySnapshot.forEach((doc) => {
+        data.push({...doc.data(), id: doc.id,})
+        // data.push(doc.data().comName);
+      });
+      setOpenComNameList(data);
+    }    
+    getOpenComName();
+  
+  }, [openPhoneEditCase.telCom]);
+  // --------------------------------------------------------------
+
+
+  useEffect(()=>{
+
+    const getOpenCallingPlan = async () => {
+      let data = [];
+      const querySnapshot = await getDocs(query(collection(db, "callingPlanName"), orderBy("planName", "asc"), where("openComName", "==", openPhoneEditCase.openCom)));
+
+      querySnapshot.forEach((doc) => {
+        data.push({...doc.data(), id: doc.id,})
+        // data.push(doc.data().comName);
+      });
+      setOpenCallingPlanList(data);
+    }    
+    getOpenCallingPlan();
+  
+  }, [openPhoneEditCase.openCom]);
+// ----------------------------------------------------------
 
 
   const handleClickOpen = () => {
@@ -95,6 +144,8 @@ function OpenPhoneEdit(props) {
   };
 
   const handleClickClose = () => {
+    // setOpenPhoneEditCase({ no: '', telCom: '', openCom: '', type: '', openDate: '', openType: '', phoneModel: '', phoneSerial: '', phoneColor: '', customerName: '', phoneNo: '', birthday: '', callingPlan: '', controlNo: '', memo: '', sellCom: '', isDeleted: 0});
+    getPhoneCaseEdit();
     setIsDialogOpen(false);
   };
 
@@ -121,6 +172,7 @@ function OpenPhoneEdit(props) {
   };
 
 
+  // Update Function =======================================================
   const handleUpdate = async (e) => {
     e.preventDefault();
 
@@ -156,7 +208,7 @@ function OpenPhoneEdit(props) {
   };
 
 
-
+  // Delete Function =======================================================
   const handleDelete = async (e) => {
     e.preventDefault();
 
@@ -221,13 +273,55 @@ function OpenPhoneEdit(props) {
             <TableBody>
             <TableRow>
               <TableCell>
-                <TextField id="telCom" label="통신사" type="text" value={openPhoneEditCase.telCom} onChange={handleValueChange} autoFocus margin="dense" fullWidth variant="standard" />
+                {/* <TextField id="telCom" label="통신사" type="text" value={openPhoneEditCase.telCom} onChange={handleValueChange} autoFocus margin="dense" fullWidth variant="standard" /> */}
+                <FormControl sx={{ m: 0, minWidth: 210 }} size="small" fullWidth>
+                    <InputLabel id="demo-simple-select">통신사</InputLabel>
+                    <Select
+                      labelId="demo-simple-select-label"
+                      label="통신사"
+                      name="telCom"                      
+                      value={openPhoneEditCase.telCom}
+                      onChange={handleSelectChange}
+                    >
+                      {telComNameList.map((com) => (
+                        <MenuItem key={com.id} value={com.comName}>{com.comName}</MenuItem>)
+                      )}
+                    </Select>
+                  </FormControl>
+              
               </TableCell>
               <TableCell>
-                <TextField id="openCom" label="개통처" type="text" value={openPhoneEditCase.openCom} onChange={handleValueChange} autoFocus margin="dense" fullWidth variant="standard" />
+                {/* <TextField id="openCom" label="개통처" type="text" value={openPhoneEditCase.openCom} onChange={handleValueChange} autoFocus margin="dense" fullWidth variant="standard" /> */}
+                <FormControl sx={{ m: 0, minWidth: 210 }} size="small" fullWidth>
+                    <InputLabel id="demo-simple-select">개통처</InputLabel>
+                    <Select
+                      labelId="demo-simple-select-label"
+                      label="개통처"
+                      name="openCom"                      
+                      value={openPhoneEditCase.openCom}
+                      onChange={handleSelectChange}
+                    >
+                      {openComNameList.map((com) => (
+                        <MenuItem key={com.id} value={com.comName}>{com.comName}</MenuItem>)
+                      )}
+                    </Select>
+                  </FormControl>
               </TableCell>
               <TableCell>
-                <TextField id="type" label="타입" type="text" value={openPhoneEditCase.type} onChange={handleValueChange} autoFocus margin="dense" fullWidth variant="standard" />
+                {/* <TextField id="type" label="타입" type="text" value={openPhoneEditCase.type} onChange={handleValueChange} autoFocus margin="dense" fullWidth variant="standard" /> */}
+                <FormControl sx={{ m: 0, minWidth: 210 }} size="small" fullWidth>
+                    <InputLabel id="demo-simple-select">타입</InputLabel>
+                    <Select
+                      labelId="demo-simple-select-label"
+                      label="타입"
+                      name="type"                      
+                      value={openPhoneEditCase.type}
+                      onChange={handleSelectChange}
+                    >
+                      <MenuItem value={'USIM'}>USIM</MenuItem>
+                      <MenuItem value={'단말기'}>단말기</MenuItem>
+                    </Select>
+                  </FormControl>
               </TableCell>
               <TableCell>
                 {/* <TextField id="openDate" label="개통일" type="text" value={openPhoneEditCase.openDate} onChange={handleValueChange} autoFocus margin="dense" fullWidth variant="standard" /> */}
@@ -244,7 +338,24 @@ function OpenPhoneEdit(props) {
 
             <TableRow>
               <TableCell>
-                <TextField id="openType" label="유형" type="text" value={openPhoneEditCase.openType} onChange={handleValueChange} autoFocus margin="dense" fullWidth variant="standard" />
+                {/* <TextField id="openType" label="유형" type="text" value={openPhoneEditCase.openType} onChange={handleValueChange} autoFocus margin="dense" fullWidth variant="standard" /> */}
+                <FormControl sx={{ m: 0, minWidth: 210 }} size="small" fullWidth>
+                    <InputLabel id="demo-simple-select">유형</InputLabel>
+                    <Select
+                      labelId="demo-simple-select-label"
+                      label="유형"
+                      name="openType"                      
+                      value={openPhoneEditCase.openType}
+                      onChange={handleSelectChange}
+                    >
+                      <MenuItem value={'MNP할부'}>MNP할부</MenuItem>
+                      <MenuItem value={'MNP현금'}>MNP현금</MenuItem>
+                      <MenuItem value={'기변할부'}>기변할부</MenuItem>
+                      <MenuItem value={'기변현금'}>기변현금</MenuItem>
+                      <MenuItem value={'신규할부'}>신규할부</MenuItem>
+                      <MenuItem value={'신규현금'}>신규현금</MenuItem>
+                    </Select>
+                  </FormControl>
               </TableCell>
               <TableCell>
                 <TextField id="phoneModel" label="개통모델" type="text" value={openPhoneEditCase.phoneModel} onChange={handleValueChange} autoFocus margin="dense" fullWidth variant="standard" />
@@ -268,7 +379,21 @@ function OpenPhoneEdit(props) {
                 <TextField id="birthday" label="생년월일" type="text" value={openPhoneEditCase.birthday} onChange={handleValueChange} autoFocus margin="dense" fullWidth variant="standard" />
               </TableCell>
               <TableCell>
-                <TextField id="callingPlan" label="요금제" type="text" value={openPhoneEditCase.callingPlan} onChange={handleValueChange} autoFocus margin="dense" fullWidth variant="standard" />
+                {/* <TextField id="callingPlan" label="요금제" type="text" value={openPhoneEditCase.callingPlan} onChange={handleValueChange} autoFocus margin="dense" fullWidth variant="standard" /> */}
+                <FormControl sx={{ m: 0, minWidth: 210 }} size="small" fullWidth>
+                    <InputLabel id="demo-simple-select">요금제</InputLabel>
+                    <Select
+                      labelId="demo-simple-select-label"
+                      label="요금제"
+                      name="callingPlan"                      
+                      value={openPhoneEditCase.callingPlan}
+                      onChange={handleSelectChange}
+                    >
+                      {openCallingPlanList.map((com) => (
+                        <MenuItem key={com.id} value={com.planName}>{com.planName}</MenuItem>)
+                      )}
+                    </Select>
+                  </FormControl>
               </TableCell>
             </TableRow>
 
@@ -281,24 +406,6 @@ function OpenPhoneEdit(props) {
               </TableCell>
 
               <TableCell>
-                {/* <Box >
-                  <FormControl sx={{ m: 0, minWidth: 210 }} size="small" fullWidth>
-                    <InputLabel id="demo-simple-select">판매처</InputLabel>
-                    <Select
-                      labelId="demo-simple-select-label"
-                      label="판매처"
-                      name="sellCom"                      
-                      value={openPhoneEditCase.sellCom}
-                      onChange={handleSelectChange}
-                    >
-                      {sellComNameList.map((com) => (
-                        <MenuItem key={com.id} value={com.comName}>{com.comName}</MenuItem>)
-                      )}
-                    </Select>
-                  </FormControl>
-                </Box>             */}
-
-
                 <Autocomplete
                   value={openPhoneEditCase.sellCom}
                   onChange={(event, newValue) => {
@@ -314,7 +421,6 @@ function OpenPhoneEdit(props) {
                   sx={{ width: 250 }}
                   renderInput={(params) => <TextField {...params} label="판매처" />}
                 />
-
               </TableCell>
 
             </TableRow>

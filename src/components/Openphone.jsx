@@ -40,7 +40,7 @@ function OpenPhone(props) {
       <TableCell>{phoneColor}</TableCell>
       <TableCell>{customerName}</TableCell>
       <TableCell>{phoneNo}</TableCell>
-      <TableCell>{birthday}</TableCell>
+      {/* <TableCell>{birthday}</TableCell> */}
       <TableCell>{callingPlan}</TableCell>
       {/* <TableCell>{controlNo}</TableCell> */}
       <TableCell>{memo}</TableCell>
