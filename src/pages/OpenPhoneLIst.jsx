@@ -1,5 +1,6 @@
-// import ============================================================
+// react & material UI import ==================================================
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useTheme } from '@emotion/react';
 import { styled } from '@mui/material/styles';
 import PropTypes from 'prop-types';
@@ -13,25 +14,22 @@ import OpenPhoneAdd from '../components/OpenPhoneAdd';
 // ======================================================================
 
 
-// firestore ============================================================
+// firebase import=======================================================
 import { initializeApp } from "firebase/app";
+import { getAuth } from "firebase/auth";
 import { getFirestore, collection, getDocs, query, where, orderBy } from "firebase/firestore";
 import { firebaseConfig } from '../firebase';
-// ======================================================================
+
 
 // Initialize Firebase ==================================================
 const app = initializeApp(firebaseConfig);
-// ======================================================================
-
-// Initialize Cloud Firestore and get a reference to the service ========
 const db = getFirestore(app);
-// ======================================================================
 
 
-
+// Define subFunction ================================================
 // Table Pagination Function Start -----------------------------------------------------
 function TablePaginationActions(props) {
-  const theme = useTheme();
+  const theme = useTheme();  
   const { count, page, rowsPerPage, onPageChange } = props;
 
   const handleFirstPageButtonClick = (event) => {
@@ -84,15 +82,12 @@ function TablePaginationActions(props) {
   );
 };
 
-
 TablePaginationActions.propTypes = {
   count: PropTypes.number.isRequired,
   onPageChange: PropTypes.func.isRequired,
   page: PropTypes.number.isRequired,
   rowsPerPage: PropTypes.number.isRequired,
 };
-
-// Table Pagination Function End ----------------------------------------------------------
 
 
 
@@ -102,9 +97,63 @@ TablePaginationActions.propTypes = {
 
 function OpenPhoneList() {
 
-  const [openPhoneList, setOpenPhoneList] = useState([]);
+// Initialize Variable ==================================================
+const navigate = useNavigate();
+const auth = getAuth();
+const [openPhoneList, setOpenPhoneList] = useState([]);
 
-  const getDataRefresh = async () => {
+// Table Pagination Start ----------------------------------------
+const [page, setPage] = useState(0);
+const [rowsPerPage, setRowsPerPage] = useState(5);
+
+// Avoid a layout jump when reaching the last page with empty rows.
+const emptyRows =
+  page > 0 ? Math.max(0, (1 + page) * rowsPerPage - openPhoneList.length) : 0;
+
+// Table style ----------------------------------------------------
+const StyledTableCell = styled(TableCell)(({ theme }) => ({
+  [`&.${tableCellClasses.head}`]: {
+    backgroundColor: '#1976d2',
+    color: theme.palette.common.white,
+    fontSize: 14,
+  },
+  [`&.${tableCellClasses.body}`]: {
+    fontSize: 14,
+  },
+}));
+
+
+// Define subFunction ==================================================
+//-----------------------------------------------------------------------
+const getDataRefresh = async () => {
+  let data = [];
+  const querySnapshot = await getDocs(query(collection(db, "CreativeNetworks"), orderBy("openDate", "desc"), where("isDeleted", "==", 0)));
+
+  querySnapshot.forEach((doc) => {
+    data.push({...doc.data(), id: doc.id,})
+  });
+
+  setOpenPhoneList(data);
+}
+
+//----------------------------------------------------------------------- 
+const handleChangePage = (event, newPage) => {
+  setPage(newPage);
+};
+
+//----------------------------------------------------------------------- 
+const handleChangeRowsPerPage = (event) => {
+  setRowsPerPage(parseInt(event.target.value, 10));
+  setPage(0);
+};  
+
+
+
+// useEffect 1 Start ========================================================
+useEffect(()=>{
+
+  const getData = async () => {
+
     let data = [];
     const querySnapshot = await getDocs(query(collection(db, "CreativeNetworks"), orderBy("openDate", "desc"), where("isDeleted", "==", 0)));
 
@@ -113,169 +162,112 @@ function OpenPhoneList() {
     });
 
     setOpenPhoneList(data);
+     
   }
-
-
-  useEffect(()=>{
-
-    const getData = async () => {
-
-      try {
-      let data = [];
-      const querySnapshot = await getDocs(query(collection(db, "CreativeNetworks"), orderBy("openDate", "desc"), where("isDeleted", "==", 0)));
-
-      querySnapshot.forEach((doc) => {
-        data.push({...doc.data(), id: doc.id,})
-      });
-
-      setOpenPhoneList(data);
-      }
-      catch {
-        alert("허가가 없어");
-      }
-
-
-
-      
-    }
-    
     getData();
 
-  }, []);
+}, []);
 
-
-
-    // Table Pagination Start ----------------------------------------
-    const [page, setPage] = useState(0);
-    const [rowsPerPage, setRowsPerPage] = useState(5);
-  
-    // Avoid a layout jump when reaching the last page with empty rows.
-    const emptyRows =
-      page > 0 ? Math.max(0, (1 + page) * rowsPerPage - openPhoneList.length) : 0;
-  
-    const handleChangePage = (event, newPage) => {
-      setPage(newPage);
-    };
-  
-    const handleChangeRowsPerPage = (event) => {
-      setRowsPerPage(parseInt(event.target.value, 10));
-      setPage(0);
-    };  
-    // Table Pagination End ----------------------------------------
-
-
-    // Table customize Start ------------------------------------------
-    const StyledTableCell = styled(TableCell)(({ theme }) => ({
-      [`&.${tableCellClasses.head}`]: {
-        backgroundColor: '#1976d2',
-        color: theme.palette.common.white,
-        fontSize: 14,
-      },
-      [`&.${tableCellClasses.body}`]: {
-        fontSize: 14,
-      },
-    }));
-    // Table customize End ------------------------------------------
 
 
 // ------------------------------------------------------------------------------------
 // return 시작 ------------------------------------------------------------------------
 // ------------------------------------------------------------------------------------
 
-  return (
-    <>
+return (
+  <>
+  <div style={{marginTop: 30}}>
+    <OpenPhoneAdd getDataRefresh = {getDataRefresh} />
+  </div>
 
-    <div style={{marginTop: 30}}>
-      <OpenPhoneAdd getDataRefresh = {getDataRefresh} />
-    </div>
+  <Paper style={{marginTop: 10, marginLeft: 10, marginRight: 10}} elevation={3}>
+    <Table stickyHeader size='small' aria-label="sticky table">        
+      <TableHead>
+        <TableRow>
+          <StyledTableCell style={{fontWeight: 400}} align='center' rowSpan={2}>No.</StyledTableCell>
+          <StyledTableCell style={{fontWeight: 400}} align='center' rowSpan={2}>통신사</StyledTableCell>
+          <StyledTableCell style={{fontWeight: 400}} align='center' rowSpan={2}>개통처</StyledTableCell>
+          <StyledTableCell style={{fontWeight: 400}} align='center' rowSpan={2}>타입</StyledTableCell>
+          <StyledTableCell style={{fontWeight: 400}} align='center' rowSpan={2}>개통일</StyledTableCell>
+          <StyledTableCell style={{fontWeight: 400}} align='center' rowSpan={2}>유형</StyledTableCell>
+          <StyledTableCell style={{fontWeight: 400}} align='center' colSpan={3}>개통모델</StyledTableCell>
+          <StyledTableCell style={{fontWeight: 400}} align='center' rowSpan={2}>고객명</StyledTableCell>
+          <StyledTableCell style={{fontWeight: 400}} align='center' rowSpan={2}>이동번호</StyledTableCell>
+          {/* <StyledTableCell style={{fontWeight: 400}} align='center' rowSpan={2}>생년월일</StyledTableCell> */}
+          <StyledTableCell style={{fontWeight: 400}} align='center' rowSpan={2}>음성요금제</StyledTableCell>
+          <StyledTableCell style={{fontWeight: 400}} align='center' rowSpan={2}>메모</StyledTableCell>
+          <StyledTableCell style={{fontWeight: 400}} align='center' rowSpan={2}>판매처</StyledTableCell>
+          <StyledTableCell style={{fontWeight: 400}} align='center' rowSpan={2}>ACTION</StyledTableCell>
+        </TableRow>
+        <TableRow>
+          <StyledTableCell style={{fontWeight: 400}} align='center'>모델명</StyledTableCell>
+          <StyledTableCell style={{fontWeight: 400}} align='center'>일련번호</StyledTableCell>
+          <StyledTableCell style={{fontWeight: 400}} align='center'>색상</StyledTableCell>
+        </TableRow>
 
-    <Paper style={{marginTop: 10, marginLeft: 10, marginRight: 10}} elevation={3}>
-      <Table stickyHeader size='small' aria-label="sticky table">        
-        <TableHead>
-          <TableRow>
-            <StyledTableCell style={{fontWeight: 400}} align='center' rowSpan={2}>No.</StyledTableCell>
-            <StyledTableCell style={{fontWeight: 400}} align='center' rowSpan={2}>통신사</StyledTableCell>
-            <StyledTableCell style={{fontWeight: 400}} align='center' rowSpan={2}>개통처</StyledTableCell>
-            <StyledTableCell style={{fontWeight: 400}} align='center' rowSpan={2}>타입</StyledTableCell>
-            <StyledTableCell style={{fontWeight: 400}} align='center' rowSpan={2}>개통일</StyledTableCell>
-            <StyledTableCell style={{fontWeight: 400}} align='center' rowSpan={2}>유형</StyledTableCell>
-            <StyledTableCell style={{fontWeight: 400}} align='center' colSpan={3}>개통모델</StyledTableCell>
-            <StyledTableCell style={{fontWeight: 400}} align='center' rowSpan={2}>고객명</StyledTableCell>
-            <StyledTableCell style={{fontWeight: 400}} align='center' rowSpan={2}>이동번호</StyledTableCell>
-            {/* <StyledTableCell style={{fontWeight: 400}} align='center' rowSpan={2}>생년월일</StyledTableCell> */}
-            <StyledTableCell style={{fontWeight: 400}} align='center' rowSpan={2}>음성요금제</StyledTableCell>
-            <StyledTableCell style={{fontWeight: 400}} align='center' rowSpan={2}>메모</StyledTableCell>
-            <StyledTableCell style={{fontWeight: 400}} align='center' rowSpan={2}>판매처</StyledTableCell>
-            <StyledTableCell style={{fontWeight: 400}} align='center' rowSpan={2}>ACTION</StyledTableCell>
+      </TableHead>
+
+      <TableBody>
+        {(rowsPerPage > 0 ?
+          openPhoneList.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)              
+          : openPhoneList).map((op, index) => {
+              return (<OpenPhone 
+                key = {op.id}
+                id = {op.id} 
+                no = {index + 1 + (page * rowsPerPage)}
+                telCom = {op.telCom}
+                openCom = {op.openCom}
+                type = {op.type}
+                openDate = {op.openDate}
+                openType = {op.openType}
+                phoneModel = {op.phoneModel}
+                phoneSerial = {op.phoneSerial}
+                phoneColor = {op.phoneColor}
+                customerName = {op.customerName}
+                phoneNo = {op.phoneNo}
+                birthday = {op.birthday}
+                callingPlan = {op.callingPlan}
+                controlNo = {op.controlNo}
+                memo = {op.memo}
+                sellCom = {op.sellCom}
+                getDataRefresh = {getDataRefresh} 
+                />
+              );    // return ----------
+          })
+        }
+        {emptyRows > 0 && (
+          <TableRow style={{ height: 53 * emptyRows }}>
+            <TableCell colSpan={6} />
           </TableRow>
-          <TableRow>
-            <StyledTableCell style={{fontWeight: 400}} align='center'>모델명</StyledTableCell>
-            <StyledTableCell style={{fontWeight: 400}} align='center'>일련번호</StyledTableCell>
-            <StyledTableCell style={{fontWeight: 400}} align='center'>색상</StyledTableCell>
-          </TableRow>
+        )}
+      </TableBody>
 
-        </TableHead>
+      <TableFooter>
+        <TableRow>
+          <TablePagination
+            rowsPerPageOptions={[5, 10, 25, { label: 'All', value: -1 }]}
+            colSpan={16}
+            count={openPhoneList.length}
+            rowsPerPage={rowsPerPage}
+            page={page}
+            SelectProps={{
+              inputProps: {
+                'aria-label': 'rows per page',
+              },
+              native: true,
+            }}
+            onPageChange={handleChangePage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
+            ActionsComponent={TablePaginationActions}
+          />
+        </TableRow>
+      </TableFooter>
 
-        <TableBody>
-          {(rowsPerPage > 0 ?
-            openPhoneList.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)              
-            : openPhoneList).map((op, index) => {
-                return (<OpenPhone 
-                  key = {op.id}
-                  id = {op.id} 
-                  no = {index + 1 + (page * rowsPerPage)}
-                  telCom = {op.telCom}
-                  openCom = {op.openCom}
-                  type = {op.type}
-                  openDate = {op.openDate}
-                  openType = {op.openType}
-                  phoneModel = {op.phoneModel}
-                  phoneSerial = {op.phoneSerial}
-                  phoneColor = {op.phoneColor}
-                  customerName = {op.customerName}
-                  phoneNo = {op.phoneNo}
-                  birthday = {op.birthday}
-                  callingPlan = {op.callingPlan}
-                  controlNo = {op.controlNo}
-                  memo = {op.memo}
-                  sellCom = {op.sellCom}
-                  getDataRefresh = {getDataRefresh} 
-                  />
-                );    // return ----------
-            })
-          }
-          {emptyRows > 0 && (
-            <TableRow style={{ height: 53 * emptyRows }}>
-              <TableCell colSpan={6} />
-            </TableRow>
-          )}
-        </TableBody>
+    </Table>
+  </Paper>
+  </>
+);
 
-        <TableFooter>
-          <TableRow>
-            <TablePagination
-              rowsPerPageOptions={[5, 10, 25, { label: 'All', value: -1 }]}
-              colSpan={16}
-              count={openPhoneList.length}
-              rowsPerPage={rowsPerPage}
-              page={page}
-              SelectProps={{
-                inputProps: {
-                  'aria-label': 'rows per page',
-                },
-                native: true,
-              }}
-              onPageChange={handleChangePage}
-              onRowsPerPageChange={handleChangeRowsPerPage}
-              ActionsComponent={TablePaginationActions}
-            />
-          </TableRow>
-        </TableFooter>
-
-      </Table>
-    </Paper>
-    </>
-  );
 }
 
 export default OpenPhoneList;

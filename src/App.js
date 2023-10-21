@@ -15,15 +15,15 @@ function App() {
 
   return (
     <Router>
-      {isLogin && <ResponsiveAppBar setIsLogin = {setIsLogin} />}
+      {isLogin && <ResponsiveAppBar />}
       {/* <ResponsiveAppBar /> */}
 
       <Routes>
         <Route path = "/" element={<SignInSide setIsLogin = {setIsLogin}/>} />
         <Route path = "/signUp" element={<SignUp />} />
         <Route path = "/openPhoneList" element={<OpenPhoneList />} />
-        <Route path = "/calculate" element={<OpenPhoneCaculation />} />
-        <Route path = "/admin" element={<AdminPage />} />
+        <Route path = "/calculate" element={<OpenPhoneCaculation setIsLogin = {setIsLogin}/>} />
+        <Route path = "/admin" element={<AdminPage setIsLogin = {setIsLogin}/>} />
       </Routes>
     </Router>
   );
