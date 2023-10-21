@@ -119,6 +119,8 @@ function OpenPhoneList() {
   useEffect(()=>{
 
     const getData = async () => {
+
+      try {
       let data = [];
       const querySnapshot = await getDocs(query(collection(db, "CreativeNetworks"), orderBy("openDate", "desc"), where("isDeleted", "==", 0)));
 
@@ -127,6 +129,14 @@ function OpenPhoneList() {
       });
 
       setOpenPhoneList(data);
+      }
+      catch {
+        alert("허가가 없어");
+      }
+
+
+
+      
     }
     
     getData();
