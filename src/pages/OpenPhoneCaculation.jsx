@@ -1,20 +1,22 @@
 import React from 'react'
+import ResponsiveAppBar from '../components/ResponsiveAppBar';
+import { getAuth } from 'firebase/auth';
+
 
 function OpenPhoneCaculation(props) {
+  const auth = getAuth();
 
-// Initialize Variable ==================================================
-const setIsLogin = props.setIsLogin
-
-// call function ==================================================
-setIsLogin(true);
-
+  console.log('/////', auth.currentUser);
 
 
 // ------------------------------------------------------------------------------------
 // return 시작 ------------------------------------------------------------------------
 // ------------------------------------------------------------------------------------
 return (
-  <div>OpenPhoneCaculation</div>
+  <>
+    <ResponsiveAppBar />
+    <div>OpenPhoneCaculation</div>
+  </>
 );
 
 }

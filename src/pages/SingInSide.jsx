@@ -53,17 +53,13 @@ function Copyright(props) {
 // Function 시작 =========================================================================
 // =======================================================================================
 
-export default function SignInSide(props) {
+export default function SignInSide() {
 
 // Initialize Variable ==================================================
-const setIsLogin = props.setIsLogin
 const [errMsgOpen, setErrMsgOpen] = React.useState(false);
 const [ msg, setMsg ] = React.useState('');
 const navigate = useNavigate();
 
-// call function ==================================================
-setIsLogin(false);
-  
 
 // Define subFunction ==================================================
 //-----------------------------------------------------------------------
@@ -90,7 +86,6 @@ const handleSubmit = (event) => {
     .then((userCredential) => {
       // Signed in 
       const user = userCredential.user;
-      setIsLogin(true);
       navigate('/openPhoneList');
       // ...
     })

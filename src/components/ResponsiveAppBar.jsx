@@ -13,7 +13,7 @@ import { deepOrange } from '@mui/material/colors';
 // firebase import=======================================================
 import { initializeApp } from "firebase/app";
 import { firebaseConfig } from '../firebase';
-import { getAuth, signOut } from "firebase/auth";
+import { getAuth, signOut, onAuthStateChanged } from "firebase/auth";
 import { getFirestore, collection, getDocs, query, where} from "firebase/firestore";
 
 
@@ -31,9 +31,14 @@ function ResponsiveAppBar() {
 // Initialize Variable ==================================================
 const navigate = useNavigate();
 const auth = getAuth();
-const user = auth.currentUser;
+
+
+
+
+
 const [ anchorElUser, setAnchorElUser ] = React.useState(null);
 const [ userName, setUserName ] = React.useState(null);
+const [ companyName, setCompanyName ] = React.useState(null);
 const settings = ['Logout'];
 
 
@@ -58,14 +63,25 @@ const handleCloseUserMenu = () => {
 // useEffect Start ========================================================
 React.useEffect(()=>{
 
-  const getUserName = async () => {
-    let data = '';
-    const querySnapshot = await getDocs(query(collection(db, "comUsers"), where("id", "==", user.uid)));
-    querySnapshot.forEach((doc) => {
-      data = (doc.data().name);
-    });
+  const getUserName = () => {    
 
-    setUserName(data);
+    onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        console.log('user 있음');
+        let data = '';
+        let companydata = '';
+        const querySnapshot = await getDocs(query(collection(db, "comUsers"), where("id", "==", user.uid)));
+        querySnapshot.forEach((doc) => {
+        data = (doc.data().name);
+        companydata = (doc.data().company);
+        setUserName(data);
+        setCompanyName(companydata);
+        });
+      } else {
+        navigate('/');
+      }
+    });
+    
   }    
   getUserName();
 
@@ -89,23 +105,23 @@ return (
               Creactive Networks
             </Typography>
 
-            <Typography variant="h10" component="a" href="/calculate"
+            {companyName === '에셀트리' ? <Typography variant="h10" component="a" href="/calculate"
               sx={{ mr: 2, pt: 0.8, display: { xs: 'none', md: 'flex' }, fontWeight: 200, color: 'inherit', textDecoration: 'none' }}
             >
               정산
-            </Typography>
+            </Typography> : ""}
 
-            <Typography variant="h10" component="a" href="/admin"
+            {companyName === '에셀트리' ? <Typography variant="h10" component="a" href="/admin"
               sx={{ mr: 2, pt: 0.8, display: { xs: 'none', md: 'flex' }, fontWeight: 200, color: 'inherit', textDecoration: 'none' }}
             >
               관리자페이지
-            </Typography>
+            </Typography> : ""}
           </Box>
 
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-              <Avatar sx={{ bgcolor: deepOrange[500] }}>{userName}</Avatar>
+              <Avatar sx={{ bgcolor: deepOrange[500], width: 50, height: 50 }}>{userName}</Avatar>
               </IconButton>
             </Tooltip>
             <Menu

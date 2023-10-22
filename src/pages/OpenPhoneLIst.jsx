@@ -19,6 +19,7 @@ import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 import { getFirestore, collection, getDocs, query, where, orderBy } from "firebase/firestore";
 import { firebaseConfig } from '../firebase';
+import ResponsiveAppBar from '../components/ResponsiveAppBar';
 
 
 // Initialize Firebase ==================================================
@@ -176,6 +177,7 @@ useEffect(()=>{
 
 return (
   <>
+  <ResponsiveAppBar />
   <div style={{marginTop: 30}}>
     <OpenPhoneAdd getDataRefresh = {getDataRefresh} />
   </div>

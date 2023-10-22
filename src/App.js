@@ -11,19 +11,18 @@ import { useState } from 'react';
 
 function App() {
 
-  const [ isLogin, setIsLogin ] = useState(false);
 
   return (
     <Router>
-      {isLogin && <ResponsiveAppBar />}
+      {/* {isLogin && <ResponsiveAppBar />} */}
       {/* <ResponsiveAppBar /> */}
 
       <Routes>
-        <Route path = "/" element={<SignInSide setIsLogin = {setIsLogin}/>} />
+        <Route path = "/" element={<SignInSide />} />
         <Route path = "/signUp" element={<SignUp />} />
         <Route path = "/openPhoneList" element={<OpenPhoneList />} />
-        <Route path = "/calculate" element={<OpenPhoneCaculation setIsLogin = {setIsLogin}/>} />
-        <Route path = "/admin" element={<AdminPage setIsLogin = {setIsLogin}/>} />
+        <Route path = "/calculate" element={<OpenPhoneCaculation />} />
+        <Route path = "/admin" element={<AdminPage />} />
       </Routes>
     </Router>
   );
