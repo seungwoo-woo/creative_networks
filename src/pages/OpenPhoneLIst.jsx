@@ -105,7 +105,7 @@ const [openPhoneList, setOpenPhoneList] = useState([]);
 
 // Table Pagination Start ----------------------------------------
 const [page, setPage] = useState(0);
-const [rowsPerPage, setRowsPerPage] = useState(5);
+const [rowsPerPage, setRowsPerPage] = useState(10);
 
 // Avoid a layout jump when reaching the last page with empty rows.
 const emptyRows =
