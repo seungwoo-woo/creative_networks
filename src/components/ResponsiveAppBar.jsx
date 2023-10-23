@@ -99,11 +99,17 @@ return (
         <SatelliteAltTwoToneIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
         
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-            <Typography variant="h5" component="a" href="/openPhoneList"
+            <Typography variant="h5" component="a" href="/dashBoard"
               sx={{ mr: 4, display: { xs: 'none', md: 'flex' }, fontWeight: 400, color: 'inherit', textDecoration: 'none' }}
             >
               Creactive Networks
             </Typography>
+
+            {companyName === '에셀트리' ? <Typography variant="h10" component="a" href="/openPhoneList"
+              sx={{ mr: 2, pt: 0.8, display: { xs: 'none', md: 'flex' }, fontWeight: 200, color: 'inherit', textDecoration: 'none' }}
+            >
+              개통 리스트
+            </Typography> : ""}
 
             {companyName === '에셀트리' ? <Typography variant="h10" component="a" href="/calculate"
               sx={{ mr: 2, pt: 0.8, display: { xs: 'none', md: 'flex' }, fontWeight: 200, color: 'inherit', textDecoration: 'none' }}

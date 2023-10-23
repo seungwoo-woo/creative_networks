@@ -14,11 +14,12 @@ import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft';
 import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
-import Dialog from '@mui/material/Dialog';
 import { Table, IconButton, TableHead, TableBody, TableCell, TableRow, TableFooter, TablePagination, TextField, Select, MenuItem, FormControl, InputLabel, tableCellClasses } from "@mui/material";
 import ResponsiveAppBar from '../components/ResponsiveAppBar';
 import AddOneRow from "../components/AddOneRow";
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import StoreIcon from '@mui/icons-material/Store';
+
 
 // firebase import=======================================================
 import { initializeApp } from "firebase/app";
@@ -104,10 +105,11 @@ function AdminPage(props) {
 
 // Initialize Variable ==================================================
 const [isSellComOpen, setIsSellComOpen] = useState(false);
+const [isTelComOpen, setIsTelComOpen] = useState(false);
 const [sellComList, setSellComList] = useState([]);
+const [telComList, setTelComList] = useState([]);
 const [jsonData, setJsonData] = useState();
-
-
+const [ editCase, setEditCase ] = useState();
 
 
 // Table Pagination Start ----------------------------------------
@@ -133,7 +135,7 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
 }));
 
 
-// Button style ----------------------------------------------------
+// File Input Button style ----------------------------------------------------
 const VisuallyHiddenInput = styled('input')({
   clip: 'rect(0 0 0 0)',
   clipPath: 'inset(50%)',
@@ -148,14 +150,41 @@ const VisuallyHiddenInput = styled('input')({
 
 
 // Define subFunction ==================================================
-//-----------------------------------------------------------------------
+// Refresh sellComList -------------------------------------------------------------
+const getDataRefresh = async () => {
+  let data = [];
+  const querySnapshot = await getDocs(query(collection(db, "sellComName"), orderBy("comName", "asc"), where("isDeleted", "==", 0)));
+  querySnapshot.forEach((doc) => {
+    data.push({...doc.data(), id: doc.id,})
+    // data.push(doc.data().comName);
+  });
+  setSellComList(data);
+}
+
+
+// Refresh telComList-------------------------------------------------------------
+const getDataRefresh2 = async () => {
+  let data = [];
+  const querySnapshot = await getDocs(query(collection(db, "telComName"), orderBy("comName", "asc"), where("isDeleted", "==", 0)));
+  querySnapshot.forEach((doc) => {
+    data.push({...doc.data(), id: doc.id,})
+    // data.push(doc.data().comName);
+  });
+  setTelComList(data);
+}
+
+// 판매처 Table Open ----------------------------------------------------------------
 const hdcSellComOpen = () => {
   setIsSellComOpen(true);
+  setIsTelComOpen(false);
+  setEditCase(1);
 };
 
-//-----------------------------------------------------------------------
+// 통신사 Table Open ----------------------------------------------------------------
 const hdcTelComOpen = () => {
+  setIsTelComOpen(true);
   setIsSellComOpen(false);
+  setEditCase(2);
 };
 
 //----------------------------------------------------------------------- 
@@ -188,7 +217,7 @@ const ExcelToJson = (e) => {
 }
 
 
-// -----------------------------------------------------------
+// 판매처 엑셀 업로드 ----------------------------------------------------------
 const SellComUpload = () => {
   try {
     jsonData.map(async (item) => {
@@ -198,12 +227,10 @@ const SellComUpload = () => {
         isDeleted: 0 
     });    
     });
-    window.location.reload();
     alert("판매처 정보가 등록되었습니다.");
   } catch (e) {
     console.error("Error adding document: ", e);
   }
-
 }
 
 
@@ -220,8 +247,20 @@ useEffect(()=>{
     });
     setSellComList(data);
   }
-
   getSellComName();
+
+
+  // 통신사 리스트 읽어오기 --------------------------------------------------
+  const getTelComName = async () => {
+    let data = [];
+    const querySnapshot = await getDocs(query(collection(db, "telComName"), orderBy("comName", "asc"), where("isDeleted", "==", 0)));
+    querySnapshot.forEach((doc) => {
+      data.push({...doc.data(), id: doc.id,})
+      // data.push(doc.data().comName);
+    });
+    setTelComList(data);
+  }
+  getTelComName();
 
 }, []);
 
@@ -235,12 +274,12 @@ return (
   <>
     <ResponsiveAppBar />
 
-    <Typography sx={{ mt: 3, ml: 4, fontWeight: 400, display: 'flex', alignItems: 'center' }} variant="h4" >
+    <Typography sx={{ mt: 2, ml: 4, fontWeight: 400, display: 'flex', alignItems: 'center' }} variant="h5" >
       <NoteAltIcon fontSize="large" sx={{ mr: 2}} /> 관리자 페이지
     </Typography>
 
     <Box sx={{ mt: 1, ml: 2, fontWeight: 400, display: 'flex', alignItems: 'center' }} >
-        <Paper sx={{ mt: 1, ml: 2, width: 300, height: 500, display: 'flex', justifyContent: 'center', alignItems: 'center' }} elevation={5} >
+        <Paper sx={{ mt: 1, ml: 2, width: 300, height: 550, display: 'flex', justifyContent: 'center', alignItems: 'center' }} elevation={5} >
           <Stack spacing={3} >            
             <Button sx={{ width: 250}} variant="contained" size="large" onClick={hdcSellComOpen} >판매처 관리</Button>
             <Button variant="contained" size="large" onClick={hdcTelComOpen}>통신사 관리</Button>
@@ -252,11 +291,21 @@ return (
 
 
 
-        <Paper sx={{ mt: 1, ml: 2, pl: 5, pr: 5, width: 1150, height: 500 }} elevation={5} >
+        <Paper sx={{ mt: 1, ml: 2, mr: 4, pl: 5, pr: 5, width: 1100, height: 550 }} elevation={5} >
           
-          {/* 통신사 테이블-------------------------------------------*/}
+          {/* 판매처 테이블 보이기 -------------------------------------------*/}
           { isSellComOpen && 
           <>
+          <Typography sx={{ mt: 2, ml: 1, mb: 2, fontWeight: 400, display: 'flex', alignItems: 'center' }} variant="h6" >
+            <StoreIcon fontSize="small" sx={{ mr: 2}} /> 판매처 정보 확인 및 수정
+              <Button sx={{ml: 69}} size='small' component="label" variant="contained" onChange={ExcelToJson} startIcon={<CloudUploadIcon />}>
+                Select Excel file
+              <VisuallyHiddenInput type="file" 
+                accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"  />
+              </Button>
+              <Button sx={{mt: 0, ml: 1}} size='small' variant="outlined" onClick={SellComUpload}>UPLOAD</Button>
+          </Typography>
+
           <Table stickyHeader size='small' aria-label="sticky table">        
             <TableHead>
               <TableRow>
@@ -280,17 +329,18 @@ return (
                       no = {index + 1 + (page * rowsPerPage)}
                       cell1 = {item.comName}
                       cell2 = {item.comNo}
-                      cell3 = {item.cell3}
-                      cell4 = {item.cell4}
-                      cell5 = {item.cell5}
-                      cell6 = {item.cell6}
+                      cell3 = '{item.cell3}'
+                      cell4 = '{item.cell4}'
+                      cell5 = '{item.cell5}'
+                      getDataRefresh={getDataRefresh}
+                      editCase = {editCase}
                       />
                     );    // return ----------
                 })
               }
               {emptyRows > 0 && (
-                <TableRow style={{ height: 53 * emptyRows }}>
-                  <TableCell colSpan={4} />
+                <TableRow style={{ height: 37.5 * emptyRows }}>
+                  <TableCell colSpan={7} />
                 </TableRow>
               )}
             </TableBody>
@@ -298,8 +348,8 @@ return (
             <TableFooter>
               <TableRow>
                 <TablePagination
-                  rowsPerPageOptions={[5, 10, 25, { label: 'All', value: -1 }]}
-                  colSpan={16}
+                  rowsPerPageOptions={[5, 10]}
+                  colSpan={7}
                   count={sellComList.length}
                   rowsPerPage={rowsPerPage}
                   page={page}
@@ -315,18 +365,79 @@ return (
                 />
               </TableRow>
             </TableFooter>
-
-            
-
           </Table>
+          </>          
+          }
 
-          <Button sx={{mt: 2}} component="label" variant="contained" onChange={ExcelToJson} startIcon={<CloudUploadIcon />}>
-            Select Excel file
-            <VisuallyHiddenInput type="file" 
-              accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"  />
-          </Button>
-          <Button sx={{mt: 2, ml: 2}} variant="outlined" onClick={SellComUpload}>UPLOAD</Button>
-          </>
+
+          {/* 통신사 테이블 보이기 -------------------------------------------*/}
+          { isTelComOpen && 
+          <>
+          <Typography sx={{ mt: 2, ml: 1, mb: 2, fontWeight: 400, display: 'flex', alignItems: 'center' }} variant="h6" >
+            <StoreIcon fontSize="small" sx={{ mr: 2}} /> 통신사 정보 확인 및 수정
+              <Button sx={{ml: 69}} size='small' component="label" variant="contained" onChange={ExcelToJson} startIcon={<CloudUploadIcon />}>
+                Select Excel file
+              <VisuallyHiddenInput type="file" 
+                accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"  />
+              </Button>
+              <Button sx={{mt: 0, ml: 1}} size='small' variant="outlined" onClick={SellComUpload}>UPLOAD</Button>
+          </Typography>
+
+          <Table stickyHeader size='small' aria-label="sticky table">        
+            <TableHead>
+              <TableRow>
+                <StyledTableCell style={{fontWeight: 400}} align='center' >No.</StyledTableCell>
+                <StyledTableCell style={{fontWeight: 400}} align='center' >통신사</StyledTableCell>
+                <StyledTableCell style={{fontWeight: 400}} align='center' >담당자</StyledTableCell>
+                <StyledTableCell style={{fontWeight: 400}} align='center' >ACTION</StyledTableCell>
+              </TableRow>
+            </TableHead>
+
+            <TableBody>
+              {(rowsPerPage > 0 ?
+                telComList.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)              
+                : telComList).map((item, index) => {
+                    return (<AddOneRow 
+                      key = {item.id}
+                      id = {item.id} 
+                      no = {index + 1 + (page * rowsPerPage)}
+                      cell1 = {item.comName}
+                      cell2 = '{item.comNo}'
+                      getDataRefresh={getDataRefresh2}
+                      editCase={editCase}
+                      />
+                    );    // return ----------
+                })
+              }
+              {emptyRows > 0 && (
+                <TableRow style={{ height: 37.5 * emptyRows }}>
+                  <TableCell colSpan={4} />
+                </TableRow>
+              )}
+            </TableBody>
+
+            <TableFooter>
+              <TableRow>
+                <TablePagination
+                  rowsPerPageOptions={[5, 10]}
+                  colSpan={4}
+                  count={sellComList.length}
+                  rowsPerPage={rowsPerPage}
+                  page={page}
+                  SelectProps={{
+                    inputProps: {
+                      'aria-label': 'rows per page',
+                    },
+                    native: true,
+                  }}
+                  onPageChange={handleChangePage}
+                  onRowsPerPageChange={handleChangeRowsPerPage}
+                  ActionsComponent={TablePaginationActions}
+                />
+              </TableRow>
+            </TableFooter>
+          </Table>
+          </>          
           }
 
 

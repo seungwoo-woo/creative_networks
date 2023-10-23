@@ -238,8 +238,8 @@ return (
           })
         }
         {emptyRows > 0 && (
-          <TableRow style={{ height: 53 * emptyRows }}>
-            <TableCell colSpan={6} />
+          <TableRow style={{ height: 38.7 * emptyRows }}>
+            <TableCell colSpan={15} />
           </TableRow>
         )}
       </TableBody>
@@ -248,7 +248,7 @@ return (
         <TableRow>
           <TablePagination
             rowsPerPageOptions={[5, 10, 25, { label: 'All', value: -1 }]}
-            colSpan={16}
+            colSpan={15}
             count={openPhoneList.length}
             rowsPerPage={rowsPerPage}
             page={page}

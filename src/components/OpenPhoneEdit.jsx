@@ -156,7 +156,7 @@ const handleDelete = async (e) => {
     console.error("Error adding document: ", e);
   }
   
-  setIsDeleteDialogOpen(false);
+  handleClickDeleteClose();
 };
 
 
