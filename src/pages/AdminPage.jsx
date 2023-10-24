@@ -110,6 +110,8 @@ const [isTelComOpen, setIsTelComOpen] = useState(false);
 const [telComList, setTelComList] = useState([]);
 const [isOpenComOpen, setIsOpenComOpen] = useState(false);
 const [openComList, setOpenComList] = useState([]);
+const [isUserOpen, setIsUserOpen] = useState(false);
+const [userList, setUserList] = useState([]);
 const [jsonData, setJsonData] = useState();
 const [ editCase, setEditCase ] = useState();
 
@@ -184,11 +186,23 @@ const getDataRefresh3 = async () => {
 }
 
 
+// Refresh openComList-------------------------------------------------------------
+const getDataRefresh5 = async () => {
+  let data = [];
+  const querySnapshot = await getDocs(query(collection(db, "comUsers"), orderBy("name", "asc"), where("isDeleted", "==", 0)));
+  querySnapshot.forEach((doc) => {
+    data.push({...doc.data(), id: doc.id,})
+  });
+  setUserList(data);
+}
+
+
 // 판매처 Table Open ----------------------------------------------------------------
 const hdcSellComOpen = () => {
   setIsSellComOpen(true);
   setIsTelComOpen(false);
   setIsOpenComOpen(false);
+  setIsUserOpen(false);
   setEditCase(1);
 };
 
@@ -197,15 +211,26 @@ const hdcTelComOpen = () => {
   setIsTelComOpen(true);
   setIsSellComOpen(false);
   setIsOpenComOpen(false);
+  setIsUserOpen(false);
   setEditCase(2);
 };
 
-// 통신사 Table Open ----------------------------------------------------------------
+// 개통처 Table Open ----------------------------------------------------------------
 const hdcOpenComOpen = () => {
   setIsOpenComOpen(true);
   setIsTelComOpen(false);
   setIsSellComOpen(false);
+  setIsUserOpen(false);
   setEditCase(3);
+};
+
+// 사용자 Table Open ----------------------------------------------------------------
+const hdcUserOpen = () => {
+  setIsUserOpen(true);
+  setIsOpenComOpen(false);
+  setIsTelComOpen(false);
+  setIsSellComOpen(false);
+  setEditCase(5);
 };
 
 //----------------------------------------------------------------------- 
@@ -293,6 +318,7 @@ const OpenComUpload = () => {
 }
 
 
+
 // useEffect 1 Start ========================================================
 useEffect(()=>{    
 
@@ -334,6 +360,20 @@ useEffect(()=>{
   }
   getOpenComName();
 
+
+  // 사용자 리스트 읽어오기 --------------------------------------------------
+  const getUser = async () => {
+    let data = [];
+    const querySnapshot = await getDocs(query(collection(db, "comUsers"), orderBy("name", "asc"), where("isDeleted", "==", 0)));
+    querySnapshot.forEach((doc) => {
+      data.push({...doc.data(), id: doc.id,})
+      // data.push(doc.data().comName);
+    });
+    setUserList(data);
+  }
+  getUser();
+
+
 }, [isSellComOpen]);
 
 
@@ -357,7 +397,7 @@ return (
             <Button variant="contained" size="large" onClick={hdcTelComOpen}>통신사 관리</Button>
             <Button variant="contained" size="large" onClick={hdcOpenComOpen}>개통처 관리</Button>
             <Button variant="contained" size="large">요금제 관리</Button>
-            <Button variant="contained" size="large">사용자 관리</Button>            
+            <Button variant="contained" size="large" onClick={hdcUserOpen}>사용자 관리</Button>            
           </Stack>
         </Paper>
 
@@ -565,6 +605,75 @@ return (
                   rowsPerPageOptions={[5, 10]}
                   colSpan={5}
                   count={openComList.length}
+                  rowsPerPage={rowsPerPage}
+                  page={page}
+                  SelectProps={{
+                    inputProps: {
+                      'aria-label': 'rows per page',
+                    },
+                    native: true,
+                  }}
+                  onPageChange={handleChangePage}
+                  onRowsPerPageChange={handleChangeRowsPerPage}
+                  ActionsComponent={TablePaginationActions}
+                />
+              </TableRow>
+            </TableFooter>
+          </Table>
+          </>          
+          }
+
+
+          {/* 사용자 테이블 보이기 -------------------------------------------*/}
+          { isUserOpen && 
+          <>
+          <Typography sx={{ mt: 2, ml: 1, mb: 2, fontWeight: 400, display: 'flex', alignItems: 'center' }} variant="h6" >
+            <StoreIcon fontSize="small" sx={{ mr: 2}} /> 사용자 정보 확인 및 수정
+          </Typography>
+
+          <Table stickyHeader size='small' aria-label="sticky table">        
+            <TableHead>
+              <TableRow>
+                <StyledTableCell style={{fontWeight: 400}} align='center' >No.</StyledTableCell>
+                <StyledTableCell style={{fontWeight: 400}} align='center' >사용자</StyledTableCell>
+                <StyledTableCell style={{fontWeight: 400}} align='center' >판매처</StyledTableCell>
+                <StyledTableCell style={{fontWeight: 400}} align='center' >이메일</StyledTableCell>
+                <StyledTableCell style={{fontWeight: 400}} align='center' >권한등급</StyledTableCell>
+                <StyledTableCell style={{fontWeight: 400}} align='center' >ACTION</StyledTableCell>
+              </TableRow>
+            </TableHead>
+
+            <TableBody>
+              {(rowsPerPage > 0 ?
+                userList.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)              
+                : userList).map((item, index) => {
+                    return (<AddOneRow 
+                      key = {item.id}
+                      id = {item.id} 
+                      no = {index + 1 + (page * rowsPerPage)}
+                      cell1 = {item.name}
+                      cell2 = {item.company}
+                      cell3 = {item.email}
+                      cell4 = {item.userGrade}
+                      getDataRefresh={getDataRefresh5}
+                      editCase={editCase}
+                      />
+                    );    // return ----------
+                })
+              }
+              {emptyRows > 0 && (
+                <TableRow style={{ height: 48.5 * emptyRows }}>
+                  <TableCell colSpan={6} />
+                </TableRow>
+              )}
+            </TableBody>
+
+            <TableFooter>
+              <TableRow>
+                <TablePagination
+                  rowsPerPageOptions={[5, 10]}
+                  colSpan={6}
+                  count={userList.length}
                   rowsPerPage={rowsPerPage}
                   page={page}
                   SelectProps={{

@@ -47,6 +47,12 @@ const getAdminEditCase3 = async () => {
   setAdminEditCase(querySnapshot.data());
 }
 
+// Edit 대상 정보 읽어오기 ------------------------------------------------
+const getAdminEditCase5 = async () => {
+  const querySnapshot = await getDoc(doc(db, "comUsers", id));
+  setAdminEditCase(querySnapshot.data());
+}
+
 // --------------------------------------------------------------------
 const hdcEditOpen = () => {
   setIsEditOpen(true);
@@ -64,6 +70,10 @@ const hdcEditClose = () => {
 
   if (editCase === 3) {
     getAdminEditCase3();
+  }
+
+  if (editCase === 5) {
+    getAdminEditCase5();
   }
 
   setIsEditOpen(false);
@@ -91,6 +101,13 @@ const handleUpdate = async (e) => {
         comName: adminEditCase.comName,
         comPerson: adminEditCase.comPerson,
         telComName: adminEditCase.telComName,
+      });}
+
+    if (editCase === 5) {
+      const docRef = await updateDoc(doc(db, "comUsers", id), {
+        name: adminEditCase.name,
+        company: adminEditCase.company,
+        userGrade: adminEditCase.userGrade,
       });}
 
 
@@ -134,6 +151,9 @@ const handleDelete = async (e) => {
     if (editCase === 3) {
       const docRef = await deleteDoc(doc(db, "openComName", id));
     }
+    if (editCase === 5) {
+      const docRef = await deleteDoc(doc(db, "comUsers", id));
+    }
 
     hdcDeleteClose();
     alert("판매처 정보가 삭제되었습니다.");
@@ -162,6 +182,10 @@ useEffect(()=>{
   if (editCase === 3) {
     getAdminEditCase3();
   }
+
+  if (editCase === 5) {
+    getAdminEditCase5();
+  }
   
 },[]);
 
@@ -178,6 +202,8 @@ return (
       {(editCase === 1) && <DialogTitle>판매처 정보 수정</DialogTitle>}
       {(editCase === 2) && <DialogTitle>통신사 정보 수정</DialogTitle>}
       {(editCase === 3) && <DialogTitle>개통처 정보 수정</DialogTitle>}
+      {(editCase === 5) && <DialogTitle>사용자 정보 수정</DialogTitle>}
+
       
       <DialogContent>
         {(editCase === 1) && <TextField value={adminEditCase.comName} id="comName" label="판매처" onChange={handleValueChange} margin="dense" type="text" fullWidth variant="standard" /> }
@@ -187,6 +213,9 @@ return (
         {(editCase === 3) && <TextField value={adminEditCase.comName} id="comName" label="개통처" onChange={handleValueChange} margin="dense" type="text" fullWidth variant="standard" /> }
         {(editCase === 3) && <TextField value={adminEditCase.comPerson} id="comPerson" label="담당자" onChange={handleValueChange} margin="dense" type="text" fullWidth variant="standard" /> }
         {(editCase === 3) && <TextField value={adminEditCase.telComName} id="telComName" label="통신사" onChange={handleValueChange} margin="dense" type="text" fullWidth variant="standard" /> }
+        {(editCase === 5) && <TextField value={adminEditCase.name} id="name" label="사용자" onChange={handleValueChange} margin="dense" type="text" fullWidth variant="standard" /> }
+        {(editCase === 5) && <TextField value={adminEditCase.company} id="company" label="판매처" onChange={handleValueChange} margin="dense" type="text" fullWidth variant="standard" /> }
+        {(editCase === 5) && <TextField value={adminEditCase.userGrade} id="userGrade" label="권한등급" onChange={handleValueChange} margin="dense" type="text" fullWidth variant="standard" /> }
       </DialogContent>
 
       <DialogActions>
