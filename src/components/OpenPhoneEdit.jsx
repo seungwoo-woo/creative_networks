@@ -430,8 +430,8 @@ return (
 
       </DialogContent>
       <DialogActions>
-        <Button onClick={handleClickClose}>취소</Button>
-        <Button onClick={handleUpdate}>수정</Button>
+        <Button onClick={handleClickClose}>CANCLE</Button>
+        <Button onClick={handleUpdate}>UPDATE</Button>
       </DialogActions>
   </Dialog>
 

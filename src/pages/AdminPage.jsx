@@ -231,6 +231,25 @@ const SellComUpload = () => {
   } catch (e) {
     console.error("Error adding document: ", e);
   }
+  getDataRefresh();
+}
+
+
+// 통신사 엑셀 업로드 ----------------------------------------------------------
+const TelComUpload = () => {
+  try {
+    jsonData.map(async (item) => {
+      const docRef = await addDoc(collection(db, "telComName"), {
+        comName: item.통신사,
+        comPerson: item.담당자,
+        isDeleted: 0 
+    });    
+    });
+    alert("통신사 정보가 등록되었습니다.");
+  } catch (e) {
+    console.error("Error adding document: ", e);
+  }
+  getDataRefresh2();
 }
 
 
@@ -375,12 +394,12 @@ return (
           <>
           <Typography sx={{ mt: 2, ml: 1, mb: 2, fontWeight: 400, display: 'flex', alignItems: 'center' }} variant="h6" >
             <StoreIcon fontSize="small" sx={{ mr: 2}} /> 통신사 정보 확인 및 수정
-              <Button sx={{ml: 69}} size='small' component="label" variant="contained" onChange={ExcelToJson} startIcon={<CloudUploadIcon />}>
+              <Button sx={{ml: 67}} size='small' component="label" variant="contained" onChange={ExcelToJson} startIcon={<CloudUploadIcon />}>
                 Select Excel file
               <VisuallyHiddenInput type="file" 
                 accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"  />
               </Button>
-              <Button sx={{mt: 0, ml: 1}} size='small' variant="outlined" onClick={SellComUpload}>UPLOAD</Button>
+              <Button sx={{mt: 0, ml: 1}} size='small' variant="outlined" onClick={TelComUpload}>UPLOAD</Button>
           </Typography>
 
           <Table stickyHeader size='small' aria-label="sticky table">        
@@ -402,7 +421,7 @@ return (
                       id = {item.id} 
                       no = {index + 1 + (page * rowsPerPage)}
                       cell1 = {item.comName}
-                      cell2 = '{item.comNo}'
+                      cell2 = {item.comPerson}
                       getDataRefresh={getDataRefresh2}
                       editCase={editCase}
                       />
@@ -410,7 +429,7 @@ return (
                 })
               }
               {emptyRows > 0 && (
-                <TableRow style={{ height: 37.5 * emptyRows }}>
+                <TableRow style={{ height: 48.5 * emptyRows }}>
                   <TableCell colSpan={4} />
                 </TableRow>
               )}
@@ -421,7 +440,7 @@ return (
                 <TablePagination
                   rowsPerPageOptions={[5, 10]}
                   colSpan={4}
-                  count={sellComList.length}
+                  count={telComList.length}
                   rowsPerPage={rowsPerPage}
                   page={page}
                   SelectProps={{

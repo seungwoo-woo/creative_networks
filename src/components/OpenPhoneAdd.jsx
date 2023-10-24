@@ -415,8 +415,8 @@ return (
         </Table>
       </DialogContent>
       <DialogActions>
-        <Button onClick={handleClickClose}>취소</Button>
-        <Button onClick={handleSubmit}>등록</Button>
+        <Button onClick={handleClickClose}>CANCLE</Button>
+        <Button onClick={handleSubmit}>SAVE</Button>
       </DialogActions>
 
   </Dialog>

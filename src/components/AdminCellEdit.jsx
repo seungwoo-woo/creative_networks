@@ -73,6 +73,7 @@ const handleUpdate = async (e) => {
     if (editCase === 2) {
       const docRef = await updateDoc(doc(db, "telComName", id), {
         comName: adminEditCase.comName,
+        comPerson: adminEditCase.comPerson
       });}
 
 
@@ -107,13 +108,16 @@ const handleDelete = async (e) => {
   e.preventDefault();
 
   try {
-    const docRef = await deleteDoc(doc(db, "sellComName", id));
+    if (editCase === 1) {
+      const docRef = await deleteDoc(doc(db, "sellComName", id));
+    }
+    if (editCase === 2) {
+      const docRef = await deleteDoc(doc(db, "telComName", id));
+    }
 
     hdcDeleteClose();
-
     alert("판매처 정보가 삭제되었습니다.");
-
-    getDataRefresh();      
+    getDataRefresh();  
 
   } catch (e) {
     console.error("Error adding document: ", e);
@@ -155,7 +159,7 @@ return (
         {(editCase === 1) && <TextField value={adminEditCase.comName} id="comName" label="판매처" onChange={handleValueChange} margin="dense" type="text" fullWidth variant="standard" /> }
         {(editCase === 1) && <TextField value={adminEditCase.comNo} id="comNo" label="사업자번호" onChange={handleValueChange} margin="dense" type="text" fullWidth variant="standard" /> }
         {(editCase === 2) && <TextField value={adminEditCase.comName} id="comName" label="통신사" onChange={handleValueChange} margin="dense" type="text" fullWidth variant="standard" /> }
-        {(editCase === 2) && <TextField value={adminEditCase.comNo} id="comNo" label="담당자" onChange={handleValueChange} margin="dense" type="text" fullWidth variant="standard" /> }
+        {(editCase === 2) && <TextField value={adminEditCase.comPerson} id="comPerson" label="담당자" onChange={handleValueChange} margin="dense" type="text" fullWidth variant="standard" /> }
       </DialogContent>
       <DialogActions>
 

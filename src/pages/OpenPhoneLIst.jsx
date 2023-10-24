@@ -206,7 +206,6 @@ return (
           <StyledTableCell style={{fontWeight: 400}} align='center'>일련번호</StyledTableCell>
           <StyledTableCell style={{fontWeight: 400}} align='center'>색상</StyledTableCell>
         </TableRow>
-
       </TableHead>
 
       <TableBody>
