@@ -38,6 +38,7 @@ const auth = getAuth();
 
 const [ anchorElUser, setAnchorElUser ] = React.useState(null);
 const [ userName, setUserName ] = React.useState(null);
+const [ userGrade, setUserGrade ] = React.useState(null);
 const [ companyName, setCompanyName ] = React.useState(null);
 const settings = ['Logout'];
 
@@ -70,12 +71,15 @@ React.useEffect(()=>{
         console.log('user 있음');
         let data = '';
         let companydata = '';
+        let userGrade = '';
         const querySnapshot = await getDocs(query(collection(db, "comUsers"), where("id", "==", user.uid)));
         querySnapshot.forEach((doc) => {
         data = (doc.data().name);
         companydata = (doc.data().company);
+        userGrade = (doc.data().userGrade);
         setUserName(data);
         setCompanyName(companydata);
+        setUserGrade(userGrade);
         });
       } else {
         navigate('/');
@@ -105,19 +109,19 @@ return (
               Creactive Networks
             </Typography>
 
-            {companyName === '에셀트리' ? <Typography variant="h10" component="a" href="/openPhoneList"
+            {(userGrade === 'A' || userGrade === 'B') ? <Typography variant="h10" component="a" href="/openPhoneList"
               sx={{ mr: 2, pt: 0.8, display: { xs: 'none', md: 'flex' }, fontWeight: 200, color: 'inherit', textDecoration: 'none' }}
             >
               개통 리스트
             </Typography> : ""}
 
-            {companyName === '에셀트리' ? <Typography variant="h10" component="a" href="/calculate"
+            {(userGrade === 'A' || userGrade === 'B') ? <Typography variant="h10" component="a" href="/calculate"
               sx={{ mr: 2, pt: 0.8, display: { xs: 'none', md: 'flex' }, fontWeight: 200, color: 'inherit', textDecoration: 'none' }}
             >
               정산
             </Typography> : ""}
 
-            {companyName === '에셀트리' ? <Typography variant="h10" component="a" href="/admin"
+            {userGrade === 'A' ? <Typography variant="h10" component="a" href="/admin"
               sx={{ mr: 2, pt: 0.8, display: { xs: 'none', md: 'flex' }, fontWeight: 200, color: 'inherit', textDecoration: 'none' }}
             >
               관리자페이지

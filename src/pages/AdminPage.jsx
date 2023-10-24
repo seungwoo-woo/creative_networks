@@ -105,9 +105,11 @@ function AdminPage(props) {
 
 // Initialize Variable ==================================================
 const [isSellComOpen, setIsSellComOpen] = useState(false);
-const [isTelComOpen, setIsTelComOpen] = useState(false);
 const [sellComList, setSellComList] = useState([]);
+const [isTelComOpen, setIsTelComOpen] = useState(false);
 const [telComList, setTelComList] = useState([]);
+const [isOpenComOpen, setIsOpenComOpen] = useState(false);
+const [openComList, setOpenComList] = useState([]);
 const [jsonData, setJsonData] = useState();
 const [ editCase, setEditCase ] = useState();
 
@@ -156,10 +158,8 @@ const getDataRefresh = async () => {
   const querySnapshot = await getDocs(query(collection(db, "sellComName"), orderBy("comName", "asc"), where("isDeleted", "==", 0)));
   querySnapshot.forEach((doc) => {
     data.push({...doc.data(), id: doc.id,})
-    // data.push(doc.data().comName);
   });
-  setSellComList(data);
-}
+  setSellComList(data);}
 
 
 // Refresh telComList-------------------------------------------------------------
@@ -168,15 +168,27 @@ const getDataRefresh2 = async () => {
   const querySnapshot = await getDocs(query(collection(db, "telComName"), orderBy("comName", "asc"), where("isDeleted", "==", 0)));
   querySnapshot.forEach((doc) => {
     data.push({...doc.data(), id: doc.id,})
-    // data.push(doc.data().comName);
   });
   setTelComList(data);
 }
+
+
+// Refresh openComList-------------------------------------------------------------
+const getDataRefresh3 = async () => {
+  let data = [];
+  const querySnapshot = await getDocs(query(collection(db, "openComName"), orderBy("comName", "asc"), where("isDeleted", "==", 0)));
+  querySnapshot.forEach((doc) => {
+    data.push({...doc.data(), id: doc.id,})
+  });
+  setOpenComList(data);
+}
+
 
 // 판매처 Table Open ----------------------------------------------------------------
 const hdcSellComOpen = () => {
   setIsSellComOpen(true);
   setIsTelComOpen(false);
+  setIsOpenComOpen(false);
   setEditCase(1);
 };
 
@@ -184,7 +196,16 @@ const hdcSellComOpen = () => {
 const hdcTelComOpen = () => {
   setIsTelComOpen(true);
   setIsSellComOpen(false);
+  setIsOpenComOpen(false);
   setEditCase(2);
+};
+
+// 통신사 Table Open ----------------------------------------------------------------
+const hdcOpenComOpen = () => {
+  setIsOpenComOpen(true);
+  setIsTelComOpen(false);
+  setIsSellComOpen(false);
+  setEditCase(3);
 };
 
 //----------------------------------------------------------------------- 
@@ -253,6 +274,25 @@ const TelComUpload = () => {
 }
 
 
+// 개통처 엑셀 업로드 ----------------------------------------------------------
+const OpenComUpload = () => {
+  try {
+    jsonData.map(async (item) => {
+      const docRef = await addDoc(collection(db, "openComName"), {
+        comName: item.개통처,
+        comPerson: item.담당자,
+        telComName: item.통신사,
+        isDeleted: 0 
+    });    
+    });
+    alert("개통처 정보가 등록되었습니다.");
+  } catch (e) {
+    console.error("Error adding document: ", e);
+  }
+  getDataRefresh3();
+}
+
+
 // useEffect 1 Start ========================================================
 useEffect(()=>{    
 
@@ -281,7 +321,20 @@ useEffect(()=>{
   }
   getTelComName();
 
-}, []);
+
+  // 개통처 리스트 읽어오기 --------------------------------------------------
+  const getOpenComName = async () => {
+    let data = [];
+    const querySnapshot = await getDocs(query(collection(db, "openComName"), orderBy("comName", "asc"), where("isDeleted", "==", 0)));
+    querySnapshot.forEach((doc) => {
+      data.push({...doc.data(), id: doc.id,})
+      // data.push(doc.data().comName);
+    });
+    setOpenComList(data);
+  }
+  getOpenComName();
+
+}, [isSellComOpen]);
 
 
 
@@ -302,13 +355,11 @@ return (
           <Stack spacing={3} >            
             <Button sx={{ width: 250}} variant="contained" size="large" onClick={hdcSellComOpen} >판매처 관리</Button>
             <Button variant="contained" size="large" onClick={hdcTelComOpen}>통신사 관리</Button>
-            <Button variant="contained" size="large">개통처 관리</Button>
+            <Button variant="contained" size="large" onClick={hdcOpenComOpen}>개통처 관리</Button>
             <Button variant="contained" size="large">요금제 관리</Button>
             <Button variant="contained" size="large">사용자 관리</Button>            
           </Stack>
         </Paper>
-
-
 
         <Paper sx={{ mt: 1, ml: 2, mr: 4, pl: 5, pr: 5, width: 1100, height: 550 }} elevation={5} >
           
@@ -441,6 +492,79 @@ return (
                   rowsPerPageOptions={[5, 10]}
                   colSpan={4}
                   count={telComList.length}
+                  rowsPerPage={rowsPerPage}
+                  page={page}
+                  SelectProps={{
+                    inputProps: {
+                      'aria-label': 'rows per page',
+                    },
+                    native: true,
+                  }}
+                  onPageChange={handleChangePage}
+                  onRowsPerPageChange={handleChangeRowsPerPage}
+                  ActionsComponent={TablePaginationActions}
+                />
+              </TableRow>
+            </TableFooter>
+          </Table>
+          </>          
+          }
+
+
+          {/* 개통처 테이블 보이기 -------------------------------------------*/}
+          { isOpenComOpen && 
+          <>
+          <Typography sx={{ mt: 2, ml: 1, mb: 2, fontWeight: 400, display: 'flex', alignItems: 'center' }} variant="h6" >
+            <StoreIcon fontSize="small" sx={{ mr: 2}} /> 개통처 정보 확인 및 수정
+              <Button sx={{ml: 67}} size='small' component="label" variant="contained" onChange={ExcelToJson} startIcon={<CloudUploadIcon />}>
+                Select Excel file
+              <VisuallyHiddenInput type="file" 
+                accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"  />
+              </Button>
+              <Button sx={{mt: 0, ml: 1}} size='small' variant="outlined" onClick={OpenComUpload}>UPLOAD</Button>
+          </Typography>
+
+          <Table stickyHeader size='small' aria-label="sticky table">        
+            <TableHead>
+              <TableRow>
+                <StyledTableCell style={{fontWeight: 400}} align='center' >No.</StyledTableCell>
+                <StyledTableCell style={{fontWeight: 400}} align='center' >개통처</StyledTableCell>
+                <StyledTableCell style={{fontWeight: 400}} align='center' >담당자</StyledTableCell>
+                <StyledTableCell style={{fontWeight: 400}} align='center' >통신사</StyledTableCell>
+                <StyledTableCell style={{fontWeight: 400}} align='center' >ACTION</StyledTableCell>
+              </TableRow>
+            </TableHead>
+
+            <TableBody>
+              {(rowsPerPage > 0 ?
+                openComList.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)              
+                : openComList).map((item, index) => {
+                    return (<AddOneRow 
+                      key = {item.id}
+                      id = {item.id} 
+                      no = {index + 1 + (page * rowsPerPage)}
+                      cell1 = {item.comName}
+                      cell2 = {item.comPerson}
+                      cell3 = {item.telComName}
+                      getDataRefresh={getDataRefresh3}
+                      editCase={editCase}
+                      />
+                    );    // return ----------
+                })
+              }
+              {emptyRows > 0 && (
+                <TableRow style={{ height: 48.5 * emptyRows }}>
+                  <TableCell colSpan={5} />
+                </TableRow>
+              )}
+            </TableBody>
+
+            <TableFooter>
+              <TableRow>
+                <TablePagination
+                  rowsPerPageOptions={[5, 10]}
+                  colSpan={5}
+                  count={openComList.length}
                   rowsPerPage={rowsPerPage}
                   page={page}
                   SelectProps={{

@@ -86,7 +86,7 @@ const handleSubmit = (event) => {
     .then((userCredential) => {
       // Signed in 
       const user = userCredential.user;
-      navigate('/');
+      navigate('/dashBoard');
       // ...
     })
     .catch((error) => {

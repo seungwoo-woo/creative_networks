@@ -107,7 +107,8 @@ const handleSubmit = async (event) => {
       name: data.get('firstName'),
       company: sellComName,
       email: data.get('email'),
-      isDeleted: 0 
+      isDeleted: 0,
+      userGrade: 'C'
     });
 
     handleSignUpMsgOpen();
