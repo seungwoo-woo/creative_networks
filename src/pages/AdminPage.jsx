@@ -426,7 +426,7 @@ return (
                 <StyledTableCell style={{fontWeight: 400}} align='center' >은행</StyledTableCell>
                 <StyledTableCell style={{fontWeight: 400}} align='center' >계좌번호</StyledTableCell>
                 <StyledTableCell style={{fontWeight: 400}} align='center' >담당자</StyledTableCell>
-                <StyledTableCell style={{fontWeight: 400}} align='center' >ACTION</StyledTableCell>
+                <StyledTableCell style={{fontWeight: 600, color: "yellow"}} align='center' >ACTION</StyledTableCell>
               </TableRow>
             </TableHead>
 
@@ -473,7 +473,7 @@ return (
           <>
           <Typography sx={{ mt: 2, ml: 1, mb: 2, fontWeight: 400, display: 'flex', alignItems: 'center' }} variant="h6" >
             <StoreIcon fontSize="small" sx={{ mr: 2}} /> 통신사 정보 확인 및 수정
-              <Button sx={{ml: 67}} size='small' component="label" variant="contained" onChange={ExcelToJson} startIcon={<CloudUploadIcon />}>
+              <Button sx={{ml: 69}} size='small' component="label" variant="contained" onChange={ExcelToJson} startIcon={<CloudUploadIcon />}>
                 Select Excel file
               <VisuallyHiddenInput type="file" 
                 accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"  />
@@ -487,7 +487,7 @@ return (
                 <StyledTableCell style={{fontWeight: 400}} align='center' >No.</StyledTableCell>
                 <StyledTableCell style={{fontWeight: 400}} align='center' >통신사</StyledTableCell>
                 <StyledTableCell style={{fontWeight: 400}} align='center' >담당자</StyledTableCell>
-                <StyledTableCell style={{fontWeight: 400}} align='center' >ACTION</StyledTableCell>
+                <StyledTableCell style={{fontWeight: 600, color: "yellow"}} align='center' >ACTION</StyledTableCell>
               </TableRow>
             </TableHead>
 
@@ -531,7 +531,7 @@ return (
           <>
           <Typography sx={{ mt: 2, ml: 1, mb: 2, fontWeight: 400, display: 'flex', alignItems: 'center' }} variant="h6" >
             <StoreIcon fontSize="small" sx={{ mr: 2}} /> 개통처 정보 확인 및 수정
-              <Button sx={{ml: 67}} size='small' component="label" variant="contained" onChange={ExcelToJson} startIcon={<CloudUploadIcon />}>
+              <Button sx={{ml: 69}} size='small' component="label" variant="contained" onChange={ExcelToJson} startIcon={<CloudUploadIcon />}>
                 Select Excel file
               <VisuallyHiddenInput type="file" 
                 accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"  />
@@ -546,7 +546,7 @@ return (
                 <StyledTableCell style={{fontWeight: 400}} align='center' >개통처</StyledTableCell>
                 <StyledTableCell style={{fontWeight: 400}} align='center' >담당자</StyledTableCell>
                 <StyledTableCell style={{fontWeight: 400}} align='center' >통신사</StyledTableCell>
-                <StyledTableCell style={{fontWeight: 400}} align='center' >ACTION</StyledTableCell>
+                <StyledTableCell style={{fontWeight: 600, color: "yellow"}} align='center' >ACTION</StyledTableCell>
               </TableRow>
             </TableHead>
 
@@ -601,7 +601,7 @@ return (
                 <StyledTableCell style={{fontWeight: 400}} align='center' >판매처</StyledTableCell>
                 <StyledTableCell style={{fontWeight: 400}} align='center' >이메일</StyledTableCell>
                 <StyledTableCell style={{fontWeight: 400}} align='center' >권한등급</StyledTableCell>
-                <StyledTableCell style={{fontWeight: 400}} align='center' >ACTION</StyledTableCell>
+                <StyledTableCell style={{fontWeight: 600, color: "yellow"}} align='center' >ACTION</StyledTableCell>
               </TableRow>
             </TableHead>
 

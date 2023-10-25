@@ -112,7 +112,8 @@ const handleUpdate = async (e) => {
         userGrade: adminEditCase.userGrade,
       });}
 
-
+  setIsEditOpen(false);
+  
   alert("정보가 수정되었습니다.");
   } catch (e) {
     console.error("Error adding document: ", e);
