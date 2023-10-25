@@ -122,9 +122,9 @@ const [page, setPage] = useState(0);
 const [rowsPerPage, setRowsPerPage] = useState(10);
 
 
-// Avoid a layout jump when reaching the last page with empty rows.
-const emptyRows =
-  page > 0 ? Math.max(0, (1 + page) * rowsPerPage - sellComList.length) : 0;
+// // Avoid a layout jump when reaching the last page with empty rows.
+// const emptyRows =
+//   page > 0 ? Math.max(0, (1 + page) * rowsPerPage - sellComList.length) : 0;
 
 
 // Table style ----------------------------------------------------
@@ -431,9 +431,8 @@ return (
             </TableHead>
 
             <TableBody>
-              {(rowsPerPage > 0 ?
-                sellComList.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)              
-                : sellComList).map((item, index) => {
+              {sellComList.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)              
+                .map((item, index) => {
                     return (<AddOneRow 
                       key = {item.id}
                       id = {item.id} 
@@ -449,27 +448,15 @@ return (
                     );    // return ----------
                 })
               }
-              {emptyRows > 0 && (
-                <TableRow style={{ height: 37.5 * emptyRows }}>
-                  <TableCell colSpan={7} />
-                </TableRow>
-              )}
             </TableBody>
 
             <TableFooter>
               <TableRow>
                 <TablePagination
                   rowsPerPageOptions={[5, 10]}
-                  colSpan={7}
                   count={sellComList.length}
                   rowsPerPage={rowsPerPage}
                   page={page}
-                  SelectProps={{
-                    inputProps: {
-                      'aria-label': 'rows per page',
-                    },
-                    native: true,
-                  }}
                   onPageChange={handleChangePage}
                   onRowsPerPageChange={handleChangeRowsPerPage}
                   ActionsComponent={TablePaginationActions}
@@ -505,9 +492,8 @@ return (
             </TableHead>
 
             <TableBody>
-              {(rowsPerPage > 0 ?
-                telComList.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)              
-                : telComList).map((item, index) => {
+              {telComList.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)              
+                .map((item, index) => {
                     return (<AddOneRow 
                       key = {item.id}
                       id = {item.id} 
@@ -520,27 +506,15 @@ return (
                     );    // return ----------
                 })
               }
-              {emptyRows > 0 && (
-                <TableRow style={{ height: 48.5 * emptyRows }}>
-                  <TableCell colSpan={4} />
-                </TableRow>
-              )}
             </TableBody>
 
             <TableFooter>
               <TableRow>
                 <TablePagination
                   rowsPerPageOptions={[5, 10]}
-                  colSpan={4}
                   count={telComList.length}
                   rowsPerPage={rowsPerPage}
                   page={page}
-                  SelectProps={{
-                    inputProps: {
-                      'aria-label': 'rows per page',
-                    },
-                    native: true,
-                  }}
                   onPageChange={handleChangePage}
                   onRowsPerPageChange={handleChangeRowsPerPage}
                   ActionsComponent={TablePaginationActions}
@@ -577,9 +551,8 @@ return (
             </TableHead>
 
             <TableBody>
-              {(rowsPerPage > 0 ?
-                openComList.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)              
-                : openComList).map((item, index) => {
+              {openComList.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)              
+                .map((item, index) => {
                     return (<AddOneRow 
                       key = {item.id}
                       id = {item.id} 
@@ -593,27 +566,15 @@ return (
                     );    // return ----------
                 })
               }
-              {emptyRows > 0 && (
-                <TableRow style={{ height: 48.5 * emptyRows }}>
-                  <TableCell colSpan={5} />
-                </TableRow>
-              )}
             </TableBody>
 
             <TableFooter>
               <TableRow>
                 <TablePagination
                   rowsPerPageOptions={[5, 10]}
-                  colSpan={5}
                   count={openComList.length}
                   rowsPerPage={rowsPerPage}
                   page={page}
-                  SelectProps={{
-                    inputProps: {
-                      'aria-label': 'rows per page',
-                    },
-                    native: true,
-                  }}
                   onPageChange={handleChangePage}
                   onRowsPerPageChange={handleChangeRowsPerPage}
                   ActionsComponent={TablePaginationActions}
@@ -645,9 +606,8 @@ return (
             </TableHead>
 
             <TableBody>
-              {(rowsPerPage > 0 ?
-                userList.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)              
-                : userList).map((item, index) => {
+              {userList.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)              
+               .map((item, index) => {
                     return (<AddOneRow 
                       key = {item.id}
                       id = {item.id} 
@@ -662,27 +622,15 @@ return (
                     );    // return ----------
                 })
               }
-              {emptyRows > 0 && (
-                <TableRow style={{ height: 48.5 * emptyRows }}>
-                  <TableCell colSpan={6} />
-                </TableRow>
-              )}
             </TableBody>
 
             <TableFooter>
               <TableRow>
                 <TablePagination
                   rowsPerPageOptions={[5, 10]}
-                  colSpan={6}
                   count={userList.length}
                   rowsPerPage={rowsPerPage}
                   page={page}
-                  SelectProps={{
-                    inputProps: {
-                      'aria-label': 'rows per page',
-                    },
-                    native: true,
-                  }}
                   onPageChange={handleChangePage}
                   onRowsPerPageChange={handleChangeRowsPerPage}
                   ActionsComponent={TablePaginationActions}

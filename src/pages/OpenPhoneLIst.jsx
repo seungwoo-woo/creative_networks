@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { useTheme } from '@emotion/react';
 import { styled } from '@mui/material/styles';
 import PropTypes from 'prop-types';
-import { Box, IconButton, Paper, Table, TableBody, TableCell, TableFooter, TableHead, TablePagination, TableRow, tableCellClasses } from '@mui/material';
+import { Box, IconButton, Paper, TableContainer, Table, TableBody, TableCell, TableFooter, TableHead, TablePagination, TableRow, tableCellClasses } from '@mui/material';
 import LastPageIcon from '@mui/icons-material/LastPage';
 import FirstPageIcon from '@mui/icons-material/FirstPage';
 import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft';
@@ -108,9 +108,6 @@ const [openPhoneList, setOpenPhoneList] = useState([]);
 const [page, setPage] = useState(0);
 const [rowsPerPage, setRowsPerPage] = useState(10);
 
-// Avoid a layout jump when reaching the last page with empty rows.
-const emptyRows =
-  page > 0 ? Math.max(0, (1 + page) * rowsPerPage - openPhoneList.length) : 0;
 
 // Table style ----------------------------------------------------
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -164,7 +161,7 @@ useEffect(()=>{
     });
 
     setOpenPhoneList(data);
-     
+    
   }
     getData();
 
@@ -184,6 +181,7 @@ return (
   </div>
 
   <Paper style={{marginTop: 10, marginLeft: 10, marginRight: 10}} elevation={3}>
+  <TableContainer  sx={{ maxHeight: 560 }}>
     <Table stickyHeader size='small' aria-label="sticky table">        
       <TableHead>
         <TableRow>
@@ -210,9 +208,8 @@ return (
       </TableHead>
 
       <TableBody>
-        {(rowsPerPage > 0 ?
-          openPhoneList.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)              
-          : openPhoneList).map((op, index) => {
+        { openPhoneList.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)              
+          .map((op, index) => {
               return (<OpenPhone 
                 key = {op.id}
                 id = {op.id} 
@@ -236,28 +233,16 @@ return (
                 />
               );    // return ----------
           })
-        }
-        {emptyRows > 0 && (
-          <TableRow style={{ height: 38.7 * emptyRows }}>
-            <TableCell colSpan={15} />
-          </TableRow>
-        )}
+          }
       </TableBody>
 
       <TableFooter>
         <TableRow>
           <TablePagination
             rowsPerPageOptions={[5, 10, 25, { label: 'All', value: -1 }]}
-            colSpan={15}
             count={openPhoneList.length}
             rowsPerPage={rowsPerPage}
             page={page}
-            SelectProps={{
-              inputProps: {
-                'aria-label': 'rows per page',
-              },
-              native: true,
-            }}
             onPageChange={handleChangePage}
             onRowsPerPageChange={handleChangeRowsPerPage}
             ActionsComponent={TablePaginationActions}
@@ -266,6 +251,7 @@ return (
       </TableFooter>
 
     </Table>
+    </TableContainer> 
   </Paper>
   </>
 );
