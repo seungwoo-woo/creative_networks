@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import EditCalendarTwoToneIcon from '@mui/icons-material/EditCalendarTwoTone';
 import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
+import PersonOffTwoToneIcon from '@mui/icons-material/PersonOffTwoTone';
 import { pink } from '@mui/material/colors';
 import Button from '@mui/material/Button';
 import { Dialog, DialogContent, DialogTitle, DialogActions, TextField, DialogContentText } from "@mui/material";
@@ -25,6 +26,7 @@ function AdminCellEdit(props) {
 const { id, getDataRefresh, editCase } = props
 const [isEditOpen, setIsEditOpen] = useState(false);
 const [isDeleteOpen, setIsDeleteOpen] = useState(false);
+const [isDisableOpen, setIsDisableOpen] = useState(false);
 const [adminEditCase, setAdminEditCase] = useState([{}]);
 
 
@@ -151,12 +153,9 @@ const handleDelete = async (e) => {
     if (editCase === 3) {
       const docRef = await deleteDoc(doc(db, "openComName", id));
     }
-    if (editCase === 5) {
-      const docRef = await deleteDoc(doc(db, "comUsers", id));
-    }
 
     hdcDeleteClose();
-    alert("판매처 정보가 삭제되었습니다.");
+    alert("해당 정보가 삭제되었습니다.");
     getDataRefresh();  
 
   } catch (e) {
@@ -164,6 +163,38 @@ const handleDelete = async (e) => {
   }
   
   hdcDeleteClose();
+};
+
+
+// --------------------------------------------------------------------
+const hdcDisableOpen = () => {
+  setIsDisableOpen(true);
+};
+
+// --------------------------------------------------------------------
+const hdcDisableClose = () => {
+  setIsDisableOpen(false);
+};
+
+
+// Delete Function =======================================================
+const handleDisable = async (e) => {
+  e.preventDefault();
+
+  try {
+    const docRef = await updateDoc(doc(db, "comUsers", id), {
+      userGrade: 'D',
+    })
+
+    hdcDisableClose();
+    alert("해당 사용자가 비활성화 되었습니다.");
+    getDataRefresh();  
+
+  } catch (e) {
+    console.error("Error adding document: ", e);
+  }
+  
+  hdcDisableClose();
 };
 
 
@@ -195,7 +226,8 @@ return (
   <>
     <div style={{display: 'flex', justifyContent: 'center'}}>
       <EditCalendarTwoToneIcon cursor='pointer' variant='contained' color='primary' sx={{ fontSize: 24 }} onClick={hdcEditOpen}/>
-      <DeleteTwoToneIcon cursor='pointer' variant='contained' sx={{ color: pink[500], fontSize: 25 }} onClick={hdcDeleteOpen}/>
+      {(editCase !== 5) && <DeleteTwoToneIcon cursor='pointer' variant='contained' sx={{ color: pink[500], fontSize: 25 }} onClick={hdcDeleteOpen}/> }
+      {(editCase === 5) && <PersonOffTwoToneIcon cursor='pointer' variant='contained' sx={{ color: pink[500], fontSize: 25 }} onClick={hdcDisableOpen}/> }
     </div>
 
     <Dialog open={isEditOpen} onClose={hdcEditClose}>
@@ -231,17 +263,38 @@ return (
       aria-describedby="alert-dialog-description"
     >
       <DialogTitle id="alert-dialog-title">
-        {"판매처 정보를 삭제하시겠습니까 ?"}
+        {"해당 정보를 삭제하시겠습니까 ?"}
       </DialogTitle>
       <DialogContent>
         <DialogContentText id="alert-dialog-description">
-          선택하신 판매처 정보가 완전하게 삭제됩니다.
+          선택하신 정보가 완전하게 삭제됩니다.
           삭제 후에는 되돌릴 수 없습니다. 그래도 삭제하시겠습니까 ? 
         </DialogContentText>
       </DialogContent>
       <DialogActions>
         <Button onClick={hdcDeleteClose}>CANCLE</Button>
         <Button onClick={handleDelete} autoFocus>DELETE</Button>
+      </DialogActions>
+    </Dialog>
+
+    <Dialog
+      open={isDisableOpen}
+      onClose={hdcDisableClose}
+      aria-labelledby="alert-dialog-title"
+      aria-describedby="alert-dialog-description"
+    >
+      <DialogTitle id="alert-dialog-title">
+        {"해당 사용자를 비활성화하시겠습니까 ?"}
+      </DialogTitle>
+      <DialogContent>
+        <DialogContentText id="alert-dialog-description">
+          선택하신 사용자의 권한등급을 D로 수정하여, 로그인 하지 못하도록 비활성화 합니다. 
+          이후, 다시 활성화할 수 있습니다. 비활성화 하시겠습니까 ? 
+        </DialogContentText>
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={hdcDisableClose}>CANCLE</Button>
+        <Button onClick={handleDisable} autoFocus>DISABLE</Button>
       </DialogActions>
     </Dialog>
 

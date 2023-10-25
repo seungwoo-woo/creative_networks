@@ -19,6 +19,7 @@ import ResponsiveAppBar from '../components/ResponsiveAppBar';
 import AddOneRow from "../components/AddOneRow";
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import StoreIcon from '@mui/icons-material/Store';
+import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
 
 
 // firebase import=======================================================
@@ -628,7 +629,7 @@ return (
           { isUserOpen && 
           <>
           <Typography sx={{ mt: 2, ml: 1, mb: 2, fontWeight: 400, display: 'flex', alignItems: 'center' }} variant="h6" >
-            <StoreIcon fontSize="small" sx={{ mr: 2}} /> 사용자 정보 확인 및 수정
+            <ManageAccountsIcon fontSize="small" sx={{ mr: 2}} /> 사용자 정보 확인 및 수정
           </Typography>
 
           <Table stickyHeader size='small' aria-label="sticky table">        

@@ -1,5 +1,6 @@
 // react & material UI import ==================================================
 import * as React from 'react';
+import { useEffect } from "react";
 import { useNavigate } from 'react-router-dom';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
@@ -22,11 +23,13 @@ import DialogTitle from '@mui/material/DialogTitle';
 // firebase import=======================================================
 import { initializeApp } from "firebase/app";
 import { firebaseConfig } from '../firebase';
+import { getFirestore, collection, getDocs, query, where, orderBy} from "firebase/firestore";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 
 
 // Initialize Firebase ==================================================
 const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
 const auth = getAuth(app);
 
 
@@ -58,6 +61,8 @@ export default function SignInSide() {
 // Initialize Variable ==================================================
 const [errMsgOpen, setErrMsgOpen] = React.useState(false);
 const [ msg, setMsg ] = React.useState('');
+const [userEmailList, setUserEmailList] = React.useState([]);
+
 const navigate = useNavigate();
 
 
@@ -81,7 +86,12 @@ const handleSubmit = (event) => {
 
   const data = new FormData(event.currentTarget);
 
-  const auth = getAuth();
+  if (userEmailList.includes(data.get('email'))) {
+    alert("관리자가 해당 아이디를 비활성화해 로그인할 수 없습니다. 관리자에게 문의하세요");
+    navigate('/');
+  } else {
+
+  // const auth = getAuth();
   signInWithEmailAndPassword(auth, data.get('email'), data.get('password'))
     .then((userCredential) => {
       // Signed in 
@@ -96,8 +106,31 @@ const handleSubmit = (event) => {
       setMsg('email 또는 password에 오류가 있습니다.');
 
       handleSignInErrMsgOpen();
-    });    
+    });
+    
+  }
+    
+    
 };
+
+
+
+// useEffect 1 Start ========================================================
+useEffect(()=>{ 
+  
+  // 사용자 리스트 읽어오기 --------------------------------------------------
+  const getUser = async () => {
+    let data = [];
+    const querySnapshot = await getDocs(query(collection(db, "comUsers"), orderBy("name", "asc"), where("userGrade", "==", 'D')));
+    querySnapshot.forEach((doc) => {
+      // data.push({...doc.data(), id: doc.id,})
+      data.push(doc.data().email);
+    });
+    setUserEmailList(data);
+  }
+  getUser();
+
+}, [])
 
 
 
