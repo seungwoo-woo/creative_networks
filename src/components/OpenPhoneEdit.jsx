@@ -5,9 +5,11 @@ import Dialog from '@mui/material/Dialog';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
+import ReportIcon from '@mui/icons-material/Report';
 import Typography from '@mui/material/Typography';
 import CloseIcon from '@mui/icons-material/Close';
 import Slide from '@mui/material/Slide';
+import Divider from '@mui/material/Divider';
 import EditCalendarTwoToneIcon from '@mui/icons-material/EditCalendarTwoTone';
 import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
 import { pink } from '@mui/material/colors';
@@ -53,6 +55,8 @@ const [openPhoneEditCase, setOpenPhoneEditCase] =
   useState({ no: '', telCom: '', openCom: '', type: '', openDate: '', openType: '', phoneModel: '', phoneSerial: '', phoneColor: '', customerName: '', phoneNo: '', birthday: '', callingPlan: '', controlNo: '', memo: '', sellCom: '', isDeleted: 0});
 const [isDialogOpen, setIsDialogOpen] = useState(false);
 const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+const [isCompUpdateDialogOpen, setIsCompUpdateDialogOpen] = useState(false);
+const [isCompDeleteDialogOpen, setIsCompDeleteDialogOpen] =  useState(false);
 const [sellComNameList, setSellComNameList] = useState([]);
 const [telComNameList, setTelComNameList] = useState([]);
 const [openComNameList, setOpenComNameList] = useState([]);
@@ -89,10 +93,30 @@ const handleClickDeleteClose = () => {
 };
 
 // --------------------------------------------------------------------
+const CompletedUpdateDialogOpen = () => {
+  setIsCompUpdateDialogOpen(true);
+};
+
+// --------------------------------------------------------------------
+const handleClickCompUpdateDialogClose = () => {
+  setIsCompUpdateDialogOpen(false);
+  getDataRefresh();
+};
+
+const CompletedDeletDialogOpen = () => {
+  setIsCompDeleteDialogOpen(true);
+};
+
+const handleClickCompDeletDialogClose = () => {
+  setIsCompDeleteDialogOpen(false);
+  getDataRefresh();
+};
+
+
+// --------------------------------------------------------------------
 const handleValueChange = (e) => {
   const keyValue = e.target.id;
   const openPhoneCaseCopy = {...openPhoneEditCase, [keyValue]: e.target.value };
-
   setOpenPhoneEditCase(openPhoneCaseCopy);
 };
 
@@ -100,7 +124,6 @@ const handleValueChange = (e) => {
 const handleSelectChange = (e) => {  
   const keyValue = e.target.name
   const openPhoneCaseCopy = {...openPhoneEditCase, [keyValue]: e.target.value };
-
   setOpenPhoneEditCase(openPhoneCaseCopy);
 };
 
@@ -125,17 +148,15 @@ const handleUpdate = async (e) => {
       controlNo: openPhoneEditCase.controlNo,
       memo: openPhoneEditCase.memo,
       sellCom: openPhoneEditCase.sellCom,
-    });
-
-    alert("개통내역이 수정되었습니다.");
-
-    getDataRefresh();
+    });    
+    
+    CompletedUpdateDialogOpen();
     handleClickClose();
 
   } catch (e) {
     console.error("Error adding document: ", e);
   }
-  
+
   setIsDialogOpen(false);
 };
 
@@ -146,11 +167,12 @@ const handleDelete = async (e) => {
   try {
     const docRef = await deleteDoc(doc(db, "CreativeNetworks", id));
 
+    CompletedDeletDialogOpen();
     handleClickDeleteClose();
 
-    alert("개통내역이 삭제되었습니다.");
+    // alert("개통내역이 삭제되었습니다.");
 
-    getDataRefresh();      
+    // getDataRefresh();      
 
   } catch (e) {
     console.error("Error adding document: ", e);
@@ -436,27 +458,73 @@ return (
   </Dialog>
 
   <Dialog
+    open={isCompUpdateDialogOpen}
+    onClose={handleClickCompUpdateDialogClose}
+    aria-labelledby="alert-dialog-title"
+    aria-describedby="alert-dialog-description"
+  >
+    <DialogTitle sx={{color: pink[500], fontWeight: '400', display: 'flex', alignItems: 'center'}}>
+      <ReportIcon sx={{mr: 1}}/>{" 개통내역 수정 "}
+    </DialogTitle>
+    <Divider />
+    <DialogContent>      
+      <Typography>
+        개통내역이 정상적으로 수정되었습니다.
+      </Typography>
+    </DialogContent>
+    <Divider />
+    <DialogActions>
+      <Button onClick={handleClickCompUpdateDialogClose}>OK</Button>
+    </DialogActions>
+  </Dialog>
+
+  <Dialog
       open={isDeleteDialogOpen}
       onClose={handleClickDeleteClose}
       aria-labelledby="alert-dialog-title"
       aria-describedby="alert-dialog-description"
     >
-      <DialogTitle id="alert-dialog-title">
-        {"개통내역을 삭제하시겠습니까 ?"}
+      <DialogTitle sx={{color: pink[500], fontWeight: '400', display: 'flex', alignItems: 'center'}}>
+        <ReportIcon sx={{mr: 1}}/>{" 개통내역을 삭제하시겠습니까 ?"}
       </DialogTitle>
-      <DialogContent>
-        <DialogContentText id="alert-dialog-description">
+      <Divider />
+      <DialogContent>      
+        <Typography>
           선택하신 개통내역이 완전하게 삭제됩니다.
+        </Typography>
+        <Typography sx={{mt: 0.5}}>
           삭제 후에는 되돌릴 수 없습니다. 그래도 삭제하시겠습니까 ? 
-        </DialogContentText>
+        </Typography>
       </DialogContent>
+      <Divider />
       <DialogActions>
-        <Button onClick={handleClickDeleteClose}>취소</Button>
-        <Button onClick={handleDelete} autoFocus>
-          삭제
-        </Button>
+        <Button onClick={handleClickDeleteClose}>CANCLE</Button>
+        <Button onClick={handleDelete} autoFocus>DELETE</Button>
       </DialogActions>
     </Dialog>
+
+    <Dialog
+    open={isCompDeleteDialogOpen}
+    onClose={handleClickCompDeletDialogClose}
+    aria-labelledby="alert-dialog-title"
+    aria-describedby="alert-dialog-description"
+  >
+    <DialogTitle sx={{color: pink[500], fontWeight: '400', display: 'flex', alignItems: 'center'}}>
+      <ReportIcon sx={{mr: 1}}/>{" 개통내역 삭제 "}
+    </DialogTitle>
+    <Divider />
+    <DialogContent>      
+      <Typography>
+        개통내역이 정상적으로 삭제되었습니다.
+      </Typography>
+    </DialogContent>
+    <Divider />
+    <DialogActions>
+      <Button onClick={handleClickCompDeletDialogClose}>OK</Button>
+    </DialogActions>
+  </Dialog>
+
+
   </>
 );
 
