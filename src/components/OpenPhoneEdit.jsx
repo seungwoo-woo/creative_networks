@@ -107,7 +107,7 @@ const CompletedDeletDialogOpen = () => {
   setIsCompDeleteDialogOpen(true);
 };
 
-const handleClickCompDeletDialogClose = () => {
+const handleClickCompDeleteDialogClose = () => {
   setIsCompDeleteDialogOpen(false);
   getDataRefresh();
 };
@@ -157,7 +157,7 @@ const handleUpdate = async (e) => {
     console.error("Error adding document: ", e);
   }
 
-  setIsDialogOpen(false);
+  handleClickClose();
 };
 
 // Delete Function =======================================================
@@ -169,10 +169,6 @@ const handleDelete = async (e) => {
 
     CompletedDeletDialogOpen();
     handleClickDeleteClose();
-
-    // alert("개통내역이 삭제되었습니다.");
-
-    // getDataRefresh();      
 
   } catch (e) {
     console.error("Error adding document: ", e);
@@ -479,35 +475,35 @@ return (
   </Dialog>
 
   <Dialog
-      open={isDeleteDialogOpen}
-      onClose={handleClickDeleteClose}
-      aria-labelledby="alert-dialog-title"
-      aria-describedby="alert-dialog-description"
-    >
-      <DialogTitle sx={{color: pink[500], fontWeight: '400', display: 'flex', alignItems: 'center'}}>
-        <ReportIcon sx={{mr: 1}}/>{" 개통내역을 삭제하시겠습니까 ?"}
-      </DialogTitle>
-      <Divider />
-      <DialogContent>      
-        <Typography>
-          선택하신 개통내역이 완전하게 삭제됩니다.
-        </Typography>
-        <Typography sx={{mt: 0.5}}>
-          삭제 후에는 되돌릴 수 없습니다. 그래도 삭제하시겠습니까 ? 
-        </Typography>
-      </DialogContent>
-      <Divider />
-      <DialogActions>
-        <Button onClick={handleClickDeleteClose}>CANCLE</Button>
-        <Button onClick={handleDelete} autoFocus>DELETE</Button>
-      </DialogActions>
-    </Dialog>
-
-    <Dialog
-    open={isCompDeleteDialogOpen}
-    onClose={handleClickCompDeletDialogClose}
+    open={isDeleteDialogOpen}
+    onClose={handleClickDeleteClose}
     aria-labelledby="alert-dialog-title"
     aria-describedby="alert-dialog-description"
+  >
+    <DialogTitle sx={{color: pink[500], fontWeight: '400', display: 'flex', alignItems: 'center'}}>
+      <ReportIcon sx={{mr: 1}}/>{" 개통내역을 삭제하시겠습니까 ?"}
+    </DialogTitle>
+    <Divider />
+    <DialogContent>      
+      <Typography>
+        선택한 개통내역이 완전하게 삭제됩니다.
+      </Typography>
+      <Typography sx={{mt: 0.5}}>
+        삭제 후에는 되돌릴 수 없습니다. 그래도 삭제하시겠습니까 ? 
+      </Typography>
+    </DialogContent>
+    <Divider />
+    <DialogActions>
+      <Button onClick={handleClickDeleteClose}>CANCLE</Button>
+      <Button onClick={handleDelete} autoFocus>DELETE</Button>
+    </DialogActions>
+  </Dialog>
+
+  <Dialog
+  open={isCompDeleteDialogOpen}
+  onClose={handleClickCompDeleteDialogClose}
+  aria-labelledby="alert-dialog-title"
+  aria-describedby="alert-dialog-description"
   >
     <DialogTitle sx={{color: pink[500], fontWeight: '400', display: 'flex', alignItems: 'center'}}>
       <ReportIcon sx={{mr: 1}}/>{" 개통내역 삭제 "}
@@ -520,7 +516,7 @@ return (
     </DialogContent>
     <Divider />
     <DialogActions>
-      <Button onClick={handleClickCompDeletDialogClose}>OK</Button>
+      <Button onClick={handleClickCompDeleteDialogClose}>OK</Button>
     </DialogActions>
   </Dialog>
 

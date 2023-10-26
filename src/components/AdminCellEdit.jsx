@@ -3,7 +3,10 @@ import EditCalendarTwoToneIcon from '@mui/icons-material/EditCalendarTwoTone';
 import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
 import PersonOffTwoToneIcon from '@mui/icons-material/PersonOffTwoTone';
 import { pink } from '@mui/material/colors';
+import ReportIcon from '@mui/icons-material/Report';
 import Button from '@mui/material/Button';
+import Typography from '@mui/material/Typography';
+import Divider from '@mui/material/Divider';
 import { Dialog, DialogContent, DialogTitle, DialogActions, TextField, DialogContentText } from "@mui/material";
 
 
@@ -20,6 +23,10 @@ const db = getFirestore(app);
 
 
 
+//  ======================================================================================
+// Function 시작 =========================================================================
+// =======================================================================================
+
 function AdminCellEdit(props) {
 
 // Initialize Variable ==================================================
@@ -27,29 +34,33 @@ const { id, getDataRefresh, editCase } = props
 const [isEditOpen, setIsEditOpen] = useState(false);
 const [isDeleteOpen, setIsDeleteOpen] = useState(false);
 const [isDisableOpen, setIsDisableOpen] = useState(false);
+const [isCompUpdateDialogOpen, setIsCompUpdateDialogOpen] = useState(false);
+const [isCompDeleteDialogOpen, setIsCompDeleteDialogOpen] = useState(false);
+const [isCompDisableDialogOpen, setIsCompDisableDialogOpen] = useState(false);
 const [adminEditCase, setAdminEditCase] = useState([{}]);
 
 
+
 // Define subFunction ==================================================
-// Edit 대상 정보 읽어오기 ------------------------------------------------
+// Edit 대상 판매처 정보 읽어오기 ------------------------------------------------
 const getAdminEditCase1 = async () => {
   const querySnapshot = await getDoc(doc(db, "sellComName", id));
   setAdminEditCase(querySnapshot.data());
 }
 
-// Edit 대상 정보 읽어오기 ------------------------------------------------
+// Edit 대상 통신사 정보 읽어오기 ------------------------------------------------
 const getAdminEditCase2 = async () => {
   const querySnapshot = await getDoc(doc(db, "telComName", id));
   setAdminEditCase(querySnapshot.data());
 }
 
-// Edit 대상 정보 읽어오기 ------------------------------------------------
+// Edit 대상 개통처 정보 읽어오기 ------------------------------------------------
 const getAdminEditCase3 = async () => {
   const querySnapshot = await getDoc(doc(db, "openComName", id));
   setAdminEditCase(querySnapshot.data());
 }
 
-// Edit 대상 정보 읽어오기 ------------------------------------------------
+// Edit 대상 User 정보 읽어오기 ------------------------------------------------
 const getAdminEditCase5 = async () => {
   const querySnapshot = await getDoc(doc(db, "comUsers", id));
   setAdminEditCase(querySnapshot.data());
@@ -80,6 +91,40 @@ const hdcEditClose = () => {
 
   setIsEditOpen(false);
 };
+
+
+// --------------------------------------------------------------------
+const CompletedUpdateDialogOpen = () => {
+  setIsCompUpdateDialogOpen(true);
+};
+
+// --------------------------------------------------------------------
+const handleClickCompUpdateDialogClose = () => {
+  setIsCompUpdateDialogOpen(false);
+  getDataRefresh();
+};
+
+
+const CompletedDeletDialogOpen = () => {
+  setIsCompDeleteDialogOpen(true);
+}
+
+const handleClickCompDeleteDialogClose = () => {
+  setIsCompDeleteDialogOpen(false);
+  getDataRefresh();
+}
+
+
+const CompletedDisableDialogOpen = () => {
+  setIsCompDisableDialogOpen(true);
+}
+
+const handleClickCompDisableDialogClose = () => {
+  setIsCompDisableDialogOpen(false);
+  getDataRefresh();
+}
+
+
 
 // --------------------------------------------------------------------
 const handleUpdate = async (e) => {
@@ -112,15 +157,14 @@ const handleUpdate = async (e) => {
         userGrade: adminEditCase.userGrade,
       });}
 
-  setIsEditOpen(false);
+  CompletedUpdateDialogOpen();
+  hdcEditClose()
   
-  alert("정보가 수정되었습니다.");
   } catch (e) {
     console.error("Error adding document: ", e);
   }
 
-  getDataRefresh();
-  setIsEditOpen(false);
+  hdcEditClose();
 }
 
 // --------------------------------------------------------------------
@@ -140,6 +184,8 @@ const hdcDeleteClose = () => {
   setIsDeleteOpen(false);
 };
 
+
+
 // Delete Function =======================================================
 const handleDelete = async (e) => {
   e.preventDefault();
@@ -155,9 +201,8 @@ const handleDelete = async (e) => {
       const docRef = await deleteDoc(doc(db, "openComName", id));
     }
 
+    CompletedDeletDialogOpen();
     hdcDeleteClose();
-    alert("해당 정보가 삭제되었습니다.");
-    getDataRefresh();  
 
   } catch (e) {
     console.error("Error adding document: ", e);
@@ -174,11 +219,10 @@ const hdcDisableOpen = () => {
 
 // --------------------------------------------------------------------
 const hdcDisableClose = () => {
-  setIsDisableOpen(false);
-};
+  setIsDisableOpen(false);};
 
 
-// Delete Function =======================================================
+// User Disable Function =======================================================
 const handleDisable = async (e) => {
   e.preventDefault();
 
@@ -187,9 +231,8 @@ const handleDisable = async (e) => {
       userGrade: 'D',
     })
 
+    CompletedDisableDialogOpen();
     hdcDisableClose();
-    alert("해당 사용자가 비활성화 되었습니다.");
-    getDataRefresh();  
 
   } catch (e) {
     console.error("Error adding document: ", e);
@@ -232,12 +275,15 @@ return (
     </div>
 
     <Dialog open={isEditOpen} onClose={hdcEditClose}>
-      {(editCase === 1) && <DialogTitle>판매처 정보 수정</DialogTitle>}
-      {(editCase === 2) && <DialogTitle>통신사 정보 수정</DialogTitle>}
-      {(editCase === 3) && <DialogTitle>개통처 정보 수정</DialogTitle>}
-      {(editCase === 5) && <DialogTitle>사용자 정보 수정</DialogTitle>}
-
-      
+      {(editCase === 1) && <DialogTitle sx={{color: pink[500], fontWeight: '400', display: 'flex', alignItems: 'center'}}>
+        <ReportIcon sx={{mr: 1}}/>판매처 정보 수정</DialogTitle>}
+      {(editCase === 2) && <DialogTitle sx={{color: pink[500], fontWeight: '400', display: 'flex', alignItems: 'center'}}>
+        <ReportIcon sx={{mr: 1}}/>통신사 정보 수정</DialogTitle>}
+      {(editCase === 3) && <DialogTitle sx={{color: pink[500], fontWeight: '400', display: 'flex', alignItems: 'center'}}>
+        <ReportIcon sx={{mr: 1}}/>개통처 정보 수정</DialogTitle>}
+      {(editCase === 5) && <DialogTitle sx={{color: pink[500], fontWeight: '400', display: 'flex', alignItems: 'center'}}>
+        <ReportIcon sx={{mr: 1}}/>사용자 정보 수정</DialogTitle>}
+      <Divider />       
       <DialogContent>
         {(editCase === 1) && <TextField value={adminEditCase.comName} id="comName" label="판매처" onChange={handleValueChange} margin="dense" type="text" fullWidth variant="standard" /> }
         {(editCase === 1) && <TextField value={adminEditCase.comNo} id="comNo" label="사업자번호" onChange={handleValueChange} margin="dense" type="text" fullWidth variant="standard" /> }
@@ -250,12 +296,34 @@ return (
         {(editCase === 5) && <TextField value={adminEditCase.company} id="company" label="판매처" onChange={handleValueChange} margin="dense" type="text" fullWidth variant="standard" /> }
         {(editCase === 5) && <TextField value={adminEditCase.userGrade} id="userGrade" label="권한등급" onChange={handleValueChange} margin="dense" type="text" fullWidth variant="standard" /> }
       </DialogContent>
-
       <DialogActions>
         <Button onClick={hdcEditClose}>Cancel</Button>
         <Button onClick={handleUpdate}>Update</Button>          
       </DialogActions>
     </Dialog>
+
+
+    <Dialog
+    open={isCompUpdateDialogOpen}
+    onClose={handleClickCompUpdateDialogClose}
+    aria-labelledby="alert-dialog-title"
+    aria-describedby="alert-dialog-description"
+    >
+      <DialogTitle sx={{color: pink[500], fontWeight: '400', display: 'flex', alignItems: 'center'}}>
+        <ReportIcon sx={{mr: 1}}/>{" 정보 수정 "}
+      </DialogTitle>
+      <Divider />
+      <DialogContent>      
+        <Typography>
+          해당 정보가 정상적으로 수정되었습니다.
+        </Typography>
+      </DialogContent>
+      <Divider />
+      <DialogActions>
+        <Button onClick={handleClickCompUpdateDialogClose}>OK</Button>
+      </DialogActions>
+    </Dialog>
+
 
     <Dialog
       open={isDeleteOpen}
@@ -263,20 +331,48 @@ return (
       aria-labelledby="alert-dialog-title"
       aria-describedby="alert-dialog-description"
     >
-      <DialogTitle id="alert-dialog-title">
-        {"해당 정보를 삭제하시겠습니까 ?"}
+      <DialogTitle sx={{color: pink[500], fontWeight: '400', display: 'flex', alignItems: 'center'}}>
+        <ReportIcon sx={{mr: 1}}/>{" 해당 정보를 삭제하시겠습니까 ?"}
       </DialogTitle>
+      <Divider />
       <DialogContent>
-        <DialogContentText id="alert-dialog-description">
-          선택하신 정보가 완전하게 삭제됩니다.
+        <Typography>
+          선택한 정보가 완전하게 삭제됩니다.
+        </Typography>
+        <Typography sx={{mt: 0.5}}>
           삭제 후에는 되돌릴 수 없습니다. 그래도 삭제하시겠습니까 ? 
-        </DialogContentText>
+        </Typography>
       </DialogContent>
+      <Divider />
       <DialogActions>
         <Button onClick={hdcDeleteClose}>CANCLE</Button>
         <Button onClick={handleDelete} autoFocus>DELETE</Button>
       </DialogActions>
     </Dialog>
+
+
+    <Dialog
+    open={isCompDeleteDialogOpen}
+    onClose={handleClickCompDeleteDialogClose}
+    aria-labelledby="alert-dialog-title"
+    aria-describedby="alert-dialog-description"
+    >
+      <DialogTitle sx={{color: pink[500], fontWeight: '400', display: 'flex', alignItems: 'center'}}>
+        <ReportIcon sx={{mr: 1}}/>{" 정보 삭제 "}
+      </DialogTitle>
+      <Divider />
+      <DialogContent>      
+        <Typography>
+          해당정보가 정상적으로 삭제되었습니다.
+        </Typography>
+      </DialogContent>
+      <Divider />
+      <DialogActions>
+        <Button onClick={handleClickCompDeleteDialogClose}>OK</Button>
+      </DialogActions>
+    </Dialog>
+
+
 
     <Dialog
       open={isDisableOpen}
@@ -284,20 +380,49 @@ return (
       aria-labelledby="alert-dialog-title"
       aria-describedby="alert-dialog-description"
     >
-      <DialogTitle id="alert-dialog-title">
-        {"해당 사용자를 비활성화하시겠습니까 ?"}
+      <DialogTitle sx={{color: pink[500], fontWeight: '400', display: 'flex', alignItems: 'center'}}>
+        <ReportIcon sx={{mr: 1}}/>{" 해당 사용자를 비활성화하시겠습니까 ?"}
       </DialogTitle>
+      <Divider />
       <DialogContent>
-        <DialogContentText id="alert-dialog-description">
-          선택하신 사용자의 권한등급을 D로 수정하여, 로그인 하지 못하도록 비활성화 합니다. 
-          이후, 다시 활성화할 수 있습니다. 비활성화 하시겠습니까 ? 
-        </DialogContentText>
+        <Typography>
+        선택하신 사용자의 권한등급을 D등급으로 수정하여,
+        </Typography>
+        <Typography sx={{mt: 0.5}}>
+        로그인할 수 없도록 비활성화 합니다. 
+        </Typography>
+        <Typography sx={{mt: 0.5}}>
+        사용자를 비활성화 하시겠습니까 ? 
+        </Typography>
       </DialogContent>
+      <Divider />
       <DialogActions>
         <Button onClick={hdcDisableClose}>CANCLE</Button>
         <Button onClick={handleDisable} autoFocus>DISABLE</Button>
       </DialogActions>
     </Dialog>
+
+    <Dialog
+    open={isCompDisableDialogOpen}
+    onClose={handleClickCompDisableDialogClose}
+    aria-labelledby="alert-dialog-title"
+    aria-describedby="alert-dialog-description"
+    >
+      <DialogTitle sx={{color: pink[500], fontWeight: '400', display: 'flex', alignItems: 'center'}}>
+        <ReportIcon sx={{mr: 1}}/>{" 사용자 비활성화 "}
+      </DialogTitle>
+      <Divider />
+      <DialogContent>      
+        <Typography>
+          해당 사용자가 정상적으로 비활성화 되었습니다.
+        </Typography>
+      </DialogContent>
+      <Divider />
+      <DialogActions>
+        <Button onClick={handleClickCompDisableDialogClose}>OK</Button>
+      </DialogActions>
+    </Dialog>
+
 
   </>
 )

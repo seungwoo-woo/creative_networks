@@ -7,7 +7,10 @@ import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
+import { pink } from '@mui/material/colors';
+import Divider from '@mui/material/Divider';
 import CloseIcon from '@mui/icons-material/Close';
+import ReportIcon from '@mui/icons-material/Report';
 import Slide from '@mui/material/Slide';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -49,6 +52,7 @@ const getDataRefresh = props.getDataRefresh;
 const [openPhoneCase, setOpenPhoneCase] = 
   useState({ no: '', telCom: '', openCom: '', type: '', openDate: '', openType: '', phoneModel: '', phoneSerial: '', phoneColor: '', customerName: '', phoneNo: '', birthday: '', callingPlan: '', controlNo: '', memo: '', sellCom: '', isDeleted: 0});
 const [isDialogOpen, setIsDialogOpen] = useState(false);
+const [isCompSaveDialogOpen, setIsCompSaveDialogOpen] = useState(false);
 const [sellComNameList, setSellComNameList] = useState([]);
 const [telComNameList, setTelComNameList] = useState([]);
 const [openComNameList, setOpenComNameList] = useState([]);
@@ -67,6 +71,13 @@ const handleClickOpen = () => {
 const handleClickClose = () => {
   setOpenPhoneCase({ no: '', telCom: '', openCom: '', type: '', openDate: '', openType: '', phoneModel: '', phoneSerial: '', phoneColor: '', customerName: '', phoneNo: '', birthday: '', callingPlan: '', controlNo: '', memo: '', sellCom: '', isDeleted: 0});
   setIsDialogOpen(false);
+};
+
+
+//-----------------------------------------------------------------------
+const handleClickCompSaveDialogClose = () => {
+  setIsCompSaveDialogOpen(false);
+  getDataRefresh();
 };
 
 
@@ -115,15 +126,15 @@ const handleSubmit = async (e) => {
       isDeleted: 0 
     });
 
-    alert("신규 개통내역이 등록되었습니다.");
+    setIsCompSaveDialogOpen(true);
+    // alert("신규 개통내역이 등록되었습니다.");
 
-    getDataRefresh();
     handleClickClose();
   } catch (e) {
     console.error("Error adding document: ", e);
   }
   
-  setIsDialogOpen(false);
+  handleClickClose();
 };
 
 
@@ -225,7 +236,7 @@ return (
             <CloseIcon onClick={handleClickClose} />
           </IconButton>
           <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
-            개통내역 신규등록
+            신규 개통내역 등록
           </Typography>
           <Button autoFocus color="inherit" onClick={handleSubmit}>
             Save
@@ -233,17 +244,16 @@ return (
         </Toolbar>
       </AppBar>
 
-      <DialogTitle>개통 상세 내역</DialogTitle>
+      <DialogTitle>신규 개통내역 상세</DialogTitle>
       <DialogContent>
         <DialogContentText>
-          신규개통 상세내역을 입력하세요.
+          신규 개통건의 상세내역을 입력하세요.
         </DialogContentText>
 
         <Table>
           <TableBody>
           <TableRow>
             <TableCell>
-              {/* <TextField id="telCom" label="통신사" type="text" value={openPhoneCase.telCom} onChange={handleValueChange} autoFocus margin="dense" fullWidth variant="standard" /> */}
               <FormControl sx={{ m: 0, minWidth: 210 }} size="small" fullWidth>
                   <InputLabel id="demo-simple-select">통신사</InputLabel>
                   <Select
@@ -260,7 +270,6 @@ return (
                 </FormControl>
             </TableCell>
             <TableCell>
-              {/* <TextField id="openCom" label="개통처" type="text" value={openPhoneCase.openCom} onChange={handleValueChange} autoFocus margin="dense" fullWidth variant="standard" /> */}
               <FormControl sx={{ m: 0, minWidth: 210 }} size="small" fullWidth>
                   <InputLabel id="demo-simple-select">개통처</InputLabel>
                   <Select
@@ -277,7 +286,6 @@ return (
                 </FormControl>
             </TableCell>
             <TableCell>
-              {/* <TextField id="type" label="타입" type="text" value={openPhoneCase.type} onChange={handleValueChange} autoFocus margin="dense" fullWidth variant="standard" /> */}
               <FormControl sx={{ m: 0, minWidth: 210 }} size="small" fullWidth>
                   <InputLabel id="demo-simple-select">타입</InputLabel>
                   <Select
@@ -306,7 +314,6 @@ return (
 
           <TableRow>
             <TableCell>
-              {/* <TextField id="openType" label="유형" type="text" value={openPhoneCase.openType} onChange={handleValueChange} autoFocus margin="dense" fullWidth variant="standard" /> */}
               <FormControl sx={{ m: 0, minWidth: 210 }} size="small" fullWidth>
                   <InputLabel id="demo-simple-select">유형</InputLabel>
                   <Select
@@ -374,23 +381,6 @@ return (
             </TableCell>
 
             <TableCell>
-              {/* <Box >
-                <FormControl sx={{ m: 0, minWidth: 210 }} size="small" fullWidth>
-                  <InputLabel id="demo-simple-select">판매처</InputLabel>
-                  <Select
-                    labelId="demo-simple-select-label"
-                    label="판매처"
-                    name="sellCom"                      
-                    value={openPhoneCase.sellCom}
-                    onChange={handleSelectChange}
-                  >
-                    {sellComNameList.map((com) => (
-                      <MenuItem key={com.id} value={com.comName}>{com.comName}</MenuItem>)
-                    )}
-                  </Select>
-                </FormControl>
-              </Box>             */}
-
               <Autocomplete
                 value={openPhoneCase.sellCom}
                 onChange={(event, newValue) => {
@@ -406,7 +396,6 @@ return (
                 sx={{ width: 250 }}
                 renderInput={(params) => <TextField {...params} label="판매처" />}
               />
-
             </TableCell>
 
           </TableRow>
@@ -418,8 +407,31 @@ return (
         <Button onClick={handleClickClose}>CANCLE</Button>
         <Button onClick={handleSubmit}>SAVE</Button>
       </DialogActions>
-
   </Dialog>
+
+
+  <Dialog
+  open={isCompSaveDialogOpen}
+  onClose={handleClickCompSaveDialogClose}
+  aria-labelledby="alert-dialog-title"
+  aria-describedby="alert-dialog-description"
+  >
+    <DialogTitle sx={{color: pink[500], fontWeight: '400', display: 'flex', alignItems: 'center'}}>
+      <ReportIcon sx={{mr: 1}}/>{" 개통내역 등록 "}
+    </DialogTitle>
+    <Divider />
+    <DialogContent>      
+      <Typography>
+        신규 개통내역이 정상적으로 등록되었습니다.
+      </Typography>
+    </DialogContent>
+    <Divider />
+    <DialogActions>
+      <Button onClick={handleClickCompSaveDialogClose}>OK</Button>
+    </DialogActions>
+  </Dialog>
+
+
   </>
 )
 
