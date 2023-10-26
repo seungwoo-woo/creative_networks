@@ -32,10 +32,6 @@ function ResponsiveAppBar() {
 const navigate = useNavigate();
 const auth = getAuth();
 
-
-
-
-
 const [ anchorElUser, setAnchorElUser ] = React.useState(null);
 const [ userName, setUserName ] = React.useState(null);
 const [ userGrade, setUserGrade ] = React.useState(null);
@@ -50,6 +46,9 @@ const handleOpenUserMenu = (event) => {
 };
 
 
+const handleJustCloseUserMenu = () => {
+  setAnchorElUser(null);
+}
 //-----------------------------------------------------------------------
 const handleCloseUserMenu = () => {
   setAnchorElUser(null);
@@ -109,17 +108,17 @@ return (
               Creactive Networks
             </Typography>
 
-            {(userGrade === 'A' || userGrade === 'B') ? <Typography variant="h10" component="a" href="/openPhoneList"
+            <Typography variant="h10" component="a" href="/openPhoneList"
               sx={{ mr: 2, pt: 0.8, display: { xs: 'none', md: 'flex' }, fontWeight: 200, color: 'inherit', textDecoration: 'none' }}
             >
               개통 리스트
-            </Typography> : ""}
+            </Typography>
 
-            {(userGrade === 'A' || userGrade === 'B') ? <Typography variant="h10" component="a" href="/calculate"
+            <Typography variant="h10" component="a" href="/calculate"
               sx={{ mr: 2, pt: 0.8, display: { xs: 'none', md: 'flex' }, fontWeight: 200, color: 'inherit', textDecoration: 'none' }}
             >
               정산
-            </Typography> : ""}
+            </Typography>
 
             {userGrade === 'A' ? <Typography variant="h10" component="a" href="/admin"
               sx={{ mr: 2, pt: 0.8, display: { xs: 'none', md: 'flex' }, fontWeight: 200, color: 'inherit', textDecoration: 'none' }}
@@ -128,7 +127,13 @@ return (
             </Typography> : ""}
           </Box>
 
-          <Box sx={{ flexGrow: 0 }}>
+
+          <Box sx={{ flexGrow: 0, display: 'flex', alignItems: 'center' }}>
+
+            <Typography variant="h6" sx={{ mr: 3,mt: 1, fontWeight: 400, color: 'yellow'}}>
+              {companyName} 
+            </Typography>
+
             <Tooltip title="">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
               <Avatar sx={{ bgcolor: deepOrange[500], width: 50, height: 50 }}>{userName}</Avatar>
@@ -148,7 +153,7 @@ return (
                 horizontal: 'right',
               }}
               open={Boolean(anchorElUser)}
-              onClose={handleCloseUserMenu}
+              onClose={handleJustCloseUserMenu}
             >
               {settings.map((setting) => (
                 <MenuItem key={setting} onClick={handleCloseUserMenu}>

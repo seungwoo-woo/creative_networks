@@ -11,16 +11,18 @@ import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft';
 import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
 import OpenPhoneAdd from '../components/OpenPhoneAdd';
 import OpenPhone from '../components/OpenPhone';
+import ResponsiveAppBar from '../components/ResponsiveAppBar';
 // ======================================================================
 
 
 
 // firebase import=======================================================
 import { initializeApp } from "firebase/app";
-import { getAuth } from "firebase/auth";
 import { getFirestore, collection, getDocs, query, where, orderBy } from "firebase/firestore";
 import { firebaseConfig } from '../firebase';
-import ResponsiveAppBar from '../components/ResponsiveAppBar';
+import { getAuth, signOut, onAuthStateChanged } from "firebase/auth";
+
+
 
 
 // Initialize Firebase ==================================================
@@ -102,6 +104,8 @@ function OpenPhoneList() {
 // Initialize Variable ==================================================
 const navigate = useNavigate();
 const auth = getAuth();
+const [ companyName, setCompanyName ] = React.useState(null);
+const [ userGrade, setUserGrade ] = React.useState(null);
 const [openPhoneList, setOpenPhoneList] = useState([]);
 
 // Table Pagination Start ----------------------------------------
@@ -151,22 +155,52 @@ const handleChangeRowsPerPage = (event) => {
 // useEffect 1 Start ========================================================
 useEffect(()=>{
 
-  const getData = async () => {
+  const getUserCompanyName = () => {    
 
-    let data = [];
-    const querySnapshot = await getDocs(query(collection(db, "CreativeNetworks"), orderBy("openDate", "desc"), where("isDeleted", "==", 0)));
-
-    querySnapshot.forEach((doc) => {
-      data.push({...doc.data(), id: doc.id,})
-    });
-
-    setOpenPhoneList(data);
-    
-  }
-    getData();
+  onAuthStateChanged(auth, async (user) => {
+    if (user) {
+      let companydata = '';
+      let userGrade = '';
+      const querySnapshot = await getDocs(query(collection(db, "comUsers"), where("id", "==", user.uid)));
+      querySnapshot.forEach((doc) => {
+      companydata = (doc.data().company);
+      userGrade = (doc.data().userGrade);
+      setCompanyName(companydata);
+      setUserGrade(userGrade);
+      });
+    } else {
+      navigate('/');
+    }
+  });    
+  }    
+  getUserCompanyName();
 
 }, []);
 
+
+useEffect(()=>{
+
+  const getData = async () => {
+
+    let data = [];
+
+    if (userGrade === 'A') {
+      const querySnapshot = await getDocs(query(collection(db, "CreativeNetworks"), orderBy("openDate", "desc"), where("isDeleted", "==", 0)));
+      querySnapshot.forEach((doc) => {
+        data.push({...doc.data(), id: doc.id,})
+      });
+    } else {
+      const querySnapshot = await getDocs(query(collection(db, "CreativeNetworks"), orderBy("openDate", "desc"), where("isDeleted", "==", 0), where("sellCom", "==", companyName)));
+      querySnapshot.forEach((doc) => {
+        data.push({...doc.data(), id: doc.id,})
+      });
+    }
+    setOpenPhoneList(data);
+    }   
+    
+    getData();
+
+}, [companyName, userGrade]);
 
 
 // ------------------------------------------------------------------------------------
@@ -177,7 +211,7 @@ return (
   <>
   <ResponsiveAppBar />
   <div style={{marginTop: 30}}>
-    <OpenPhoneAdd getDataRefresh = {getDataRefresh} />
+    <OpenPhoneAdd getDataRefresh = {getDataRefresh} userGrade = {userGrade}/>
   </div>
 
   <Paper style={{marginTop: 10, marginLeft: 10, marginRight: 10}} elevation={3}>
@@ -201,7 +235,7 @@ return (
           <StyledTableCell style={{fontWeight: 400}} align='center' rowSpan={2}>음성요금제</StyledTableCell>
           <StyledTableCell style={{fontWeight: 400}} align='center' rowSpan={2}>메모</StyledTableCell>
           <StyledTableCell style={{fontWeight: 400}} align='center' rowSpan={2}>판매처</StyledTableCell>
-          <StyledTableCell style={{fontWeight: 600, color: "yellow"}} align='center' rowSpan={2}>ACTION</StyledTableCell>
+          { (userGrade === 'A') && <StyledTableCell style={{fontWeight: 600, color: "yellow"}} align='center' rowSpan={2}>ACTION</StyledTableCell> }
         </TableRow>
         {/* <TableRow>
           <StyledTableCell style={{fontWeight: 400}} align='center'>모델명</StyledTableCell>
@@ -233,6 +267,7 @@ return (
                 memo = {op.memo}
                 sellCom = {op.sellCom}
                 getDataRefresh = {getDataRefresh} 
+                userGrade = {userGrade}
                 />
               );    // return ----------
           })

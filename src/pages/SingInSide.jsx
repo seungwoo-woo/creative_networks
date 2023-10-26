@@ -4,19 +4,21 @@ import { useEffect } from "react";
 import { useNavigate } from 'react-router-dom';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
+import { pink } from '@mui/material/colors';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
 import Link from '@mui/material/Link';
 import Paper from '@mui/material/Paper';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
+import Divider from '@mui/material/Divider';
+import ReportIcon from '@mui/icons-material/Report';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 
 
@@ -87,30 +89,19 @@ const handleSubmit = (event) => {
   const data = new FormData(event.currentTarget);
 
   if (userEmailList.includes(data.get('email'))) {
-    alert("관리자가 해당 아이디를 비활성화해 로그인할 수 없습니다. 관리자에게 문의하세요");
+    setMsg('아이디가 비활성화되어 로그인할 수 없습니다. 관리자에게 문의하세요');
+    handleSignInErrMsgOpen();
     navigate('/');
   } else {
-
-  // const auth = getAuth();
-  signInWithEmailAndPassword(auth, data.get('email'), data.get('password'))
+    signInWithEmailAndPassword(auth, data.get('email'), data.get('password'))
     .then((userCredential) => {
-      // Signed in 
-      const user = userCredential.user;
-      navigate('/dashBoard');
-      // ...
+      navigate(`/dashBoard`);
     })
     .catch((error) => {
-      const errorCode = error.code;
-      const errorMessage = error.message;
-
       setMsg('email 또는 password에 오류가 있습니다.');
-
       handleSignInErrMsgOpen();
-    });
-    
+    });    
   }
-    
-    
 };
 
 
@@ -228,20 +219,21 @@ return (
       aria-labelledby="alert-dialog-title"
       aria-describedby="alert-dialog-description"
     >
-      <DialogTitle id="alert-dialog-title">
-        {"로그인 오류"}
+      <DialogTitle sx={{color: pink[500], fontWeight: '400', display: 'flex', alignItems: 'center'}}>
+        <ReportIcon sx={{mr: 1}}/>{" 로그인 오류 "}
       </DialogTitle>
-      <DialogContent>
-        <DialogContentText id="alert-dialog-description">
+      <Divider />
+      <DialogContent>      
+        <Typography>
           {msg}
-        </DialogContentText>
+        </Typography>
       </DialogContent>
+      <Divider />
       <DialogActions>
-        <Button onClick={handleCloseError} autoFocus>
-          Agree
-        </Button>
+        <Button onClick={handleCloseError} autoFocus> OK </Button>          
       </DialogActions>
     </Dialog>
+
   </>
 );
 

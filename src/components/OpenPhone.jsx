@@ -13,7 +13,7 @@ import OpenPhoneEdit from './OpenPhoneEdit';
 function OpenPhone(props) {
 
 // Initialize Variable ==================================================
-const {id, no, telCom, openCom, type, openDate, openType, phoneModel, phoneSerial, phoneColor, customerName, phoneNo, birthday, callingPlan, controlNo, memo, sellCom, getDataRefresh} = props;
+const {id, no, telCom, openCom, type, openDate, openType, phoneModel, phoneSerial, phoneColor, customerName, phoneNo, birthday, callingPlan, controlNo, memo, sellCom, getDataRefresh, userGrade} = props;
 
 // Table style ----------------------------------------------------
 const StyledTableRow = styled(TableRow)(({ theme }) => ({
@@ -49,7 +49,7 @@ return (
     {/* <TableCell>{controlNo}</TableCell> */}
     <TableCell>{memo}</TableCell>
     <TableCell>{sellCom}</TableCell>
-    <TableCell><OpenPhoneEdit id={id} getDataRefresh={getDataRefresh}/></TableCell>
+    { (userGrade === 'A') && <TableCell><OpenPhoneEdit id={id} getDataRefresh={getDataRefresh}/></TableCell> }
   </StyledTableRow>
 );
 

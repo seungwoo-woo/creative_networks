@@ -49,6 +49,8 @@ function OpenPhoneAdd(props) {
 
 // Initialize Variable ==================================================
 const getDataRefresh = props.getDataRefresh;
+const userGrade = props.userGrade;
+
 const [openPhoneCase, setOpenPhoneCase] = 
   useState({ no: '', telCom: '', openCom: '', type: '', openDate: '', openType: '', phoneModel: '', phoneSerial: '', phoneColor: '', customerName: '', phoneNo: '', birthday: '', callingPlan: '', controlNo: '', memo: '', sellCom: '', isDeleted: 0});
 const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -219,9 +221,9 @@ return (
       Creative Networks 개통 리스트
     </Typography>
     
-    <Button variant='contained' color='primary' onClick={handleClickOpen}>
+    { (userGrade === 'A') && <Button variant='contained' color='primary' onClick={handleClickOpen}>
       신규등록
-    </Button>
+    </Button> }
   </div>
 
   <Dialog
