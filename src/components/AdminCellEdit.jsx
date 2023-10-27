@@ -282,7 +282,7 @@ return (
       {(editCase === 3) && <DialogTitle sx={{color: pink[500], fontWeight: '400', display: 'flex', alignItems: 'center'}}>
         <ReportIcon sx={{mr: 1}}/>개통처 정보 수정</DialogTitle>}
       {(editCase === 5) && <DialogTitle sx={{color: pink[500], fontWeight: '400', display: 'flex', alignItems: 'center'}}>
-        <ReportIcon sx={{mr: 1}}/>사용자 정보 수정</DialogTitle>}
+        <ReportIcon sx={{mr: 1}}/>사용자 정보 수정 (B-개통 직원, C-판매처 직원)</DialogTitle>}
       <Divider />       
       <DialogContent>
         {(editCase === 1) && <TextField value={adminEditCase.comName} id="comName" label="판매처" onChange={handleValueChange} margin="dense" type="text" fullWidth variant="standard" /> }

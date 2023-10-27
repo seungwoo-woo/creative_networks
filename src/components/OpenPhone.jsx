@@ -49,10 +49,11 @@ return (
     {/* <TableCell>{controlNo}</TableCell> */}
     <TableCell>{memo}</TableCell>
     <TableCell>{sellCom}</TableCell>
-    { (userGrade === 'A') && <TableCell><OpenPhoneEdit id={id} getDataRefresh={getDataRefresh}/></TableCell> }
+    { (userGrade === 'A' || userGrade === 'B') && <TableCell><OpenPhoneEdit id={id} getDataRefresh={getDataRefresh}/></TableCell> }
   </StyledTableRow>
 );
 
+// Component End =========================================================
 }
 
 export default OpenPhone

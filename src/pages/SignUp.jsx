@@ -6,8 +6,11 @@ import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
 import Link from '@mui/material/Link';
+import { pink } from '@mui/material/colors';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
+import Divider from '@mui/material/Divider';
+import ReportIcon from '@mui/icons-material/Report';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
@@ -15,7 +18,6 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import Autocomplete from '@mui/material/Autocomplete';
 
@@ -41,13 +43,7 @@ const defaultTheme = createTheme();
 function Copyright(props) {
   return (
     <Typography variant="body2" color="text.secondary" align="center" {...props}>
-      {'Copyright © '}
-      {/* <Link color="inherit" href="https://mui.com/"> */}
-        (주)에셀트리
-      {/* </Link>{' '} */}
-      {'  '}
-      {new Date().getFullYear()}
-      {'.'}
+      {'Copyright © '} (주)에셀트리 {'  '} {new Date().getFullYear()} {'.'}
     </Typography>
   );
 }
@@ -57,7 +53,6 @@ function Copyright(props) {
 //  ======================================================================================
 // Function 시작 =========================================================================
 // =======================================================================================
-
 export default function SignUp() {
 
 // Initialize Variable ==================================================
@@ -108,13 +103,12 @@ const handleSubmit = async (event) => {
       company: sellComName,
       email: data.get('email'),
       isDeleted: 0,
-      userGrade: 'C'
+      userGrade: 'D'
     });
 
     handleSignUpMsgOpen();
   })
   .catch((error) => {
-    const errorCode = error.code;
     const errorMessage = error.message;
 
     if (errorMessage === 'Firebase: Error (auth/email-already-in-use).') {
@@ -131,13 +125,11 @@ const handleSubmit = async (event) => {
     }
 
     handleSignUpErrMsgOpen();
-
     });
 };
 
 
-
-// useEffect Start ========================================================
+// useEffect Start - 판매점 업체명 받아오기 ==============================================
   React.useEffect(()=>{
 
     const getSellComName = async () => {
@@ -162,77 +154,36 @@ return (
   <ThemeProvider theme={defaultTheme}>
     <Container component="main" maxWidth="xs">
       <CssBaseline />
-      <Box
-        sx={{
-          marginTop: 8,
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-        }}
-      >
+      <Box sx={{ marginTop: 8, display: 'flex', flexDirection: 'column', alignItems: 'center'}} >
         <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
           <LockOutlinedIcon />
         </Avatar>
-        <Typography component="h1" variant="h5">
-          Sign up
-        </Typography>
+        <Typography component="h1" variant="h5"> Sign up </Typography>
         <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
           <Grid container spacing={2}>
           <Grid item xs={12}>
-              <TextField
-                autoComplete="given-name"
-                name="firstName"
-                required
-                fullWidth 
-                id="firstName"
-                label="성명"
-                autoFocus
-              />
-            </Grid>
-            <Grid item xs={12}>
-            <Autocomplete
-                value={sellComName}
-                onChange={(event, newValue) => {
-                  setSellComName(newValue);
-                }}  
-                inputValue={inputValue}
-                onInputChange={(event, newInputValue) => {
-                  setInputValue(newInputValue);
-                }}
-                id="controllable-states-demo"
-                options={sellComNameList}
-                sx={{ width: 400 }}
-                renderInput={(params) => <TextField {...params} label="판매처" />}
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
-                required
-                fullWidth
-                id="email"
-                label="Email Address"
-                name="email"
-                autoComplete="email"
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
-                required
-                fullWidth
-                name="password"
-                label="Password"
-                type="password"
-                id="password"
-                autoComplete="new-password"
-              />
-            </Grid>
+            <TextField autoComplete="given-name" name="firstName" required fullWidth 
+              id="firstName" label="성명" autoFocus />
           </Grid>
-          <Button
-            type="submit"
-            fullWidth
-            variant="contained"
-            sx={{ mt: 3, mb: 2 }}
-          >
+          <Grid item xs={12}>
+            <Autocomplete 
+              value={sellComName}
+              onChange={(event, newValue) => { setSellComName(newValue) }}  
+              inputValue={inputValue}
+              onInputChange={(event, newInputValue) => { setInputValue(newInputValue) }}
+              id="controllable-states-demo"
+              options={sellComNameList}
+              sx={{ width: 400 }}
+              renderInput={(params) => <TextField {...params} label="판매처" />} />
+          </Grid>
+          <Grid item xs={12}>
+            <TextField id="email" autoComplete="email" label="Email Address" name="email" required fullWidth />
+          </Grid>
+          <Grid item xs={12}>
+            <TextField autoComplete="new-password" name="password" label="Password" id="password" type="password" required fullWidth />
+          </Grid>
+          </Grid>
+          <Button sx={{ mt: 3, mb: 2 }} type="submit" fullWidth variant="contained" >
             Sign Up
           </Button>
           <Grid container justifyContent="flex-end">
@@ -255,20 +206,24 @@ return (
       aria-labelledby="alert-dialog-title"
       aria-describedby="alert-dialog-description"
     >
-      <DialogTitle id="alert-dialog-title">
-        {"계정 생성"}
+      <DialogTitle sx={{color: pink[500], fontWeight: '400', display: 'flex', alignItems: 'center'}}>
+        <ReportIcon sx={{mr: 1}}/>{" 계정 생성 "}
       </DialogTitle>
+      <Divider />
       <DialogContent>
-        <DialogContentText id="alert-dialog-description">
-          계정이 정상적으로 생성되었습니다. 로그인 페이지로 이동합니다.
-        </DialogContentText>
+        <Typography>
+          계정이 정상적으로 생성되었습니다. 
+        </Typography>
+        <Typography sx={{color: pink[500], fontWeight: '400'}}>
+          관리자에게 권한등급조정을 요청하세요.
+        </Typography>
       </DialogContent>
+      <Divider />
       <DialogActions>
-        <Button onClick={handleSignUpMsgClose} autoFocus>
-          Agree
-        </Button>
+        <Button onClick={handleSignUpMsgClose} autoFocus> OK </Button>
       </DialogActions>
     </Dialog>
+
 
   {/* SingUp error alert =====================================*/}
   <Dialog
@@ -277,21 +232,22 @@ return (
       aria-labelledby="alert-dialog-title"
       aria-describedby="alert-dialog-description"
     >
-      <DialogTitle id="alert-dialog-title">
-        {"계정 생성 오류"}
+      <DialogTitle sx={{color: pink[500], fontWeight: '400', display: 'flex', alignItems: 'center'}}>
+        <ReportIcon sx={{mr: 1}}/>{" 계정 생성 오류 "}
       </DialogTitle>
+      <Divider />
       <DialogContent>
-        <DialogContentText id="alert-dialog-description">
+        <Typography>
           {msg}
-        </DialogContentText>
+        </Typography>
       </DialogContent>
+      <Divider />
       <DialogActions>
-        <Button onClick={handleSignUpErrMsgClose} autoFocus>
-          Agree
-        </Button>
+        <Button onClick={handleSignUpErrMsgClose} autoFocus> OK </Button>
       </DialogActions>
     </Dialog>
   </>
 );
 
-}
+// Component End =========================================================
+}  

@@ -15,14 +15,11 @@ import ResponsiveAppBar from '../components/ResponsiveAppBar';
 // ======================================================================
 
 
-
 // firebase import=======================================================
 import { initializeApp } from "firebase/app";
 import { getFirestore, collection, getDocs, query, where, orderBy } from "firebase/firestore";
 import { firebaseConfig } from '../firebase';
 import { getAuth, signOut, onAuthStateChanged } from "firebase/auth";
-
-
 
 
 // Initialize Firebase ==================================================
@@ -104,9 +101,10 @@ function OpenPhoneList() {
 // Initialize Variable ==================================================
 const navigate = useNavigate();
 const auth = getAuth();
-const [ companyName, setCompanyName ] = React.useState(null);
+const [ userCompanyName, setUserCompanyName ] = React.useState(null);
 const [ userGrade, setUserGrade ] = React.useState(null);
-const [openPhoneList, setOpenPhoneList] = useState([]);
+const [ openPhoneList, setOpenPhoneList ] = useState([]);
+
 
 // Table Pagination Start ----------------------------------------
 const [page, setPage] = useState(0);
@@ -165,7 +163,7 @@ useEffect(()=>{
       querySnapshot.forEach((doc) => {
       companydata = (doc.data().company);
       userGrade = (doc.data().userGrade);
-      setCompanyName(companydata);
+      setUserCompanyName(companydata);
       setUserGrade(userGrade);
       });
     } else {
@@ -178,19 +176,20 @@ useEffect(()=>{
 }, []);
 
 
+// useEffect 2 Start ========================================================
 useEffect(()=>{
 
   const getData = async () => {
 
     let data = [];
 
-    if (userGrade === 'A') {
+    if (userGrade === 'A' || userGrade === 'B') {
       const querySnapshot = await getDocs(query(collection(db, "CreativeNetworks"), orderBy("openDate", "desc"), where("isDeleted", "==", 0)));
       querySnapshot.forEach((doc) => {
         data.push({...doc.data(), id: doc.id,})
       });
     } else {
-      const querySnapshot = await getDocs(query(collection(db, "CreativeNetworks"), orderBy("openDate", "desc"), where("isDeleted", "==", 0), where("sellCom", "==", companyName)));
+      const querySnapshot = await getDocs(query(collection(db, "CreativeNetworks"), orderBy("openDate", "desc"), where("isDeleted", "==", 0), where("sellCom", "==", userCompanyName)));
       querySnapshot.forEach((doc) => {
         data.push({...doc.data(), id: doc.id,})
       });
@@ -200,7 +199,7 @@ useEffect(()=>{
     
     getData();
 
-}, [companyName, userGrade]);
+}, [userCompanyName, userGrade]);
 
 
 // ------------------------------------------------------------------------------------
@@ -235,7 +234,7 @@ return (
           <StyledTableCell style={{fontWeight: 400}} align='center' rowSpan={2}>음성요금제</StyledTableCell>
           <StyledTableCell style={{fontWeight: 400}} align='center' rowSpan={2}>메모</StyledTableCell>
           <StyledTableCell style={{fontWeight: 400}} align='center' rowSpan={2}>판매처</StyledTableCell>
-          { (userGrade === 'A') && <StyledTableCell style={{fontWeight: 600, color: "yellow"}} align='center' rowSpan={2}>ACTION</StyledTableCell> }
+          { (userGrade === 'A' || userGrade === 'B') && <StyledTableCell style={{fontWeight: 600, color: "yellow"}} align='center' rowSpan={2}>ACTION</StyledTableCell> }
         </TableRow>
         {/* <TableRow>
           <StyledTableCell style={{fontWeight: 400}} align='center'>모델명</StyledTableCell>
@@ -294,6 +293,7 @@ return (
   </>
 );
 
+// Component End =========================================================
 }
 
 export default OpenPhoneList;

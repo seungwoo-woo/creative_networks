@@ -35,7 +35,7 @@ const auth = getAuth();
 const [ anchorElUser, setAnchorElUser ] = React.useState(null);
 const [ userName, setUserName ] = React.useState(null);
 const [ userGrade, setUserGrade ] = React.useState(null);
-const [ companyName, setCompanyName ] = React.useState(null);
+const [ userCompanyName, setUserCompanyName ] = React.useState(null);
 const settings = ['Logout'];
 
 
@@ -45,17 +45,18 @@ const handleOpenUserMenu = (event) => {
   setAnchorElUser(event.currentTarget);
 };
 
-
+//-----------------------------------------------------------------------
 const handleJustCloseUserMenu = () => {
   setAnchorElUser(null);
 }
+
 //-----------------------------------------------------------------------
 const handleCloseUserMenu = () => {
   setAnchorElUser(null);
   signOut(auth).then(() => {
     navigate('/');
   }).catch((error) => {
-    // An error happened.
+
   });
 };
 
@@ -67,17 +68,16 @@ React.useEffect(()=>{
 
     onAuthStateChanged(auth, async (user) => {
       if (user) {
-        console.log('user 있음');
         let data = '';
-        let companydata = '';
+        let userCompany = '';
         let userGrade = '';
         const querySnapshot = await getDocs(query(collection(db, "comUsers"), where("id", "==", user.uid)));
         querySnapshot.forEach((doc) => {
         data = (doc.data().name);
-        companydata = (doc.data().company);
+        userCompany = (doc.data().company);
         userGrade = (doc.data().userGrade);
         setUserName(data);
-        setCompanyName(companydata);
+        setUserCompanyName(userCompany);
         setUserGrade(userGrade);
         });
       } else {
@@ -95,6 +95,7 @@ React.useEffect(()=>{
 // ------------------------------------------------------------------------------------
 // return 시작 ------------------------------------------------------------------------
 // ------------------------------------------------------------------------------------
+
 return (
   <AppBar position="relative" >
     <Container maxWidth="xl">
@@ -127,11 +128,9 @@ return (
             </Typography> : ""}
           </Box>
 
-
           <Box sx={{ flexGrow: 0, display: 'flex', alignItems: 'center' }}>
-
             <Typography variant="h6" sx={{ mr: 3,mt: 1, fontWeight: 400, color: 'yellow'}}>
-              {companyName} 
+              {userCompanyName} 
             </Typography>
 
             <Tooltip title="">
@@ -162,12 +161,12 @@ return (
               ))}
             </Menu>
           </Box>
-
       </Toolbar>
     </Container>
   </AppBar>
 );
 
+// Component End =========================================================
 }
 
 export default ResponsiveAppBar

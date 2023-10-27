@@ -5,6 +5,7 @@ import { styled } from '@mui/material/styles';
 import PropTypes from 'prop-types';
 import Box from '@mui/material/Box';
 import { useTheme } from '@emotion/react';
+import { useNavigate } from 'react-router-dom';
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
 import NoteAltIcon from '@mui/icons-material/NoteAlt';
@@ -25,6 +26,7 @@ import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
 // firebase import=======================================================
 import { initializeApp } from "firebase/app";
 import { firebaseConfig } from '../firebase';
+import { getAuth, signOut, onAuthStateChanged } from "firebase/auth";
 import { getFirestore, collection, addDoc, getDocs, query, where, orderBy} from "firebase/firestore";
 
 
@@ -105,6 +107,9 @@ TablePaginationActions.propTypes = {
 function AdminPage(props) {
 
 // Initialize Variable ==================================================
+const navigate = useNavigate();
+const [ userGrade, setUserGrade ] = React.useState(null);
+const auth = getAuth();
 const [isSellComOpen, setIsSellComOpen] = useState(false);
 const [sellComList, setSellComList] = useState([]);
 const [isTelComOpen, setIsTelComOpen] = useState(false);
@@ -120,11 +125,6 @@ const [ editCase, setEditCase ] = useState();
 // Table Pagination Start ----------------------------------------
 const [page, setPage] = useState(0);
 const [rowsPerPage, setRowsPerPage] = useState(10);
-
-
-// // Avoid a layout jump when reaching the last page with empty rows.
-// const emptyRows =
-//   page > 0 ? Math.max(0, (1 + page) * rowsPerPage - sellComList.length) : 0;
 
 
 // Table style ----------------------------------------------------
@@ -321,6 +321,32 @@ const OpenComUpload = () => {
 
 
 // useEffect 1 Start ========================================================
+useEffect(()=>{
+
+  const getUserCompanyName = () => {    
+
+  onAuthStateChanged(auth, async (user) => {
+    if (user) {
+      let userGrade = '';
+      const querySnapshot = await getDocs(query(collection(db, "comUsers"), where("id", "==", user.uid)));
+      querySnapshot.forEach((doc) => {
+      userGrade = (doc.data().userGrade);
+        if(userGrade != 'A') {
+          navigate('/openPhoneList');
+        }
+      setUserGrade(userGrade);
+      });
+    } else {
+      navigate('/');
+    }
+  });    
+  }    
+  getUserCompanyName();
+
+}, []);
+
+
+// useEffect 2 Start ========================================================
 useEffect(()=>{    
 
   // 판매점 리스트 읽어오기 --------------------------------------------------
@@ -393,12 +419,16 @@ return (
 
     <Box sx={{ mt: 1, ml: 2, fontWeight: 400, display: 'flex', alignItems: 'center' }} >
         <Paper sx={{ mt: 1, ml: 2, width: 300, height: 550, display: 'flex', justifyContent: 'center', alignItems: 'center' }} elevation={5} >
-          <Stack spacing={3} >            
-            <Button sx={{ width: 250}} variant="contained" size="large" onClick={hdcSellComOpen} >판매처 관리</Button>
-            <Button variant="contained" size="large" onClick={hdcTelComOpen}>통신사 관리</Button>
-            <Button variant="contained" size="large" onClick={hdcOpenComOpen}>개통처 관리</Button>
+          <Stack spacing={3} >
+            {isSellComOpen && <Button sx={{ width: 250}} variant="outlined" size="large" onClick={hdcSellComOpen} >판매처 관리</Button>}            
+            {!isSellComOpen && <Button sx={{ width: 250}} variant="contained" size="large" onClick={hdcSellComOpen} >판매처 관리</Button>}
+            {isTelComOpen && <Button variant="outlined" size="large" onClick={hdcTelComOpen}>통신사 관리</Button>}
+            {!isTelComOpen && <Button variant="contained" size="large" onClick={hdcTelComOpen}>통신사 관리</Button>}
+            {isOpenComOpen && <Button variant="outlined" size="large" onClick={hdcOpenComOpen}>개통처 관리</Button>}
+            {!isOpenComOpen && <Button variant="contained" size="large" onClick={hdcOpenComOpen}>개통처 관리</Button>}
             <Button variant="contained" size="large">요금제 관리</Button>
-            <Button variant="contained" size="large" onClick={hdcUserOpen}>사용자 관리</Button>            
+            {isUserOpen && <Button variant="outlined" size="large" onClick={hdcUserOpen}>사용자 관리</Button>}           
+            {!isUserOpen && <Button variant="contained" size="large" onClick={hdcUserOpen}>사용자 관리</Button>}           
           </Stack>
         </Paper>
 
@@ -640,15 +670,13 @@ return (
           </Table>
           </>          
           }
-
-
-
         </Paper>
     </Box>
     
   </>
 );
 
+// Component End =========================================================
 }
 
 export default AdminPage

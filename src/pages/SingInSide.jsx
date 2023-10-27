@@ -43,11 +43,7 @@ const defaultTheme = createTheme();
 function Copyright(props) {
   return (
     <Typography variant="body2" color="text.secondary" align="center" {...props}>
-      {'Copyright © '}
-        (주)에셀트리
-      {'  '}
-      {new Date().getFullYear()}
-      {'.'}
+      {'Copyright © '} (주)에셀트리 {'  '} {new Date().getFullYear()} {'.'}
     </Typography>
   );
 }
@@ -61,9 +57,9 @@ function Copyright(props) {
 export default function SignInSide() {
 
 // Initialize Variable ==================================================
-const [errMsgOpen, setErrMsgOpen] = React.useState(false);
+const [ errMsgOpen, setErrMsgOpen ] = React.useState(false);
 const [ msg, setMsg ] = React.useState('');
-const [userEmailList, setUserEmailList] = React.useState([]);
+const [ userEmailList, setUserEmailList ] = React.useState([]);
 
 const navigate = useNavigate();
 
@@ -114,7 +110,6 @@ useEffect(()=>{
     let data = [];
     const querySnapshot = await getDocs(query(collection(db, "comUsers"), orderBy("name", "asc"), where("userGrade", "==", 'D')));
     querySnapshot.forEach((doc) => {
-      // data.push({...doc.data(), id: doc.id,})
       data.push(doc.data().email);
     });
     setUserEmailList(data);
@@ -133,7 +128,6 @@ return (
   <ThemeProvider theme={defaultTheme}>
     <Grid container component="main" sx={{ height: '100vh' }}>
       <CssBaseline />
-
       <Grid
         item
         xs={false}
@@ -212,7 +206,7 @@ return (
     </Grid>
   </ThemeProvider>
 
-  {/* SingUp error alert */}
+  {/* SingIn error alert */}
   <Dialog
       open={errMsgOpen}
       onClose={handleCloseError}
@@ -233,8 +227,8 @@ return (
         <Button onClick={handleCloseError} autoFocus> OK </Button>          
       </DialogActions>
     </Dialog>
-
   </>
 );
 
+// Component End =========================================================
 }

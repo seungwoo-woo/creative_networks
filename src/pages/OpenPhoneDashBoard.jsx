@@ -18,7 +18,7 @@ const db = getFirestore(app);
 const auth = getAuth();
 
 
-
+// graph용 임시 data -------------------------------------------------
 const data = [{name: 'Page A', uv: 400, pv: 240, amt: 2400},
               {name: 'Page B', uv: 300, pv: 280, amt: 2400},
               {name: 'Page C', uv: 300, pv: 210, amt: 2400},
@@ -27,14 +27,19 @@ const data = [{name: 'Page A', uv: 400, pv: 240, amt: 2400},
               {name: 'Page F', uv: 190, pv: 120, amt: 2400},
             ];
 
+
+
+//  ======================================================================================
+// Function 시작 =========================================================================
+// =======================================================================================
+
 function OpenPhoneDashBoard(props) {
 
   // Initialize Variable ==================================================
   const navigate = useNavigate();
 
   const [ userCompanyName, setUserCompanyName ] = useState([]);
-
-  
+  const [ userGrade, setUserGrade ] = React.useState(null);
 
 
 
@@ -45,11 +50,14 @@ useEffect(()=>{
 
     onAuthStateChanged(auth, async (user) => {
       if (user) {
-        let companydata = '';
+        let userCompany = '';
+        let userGrade = '';
         const querySnapshot = await getDocs(query(collection(db, "comUsers"), where("id", "==", user.uid)));
         querySnapshot.forEach((doc) => {
-        companydata = (doc.data().company);
-        setUserCompanyName(companydata);
+        userCompany = (doc.data().company);
+        userGrade = (doc.data().userGrade);
+        setUserCompanyName(userCompany);
+        setUserGrade(userGrade);
         });
       } else {
         navigate('/');
@@ -62,9 +70,11 @@ useEffect(()=>{
 }, [])
 
 
+
 // ------------------------------------------------------------------------------------
 // return 시작 ------------------------------------------------------------------------
 // ------------------------------------------------------------------------------------
+
 return (
   <>
     <ResponsiveAppBar />
@@ -83,6 +93,8 @@ return (
   </>
 );
 
+
+// Component End =========================================================
 }
 
 export default OpenPhoneDashBoard

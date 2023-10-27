@@ -25,7 +25,7 @@ import { DialogContent, DialogTitle, DialogContentText, DialogActions, Table, Ta
 import { initializeApp } from "firebase/app";
 import { firebaseConfig } from '../firebase';
 import { getAuth } from "firebase/auth";
-import { getFirestore, collection, addDoc, getDocs, query, where, orderBy} from "firebase/firestore";
+import { getFirestore, collection, addDoc, getDocs, query, where, orderBy } from "firebase/firestore";
 
 
 // Initialize Firebase ==================================================
@@ -105,9 +105,6 @@ const handleSelectChange = (e) => {
 const handleSubmit = async (e) => {
   e.preventDefault();
 
-  console.log(openPhoneCase.openDate);
-  console.log(openPhoneCase.sellCom);
-
   try {
     const docRef = await addDoc(collection(db, "CreativeNetworks"), {
       telCom: openPhoneCase.telCom,
@@ -129,8 +126,6 @@ const handleSubmit = async (e) => {
     });
 
     setIsCompSaveDialogOpen(true);
-    // alert("신규 개통내역이 등록되었습니다.");
-
     handleClickClose();
   } catch (e) {
     console.error("Error adding document: ", e);
@@ -221,7 +216,7 @@ return (
       Creative Networks 개통 리스트
     </Typography>
     
-    { (userGrade === 'A') && <Button variant='contained' color='primary' onClick={handleClickOpen}>
+    { (userGrade === 'A' || userGrade === 'B') && <Button variant='contained' color='primary' onClick={handleClickOpen}>
       신규등록
     </Button> }
   </div>
@@ -432,11 +427,10 @@ return (
       <Button onClick={handleClickCompSaveDialogClose}>OK</Button>
     </DialogActions>
   </Dialog>
-
-
   </>
 )
 
+// Component End =========================================================
 }
 
 export default OpenPhoneAdd
