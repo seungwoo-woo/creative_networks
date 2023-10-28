@@ -116,6 +116,10 @@ const [isTelComOpen, setIsTelComOpen] = useState(false);
 const [telComList, setTelComList] = useState([]);
 const [isOpenComOpen, setIsOpenComOpen] = useState(false);
 const [openComList, setOpenComList] = useState([]);
+
+const [isCallingPlanOpen, setIsCallingPlanOpen] = useState(false);
+const [callingPlanList, setCallingPlanList] = useState([]);
+
 const [isUserOpen, setIsUserOpen] = useState(false);
 const [userList, setUserList] = useState([]);
 const [jsonData, setJsonData] = useState();
@@ -187,7 +191,18 @@ const getDataRefresh3 = async () => {
 }
 
 
-// Refresh openComList-------------------------------------------------------------
+// Refresh callingPlanList-------------------------------------------------------------
+const getDataRefresh4 = async () => {
+  let data = [];
+  const querySnapshot = await getDocs(query(collection(db, "callingPlanName"), orderBy("planName", "asc"), where("isDeleted", "==", 0)));
+  querySnapshot.forEach((doc) => {
+    data.push({...doc.data(), id: doc.id,})
+  });
+  setCallingPlanList(data);
+}
+
+
+// Refresh userList-------------------------------------------------------------
 const getDataRefresh5 = async () => {
   let data = [];
   const querySnapshot = await getDocs(query(collection(db, "comUsers"), orderBy("name", "asc"), where("isDeleted", "==", 0)));
@@ -203,6 +218,7 @@ const hdcSellComOpen = () => {
   setIsSellComOpen(true);
   setIsTelComOpen(false);
   setIsOpenComOpen(false);
+  setIsCallingPlanOpen(false);
   setIsUserOpen(false);
   setEditCase(1);
 };
@@ -212,6 +228,7 @@ const hdcTelComOpen = () => {
   setIsTelComOpen(true);
   setIsSellComOpen(false);
   setIsOpenComOpen(false);
+  setIsCallingPlanOpen(false);
   setIsUserOpen(false);
   setEditCase(2);
 };
@@ -221,8 +238,20 @@ const hdcOpenComOpen = () => {
   setIsOpenComOpen(true);
   setIsTelComOpen(false);
   setIsSellComOpen(false);
+  setIsCallingPlanOpen(false);
   setIsUserOpen(false);
   setEditCase(3);
+};
+
+
+// 요금제 Table Open ----------------------------------------------------------------
+const hdcCallingPlanOpen = () => {
+  setIsCallingPlanOpen(true);
+  setIsOpenComOpen(false);
+  setIsTelComOpen(false);
+  setIsSellComOpen(false);
+  setIsUserOpen(false);
+  setEditCase(4);
 };
 
 // 사용자 Table Open ----------------------------------------------------------------
@@ -231,6 +260,7 @@ const hdcUserOpen = () => {
   setIsOpenComOpen(false);
   setIsTelComOpen(false);
   setIsSellComOpen(false);
+  setIsCallingPlanOpen(false);
   setEditCase(5);
 };
 
@@ -331,7 +361,7 @@ useEffect(()=>{
       const querySnapshot = await getDocs(query(collection(db, "comUsers"), where("id", "==", user.uid)));
       querySnapshot.forEach((doc) => {
       userGrade = (doc.data().userGrade);
-        if(userGrade != 'A') {
+        if(userGrade !== 'A') {
           navigate('/openPhoneList');
         }
       setUserGrade(userGrade);
@@ -388,6 +418,19 @@ useEffect(()=>{
   getOpenComName();
 
 
+  // 요금제 리스트 읽어오기 --------------------------------------------------
+  const getCallingPlanName = async () => {
+    let data = [];
+    const querySnapshot = await getDocs(query(collection(db, "callingPlanName"), orderBy("planName", "asc"), where("isDeleted", "==", 0)));
+    querySnapshot.forEach((doc) => {
+      data.push({...doc.data(), id: doc.id,})
+      // data.push(doc.data().comName);
+    });
+    setCallingPlanList(data);
+  }
+  getCallingPlanName();
+
+
   // 사용자 리스트 읽어오기 --------------------------------------------------
   const getUser = async () => {
     let data = [];
@@ -401,8 +444,7 @@ useEffect(()=>{
   getUser();
 
 
-}, [isSellComOpen]);
-
+}, [isSellComOpen, isTelComOpen, isSellComOpen, isCallingPlanOpen, isUserOpen]);
 
 
 
@@ -426,7 +468,8 @@ return (
             {!isTelComOpen && <Button variant="contained" size="large" onClick={hdcTelComOpen}>통신사 관리</Button>}
             {isOpenComOpen && <Button variant="outlined" size="large" onClick={hdcOpenComOpen}>개통처 관리</Button>}
             {!isOpenComOpen && <Button variant="contained" size="large" onClick={hdcOpenComOpen}>개통처 관리</Button>}
-            <Button variant="contained" size="large">요금제 관리</Button>
+            {isCallingPlanOpen && <Button variant="outlined" size="large" onClick={hdcCallingPlanOpen}>요금제 관리</Button>}
+            {!isCallingPlanOpen && <Button variant="contained" size="large" onClick={hdcCallingPlanOpen}>요금제 관리</Button>}
             {isUserOpen && <Button variant="outlined" size="large" onClick={hdcUserOpen}>사용자 관리</Button>}           
             {!isUserOpen && <Button variant="contained" size="large" onClick={hdcUserOpen}>사용자 관리</Button>}           
           </Stack>
@@ -616,6 +659,58 @@ return (
           }
 
 
+          {/* 요금제 테이블 보이기 -------------------------------------------*/}
+          { isCallingPlanOpen && 
+          <>
+          <Typography sx={{ mt: 2, ml: 1, mb: 2, fontWeight: 400, display: 'flex', alignItems: 'center' }} variant="h6" >
+            <ManageAccountsIcon fontSize="small" sx={{ mr: 2}} /> 요금제 정보 확인 및 수정
+          </Typography>
+
+          <Table stickyHeader size='small' aria-label="sticky table">        
+            <TableHead>
+              <TableRow>
+                <StyledTableCell style={{fontWeight: 400}} align='center' >No.</StyledTableCell>
+                <StyledTableCell style={{fontWeight: 400}} align='center' >요금제</StyledTableCell>
+                <StyledTableCell style={{fontWeight: 400}} align='center' >개통처</StyledTableCell>
+                <StyledTableCell style={{fontWeight: 600, color: "yellow"}} align='center' >ACTION</StyledTableCell>
+              </TableRow>
+            </TableHead>
+
+            <TableBody>
+              {callingPlanList.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)              
+                .map((item, index) => {
+                    return (<AddOneRow 
+                      key = {item.id}
+                      id = {item.id} 
+                      no = {index + 1 + (page * rowsPerPage)}
+                      cell1 = {item.planName}
+                      cell2 = {item.openComName}
+                      getDataRefresh={getDataRefresh4}
+                      editCase={editCase}
+                      />
+                    );    // return ----------
+                })
+              }
+            </TableBody>
+
+            <TableFooter>
+              <TableRow>
+                <TablePagination
+                  rowsPerPageOptions={[5, 10]}
+                  count={callingPlanList.length}
+                  rowsPerPage={rowsPerPage}
+                  page={page}
+                  onPageChange={handleChangePage}
+                  onRowsPerPageChange={handleChangeRowsPerPage}
+                  ActionsComponent={TablePaginationActions}
+                />
+              </TableRow>
+            </TableFooter>
+          </Table>
+          </>          
+          }
+
+
           {/* 사용자 테이블 보이기 -------------------------------------------*/}
           { isUserOpen && 
           <>
@@ -637,7 +732,7 @@ return (
 
             <TableBody>
               {userList.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)              
-               .map((item, index) => {
+                .map((item, index) => {
                     return (<AddOneRow 
                       key = {item.id}
                       id = {item.id} 
@@ -670,6 +765,7 @@ return (
           </Table>
           </>          
           }
+
         </Paper>
     </Box>
     

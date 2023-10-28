@@ -26,7 +26,8 @@ const db = getFirestore(app);
 //  ======================================================================================
 // Function 시작 =========================================================================
 // =======================================================================================
-function ResponsiveAppBar() {
+function ResponsiveAppBar(props) {
+
 
 // Initialize Variable ==================================================
 const navigate = useNavigate();
@@ -77,8 +78,8 @@ React.useEffect(()=>{
         userCompany = (doc.data().company);
         userGrade = (doc.data().userGrade);
         setUserName(data);
-        setUserCompanyName(userCompany);
         setUserGrade(userGrade);
+        setUserCompanyName(userCompany);
         });
       } else {
         navigate('/');
