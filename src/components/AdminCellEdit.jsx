@@ -4,10 +4,16 @@ import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
 import PersonOffTwoToneIcon from '@mui/icons-material/PersonOffTwoTone';
 import { pink } from '@mui/material/colors';
 import ReportIcon from '@mui/icons-material/Report';
+import Paper from '@mui/material/Paper';
 import Button from '@mui/material/Button';
+import AppBar from '@mui/material/AppBar';
+import Toolbar from '@mui/material/Toolbar';
+import IconButton from '@mui/material/IconButton';
+import CloseIcon from '@mui/icons-material/Close';
 import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
-import { Dialog, DialogContent, DialogTitle, DialogActions, TextField, DialogContentText } from "@mui/material";
+import Slide from '@mui/material/Slide';
+import { Dialog, DialogContent, DialogTitle, DialogActions, TextField, DialogContentText, Table, TableHead, TableBody, TableCell, TableRow, Input, Grid } from "@mui/material";
 
 
 
@@ -15,11 +21,18 @@ import { Dialog, DialogContent, DialogTitle, DialogActions, TextField, DialogCon
 import { initializeApp } from "firebase/app";
 import { firebaseConfig } from '../firebase';
 import { getFirestore, collection, getDoc, doc, getDocs, query, where, orderBy, updateDoc, deleteDoc } from "firebase/firestore";
+import { FormatColorReset } from '@mui/icons-material';
 
 
 // Initialize Firebase ==================================================
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
+
+
+// Modal Transition --------------------------------------------------
+const Transition = React.forwardRef(function Transition(props, ref) {
+  return <Slide direction="up" ref={ref} {...props} />;
+});
 
 
 
@@ -33,11 +46,17 @@ function AdminCellEdit(props) {
 const { id, getDataRefresh, editCase } = props
 const [isEditOpen, setIsEditOpen] = useState(false);
 const [isDeleteOpen, setIsDeleteOpen] = useState(false);
+const [isCallingPlanEditOpen, setIsCallingPlanEditOpen] = useState(false);
 const [isDisableOpen, setIsDisableOpen] = useState(false);
 const [isCompUpdateDialogOpen, setIsCompUpdateDialogOpen] = useState(false);
 const [isCompDeleteDialogOpen, setIsCompDeleteDialogOpen] = useState(false);
 const [isCompDisableDialogOpen, setIsCompDisableDialogOpen] = useState(false);
 const [adminEditCase, setAdminEditCase] = useState([{}]);
+const [adminEditCaseCP, setAdminEditCaseCP] = useState([{}]);
+const [rebate1, setRebate1] = useState([]);
+const [rebate2, setRebate2] = useState([]);
+const [rebate3, setRebate3] = useState([]);
+const [rebate4, setRebate4] = useState([]);
 
 
 
@@ -60,6 +79,16 @@ const getAdminEditCase3 = async () => {
   setAdminEditCase(querySnapshot.data());
 }
 
+// Edit 대상 요금제 정보 읽어오기 ------------------------------------------------
+const getAdminEditCase4 = async () => {
+  const querySnapshot = await getDoc(doc(db, "callingPlanName", id));
+  setRebate1(querySnapshot.data().rebate1);
+  setRebate2(querySnapshot.data().rebate2);
+  setRebate3(querySnapshot.data().rebate3);
+  setRebate4(querySnapshot.data().rebate4);
+  setAdminEditCaseCP(querySnapshot.data());
+}
+
 // Edit 대상 User 정보 읽어오기 ------------------------------------------------
 const getAdminEditCase5 = async () => {
   const querySnapshot = await getDoc(doc(db, "comUsers", id));
@@ -68,7 +97,13 @@ const getAdminEditCase5 = async () => {
 
 // --------------------------------------------------------------------
 const hdcEditOpen = () => {
-  setIsEditOpen(true);
+  if (editCase !== 4) {
+    setIsEditOpen(true);
+  }
+
+  if (editCase === 4) {
+    setIsCallingPlanEditOpen(true);
+  }
 };
 
 // --------------------------------------------------------------------
@@ -90,7 +125,17 @@ const hdcEditClose = () => {
   }
 
   setIsEditOpen(false);
+
 };
+
+
+// --------------------------------------------------------------------
+const hdcEditCloseCP = () => {
+
+  getAdminEditCase4();
+  setIsCallingPlanEditOpen(false);
+};
+
 
 
 // --------------------------------------------------------------------
@@ -113,7 +158,6 @@ const handleClickCompDeleteDialogClose = () => {
   setIsCompDeleteDialogOpen(false);
   getDataRefresh();
 }
-
 
 const CompletedDisableDialogOpen = () => {
   setIsCompDisableDialogOpen(true);
@@ -150,6 +194,16 @@ const handleUpdate = async (e) => {
         telComName: adminEditCase.telComName,
       });}
 
+    if (editCase === 4) {
+      const docRef = await updateDoc(doc(db, "callingPlanName", id), {
+        comName: adminEditCaseCP.planName,
+        openComName: adminEditCaseCP.openComName,
+        rebate1: adminEditCaseCP.rebate1,
+        rebate2: adminEditCaseCP.rebate2,
+        rebate3: adminEditCaseCP.rebate3,
+        rebate4: adminEditCaseCP.rebate4,
+      });}
+
     if (editCase === 5) {
       const docRef = await updateDoc(doc(db, "comUsers", id), {
         name: adminEditCase.name,
@@ -172,6 +226,38 @@ const handleValueChange = (e) => {
   const keyValue = e.target.id;
   const editCopy = {...adminEditCase, [keyValue]: e.target.value };
   setAdminEditCase(editCopy);
+};
+
+// --------------------------------------------------------------------
+const handleValueChangeCP1 = (e) => {
+  const editCopy = [...rebate1];
+  editCopy[e.target.name] = e.target.value;
+  console.log(editCopy);
+  setRebate1(editCopy);
+};
+
+// --------------------------------------------------------------------
+const handleValueChangeCP2 = (e) => {
+  const editCopy = [...rebate2];
+  editCopy[e.target.name] = e.target.value;
+  console.log(editCopy);
+  setRebate2(editCopy);
+};
+
+// --------------------------------------------------------------------
+const handleValueChangeCP3 = (e) => {
+  const editCopy = [...rebate3];
+  editCopy[e.target.name] = e.target.value;
+  console.log(editCopy);
+  setRebate3(editCopy);
+};
+
+// --------------------------------------------------------------------
+const handleValueChangeCP4 = (e) => {
+  const editCopy = [...rebate4];
+  editCopy[e.target.name] = e.target.value;
+  console.log(editCopy);
+  setRebate4(editCopy);
 };
 
 // --------------------------------------------------------------------
@@ -219,7 +305,8 @@ const hdcDisableOpen = () => {
 
 // --------------------------------------------------------------------
 const hdcDisableClose = () => {
-  setIsDisableOpen(false);};
+  setIsDisableOpen(false);
+};
 
 
 // User Disable Function =======================================================
@@ -258,11 +345,15 @@ useEffect(()=>{
     getAdminEditCase3();
   }
 
+  if (editCase === 4) {
+    getAdminEditCase4();
+  }
+
   if (editCase === 5) {
     getAdminEditCase5();
   }
   
-},[]);
+}, []);
 
 
 
@@ -422,6 +513,79 @@ return (
         <Button onClick={handleClickCompDisableDialogClose}>OK</Button>
       </DialogActions>
     </Dialog>
+
+
+
+
+    {/* 요금제 수정 Dialog 열기 */}
+    <Dialog
+      fullScreen
+      open={isCallingPlanEditOpen}
+      onClose={hdcEditCloseCP}
+      TransitionComponent={Transition}
+    >
+      <AppBar sx={{ position: 'relative' }}>
+        <Toolbar>
+          <IconButton edge="start" color="inherit" onClick={hdcEditCloseCP} aria-label="close">
+            <CloseIcon onClick={hdcEditCloseCP} />
+          </IconButton>
+          <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
+            요금제 리베이트 수정
+          </Typography>
+          <Button autoFocus color="inherit" onClick={handleUpdate}>
+            Update
+          </Button>
+        </Toolbar>
+      </AppBar>
+
+      <DialogTitle sx={{color: pink[500], fontWeight: '600', display: 'flex', alignItems: 'center'}}>
+        <ReportIcon sx={{mr: 1}}/>{adminEditCaseCP.planName} - {adminEditCaseCP.openComName}
+      </DialogTitle>
+
+      <DialogContent>
+
+      <Paper sx={{ mt: 1, ml: 2, mr: 4, pl: 5, pr: 5, width: 1250, height: 550 }} elevation={5} >
+        
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell style={{fontWeight: 600}} align='center' >No.</TableCell>
+              <TableCell style={{fontWeight: 600}} align='center' >신규-리베이트</TableCell>
+              <TableCell style={{fontWeight: 600}} align='center' >MNP-리베이트</TableCell>
+              <TableCell style={{fontWeight: 600}} align='center' >신규-원가리베이트</TableCell>
+              <TableCell style={{fontWeight: 600}} align='center' >MNP-원가리베이트</TableCell>
+              <TableCell style={{fontWeight: 600}} align='center' >신규-손익</TableCell>
+              <TableCell style={{fontWeight: 600}} align='center' >MNP-손익</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {rebate1.map((r, index) => {
+              return (
+              <TableRow key = {index} sx={{padding:0}}>
+                <TableCell align='center' size="small" padding="none">{index + 1}</TableCell>
+                <TableCell align='center' size="small" padding="none"><Input name={(index)} value={rebate1[index]} onChange={handleValueChangeCP1} type="text" disableUnderline={true} sx={{ pl: 9, width: 200 }} variant="standard" /></TableCell>
+                <TableCell align='center' size="small" padding="none"><Input name={(index)} value={rebate2[index]} onChange={handleValueChangeCP2} type="text" disableUnderline={true} sx={{ pl: 9, width: 200 }} variant="standard" /></TableCell>
+                <TableCell align='center' size="small" padding="none"><Input name={(index)} value={rebate3[index]} onChange={handleValueChangeCP3} type="text" disableUnderline={true} sx={{ pl: 9, width: 200 }} variant="standard"/></TableCell>
+                <TableCell align='center' size="small" padding="none"><Input name={(index)} value={rebate4[index]} onChange={handleValueChangeCP4} type="text" disableUnderline={true} sx={{ pl: 9, width: 200 }} variant="standard"/></TableCell>
+                <TableCell align='center' size="small" padding="none"><Input value={rebate3[index] - rebate1[index]} type="text" disableUnderline={true} sx={{ pl: 10, width: 200 }} /></TableCell>
+                <TableCell align='center' size="small" padding="none"><Input value={rebate4[index] - rebate2[index]} type="text" disableUnderline={true} sx={{ pl: 10, width: 200 }} /></TableCell>
+              </TableRow>
+              )
+            })}
+              
+
+            
+        </TableBody>
+        </Table>
+        </Paper>
+
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={hdcEditCloseCP}>CANCLE</Button>
+        {/* <Button onClick={handleUpdate}>UPDATE</Button> */}
+        <Button >UPDATE</Button>
+      </DialogActions>
+  </Dialog>
 
 
   </>
