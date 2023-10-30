@@ -1,5 +1,5 @@
 // react & material UI import ==================================================
-import React from 'react'
+import React, { useContext } from 'react'
 import { useNavigate } from 'react-router-dom';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
@@ -15,6 +15,9 @@ import { initializeApp } from "firebase/app";
 import { firebaseConfig } from '../firebase';
 import { getAuth, signOut, onAuthStateChanged } from "firebase/auth";
 import { getFirestore, collection, getDocs, query, where} from "firebase/firestore";
+import { UserCompanyContext } from '../context/UserCompanyContext';
+import { UserNameContext } from '../context/UserNameContext';
+import { UserGradeContext } from '../context/UserGradeContext';
 
 
 // Initialize Firebase ==================================================
@@ -34,11 +37,12 @@ const navigate = useNavigate();
 const auth = getAuth();
 
 const [ anchorElUser, setAnchorElUser ] = React.useState(null);
-const [ userName, setUserName ] = React.useState(null);
-const [ userGrade, setUserGrade ] = React.useState(null);
-const [ userCompanyName, setUserCompanyName ] = React.useState(null);
+
 const settings = ['Logout'];
 
+const { userCompanyName } = useContext(UserCompanyContext);
+const { userName } = useContext(UserNameContext);
+const { userGrade } = useContext(UserGradeContext);
 
 // Define subFunction ==================================================
 //-----------------------------------------------------------------------
@@ -60,36 +64,6 @@ const handleCloseUserMenu = () => {
 
   });
 };
-
-
-// useEffect Start ========================================================
-React.useEffect(()=>{
-
-  const getUserName = () => {    
-
-    onAuthStateChanged(auth, async (user) => {
-      if (user) {
-        let data = '';
-        let userCompany = '';
-        let userGrade = '';
-        const querySnapshot = await getDocs(query(collection(db, "comUsers"), where("id", "==", user.uid)));
-        querySnapshot.forEach((doc) => {
-        data = (doc.data().name);
-        userCompany = (doc.data().company);
-        userGrade = (doc.data().userGrade);
-        setUserName(data);
-        setUserGrade(userGrade);
-        setUserCompanyName(userCompany);
-        });
-      } else {
-        navigate('/');
-      }
-    });
-    
-  }    
-  getUserName();
-
-}, []);
 
 
 

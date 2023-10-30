@@ -1,5 +1,5 @@
 // react & material UI import ==================================================
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext, createContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTheme } from '@emotion/react';
 import { styled } from '@mui/material/styles';
@@ -12,14 +12,15 @@ import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
 import OpenPhoneAdd from '../components/OpenPhoneAdd';
 import OpenPhone from '../components/OpenPhone';
 import ResponsiveAppBar from '../components/ResponsiveAppBar';
-// ======================================================================
-
+import { UserCompanyContext } from '../context/UserCompanyContext';
+import { UserNameContext } from '../context/UserNameContext';
+import { UserGradeContext } from '../context/UserGradeContext';
 
 // firebase import=======================================================
 import { initializeApp } from "firebase/app";
 import { getFirestore, collection, getDocs, query, where, orderBy } from "firebase/firestore";
 import { firebaseConfig } from '../firebase';
-import { getAuth, signOut, onAuthStateChanged } from "firebase/auth";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 
 // Initialize Firebase ==================================================
@@ -101,9 +102,14 @@ function OpenPhoneList() {
 // Initialize Variable ==================================================
 const navigate = useNavigate();
 const auth = getAuth();
-const [ userCompanyName, setUserCompanyName ] = React.useState(null);
-const [ userGrade, setUserGrade ] = React.useState(null);
+// const [ userCompanyName, setUserCompanyName ] = React.useState(null);
+// const [ userName, setUserName ] = React.useState(null);
+// const [ userGrade, setUserGrade ] = React.useState(null);
 const [ openPhoneList, setOpenPhoneList ] = useState([]);
+
+const { userCompanyName, setUserCompanyName } = useContext(UserCompanyContext);
+const { userName, setUserName } = useContext(UserNameContext);
+const { userGrade, setUserGrade }= useContext(UserGradeContext);
 
 
 // Table Pagination Start ----------------------------------------
@@ -153,17 +159,20 @@ const handleChangeRowsPerPage = (event) => {
 // useEffect 1 Start ========================================================
 useEffect(()=>{
 
-  const getUserCompanyName = () => {    
+  const getUserInformation = () => {    
 
   onAuthStateChanged(auth, async (user) => {
     if (user) {
-      let companydata = '';
+      let userCompany = '';
+      let userName = '';
       let userGrade = '';
       const querySnapshot = await getDocs(query(collection(db, "comUsers"), where("id", "==", user.uid)));
       querySnapshot.forEach((doc) => {
-      companydata = (doc.data().company);
+      userName = (doc.data().name);
+      userCompany = (doc.data().company);
       userGrade = (doc.data().userGrade);
-      setUserCompanyName(companydata);
+      setUserName(userName);
+      setUserCompanyName(userCompany);
       setUserGrade(userGrade);
       });
     } else {
@@ -171,9 +180,9 @@ useEffect(()=>{
     }
   });    
   }    
-  getUserCompanyName();
+  getUserInformation();
 
-}, []);
+});
 
 
 // useEffect 2 Start ========================================================
@@ -291,6 +300,7 @@ return (
     </TableContainer> 
   </Paper>
   </>
+  
 );
 
 // Component End =========================================================

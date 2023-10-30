@@ -59,7 +59,7 @@ export default function SignInSide() {
 // Initialize Variable ==================================================
 const [ errMsgOpen, setErrMsgOpen ] = React.useState(false);
 const [ msg, setMsg ] = React.useState('');
-const [ userEmailList, setUserEmailList ] = React.useState([]);
+const [ unconfirmUserEmailList, setUnconfirmUserEmailList ] = React.useState([]);
 
 const navigate = useNavigate();
 
@@ -84,7 +84,7 @@ const handleSubmit = (event) => {
 
   const data = new FormData(event.currentTarget);
 
-  if (userEmailList.includes(data.get('email'))) {
+  if (unconfirmUserEmailList.includes(data.get('email'))) {
     setMsg('아이디가 비활성화되어 로그인할 수 없습니다. 관리자에게 문의하세요');
     handleSignInErrMsgOpen();
     navigate('/');
@@ -112,7 +112,7 @@ useEffect(()=>{
     querySnapshot.forEach((doc) => {
       data.push(doc.data().email);
     });
-    setUserEmailList(data);
+    setUnconfirmUserEmailList(data);
   }
   getUser();
 

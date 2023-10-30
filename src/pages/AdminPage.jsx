@@ -1,5 +1,6 @@
 // react & material UI import ==================================================
 import React, { useEffect, useState } from "react";
+import { useContext } from 'react'
 import * as XLSX  from 'xlsx';
 import { styled } from '@mui/material/styles';
 import PropTypes from 'prop-types';
@@ -25,7 +26,9 @@ import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import StoreIcon from '@mui/icons-material/Store';
 import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
 import { Dialog, DialogContent, DialogTitle, DialogActions } from "@mui/material";
-
+import { UserCompanyContext } from '../context/UserCompanyContext';
+import { UserNameContext } from '../context/UserNameContext';
+import { UserGradeContext } from '../context/UserGradeContext';
 
 
 // firebase import=======================================================
@@ -113,24 +116,28 @@ function AdminPage(props) {
 
 // Initialize Variable ==================================================
 const navigate = useNavigate();
-const [ userGrade, setUserGrade ] = React.useState(null);
 const auth = getAuth();
+
 const [isSellComOpen, setIsSellComOpen] = useState(false);
 const [sellComList, setSellComList] = useState([]);
 const [isTelComOpen, setIsTelComOpen] = useState(false);
 const [telComList, setTelComList] = useState([]);
 const [isOpenComOpen, setIsOpenComOpen] = useState(false);
 const [openComList, setOpenComList] = useState([]);
-
 const [isCallingPlanOpen, setIsCallingPlanOpen] = useState(false);
 const [callingPlanList, setCallingPlanList] = useState([]);
-
 const [isUserOpen, setIsUserOpen] = useState(false);
 const [userList, setUserList] = useState([]);
+
 const [jsonData, setJsonData] = useState();
 const [ editCase, setEditCase ] = useState();
 
 const [ isCompUploadDialogOpen, setIsComUpLoadDialogOpen ] = useState(false);
+const [ msg, setMsg ] = useState('');
+
+const { setUserCompanyName } = useContext(UserCompanyContext);
+const { setUserName } = useContext(UserNameContext);
+const { userGrade, setUserGrade }= useContext(UserGradeContext);
 
 
 // Table Pagination Start ----------------------------------------
@@ -322,7 +329,7 @@ const SellComUpload = () => {
         isDeleted: 0 
     });    
     });
-    // alert("판매처 정보가 등록되었습니다.");
+    setMsg('판매처 정보가 업로드되었습니다.')
     hdcCompUploadDialogOpen();
   } catch (e) {
     console.error("Error adding document: ", e);
@@ -341,7 +348,7 @@ const TelComUpload = () => {
         isDeleted: 0 
     });    
     });
-    // alert("통신사 정보가 등록되었습니다.");
+    setMsg('통신사 정보가 업로드되었습니다.')
     hdcCompUploadDialogOpen();
   } catch (e) {
     console.error("Error adding document: ", e);
@@ -361,7 +368,7 @@ const OpenComUpload = () => {
         isDeleted: 0 
     });    
     });
-    // alert("개통처 정보가 등록되었습니다.");
+    setMsg('개통처 정보가 업로드되었습니다.')
     hdcCompUploadDialogOpen();
   } catch (e) {
     console.error("Error adding document: ", e);
@@ -370,7 +377,7 @@ const OpenComUpload = () => {
 }
 
 
-// 개통처 엑셀 업로드 ----------------------------------------------------------
+// 요금제 엑셀 업로드 ----------------------------------------------------------
 const CallingPlanUpload = () => {
   
   try {
@@ -399,7 +406,7 @@ const CallingPlanUpload = () => {
         isDeleted: 0,
     });    
   });
-    // alert("개통처 정보가 등록되었습니다.");
+    setMsg('요금제 정보가 업로드되었습니다.')
     hdcCompUploadDialogOpen();
   } catch (e) {
     console.error("Error adding document: ", e);
@@ -413,17 +420,23 @@ const CallingPlanUpload = () => {
 // useEffect 1 Start ========================================================
 useEffect(()=>{
 
-  const getUserCompanyName = () => {    
+  const getUserInformation = () => {    
 
   onAuthStateChanged(auth, async (user) => {
     if (user) {
+      let userCompany = '';
+      let userName = '';
       let userGrade = '';
       const querySnapshot = await getDocs(query(collection(db, "comUsers"), where("id", "==", user.uid)));
       querySnapshot.forEach((doc) => {
+      userName = (doc.data().name);
+      userCompany = (doc.data().company);
       userGrade = (doc.data().userGrade);
         if(userGrade !== 'A') {
           navigate('/openPhoneList');
         }
+      setUserName(userName);
+      setUserCompanyName(userCompany);
       setUserGrade(userGrade);
       });
     } else {
@@ -431,9 +444,9 @@ useEffect(()=>{
     }
   });    
   }    
-  getUserCompanyName();
+  getUserInformation();
 
-}, []);
+});
 
 
 // useEffect 2 Start ========================================================
@@ -848,7 +861,7 @@ return (
       <Divider />
       <DialogContent>      
         <Typography>
-          해당 정보가 정상적으로 업로드되었습니다.
+          {msg}
         </Typography>
       </DialogContent>
       <Divider />
