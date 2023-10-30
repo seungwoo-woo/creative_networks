@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { useContext } from 'react'
 import { useNavigate } from 'react-router-dom';
 import ResponsiveAppBar from '../components/ResponsiveAppBar';
@@ -9,7 +9,7 @@ import { UserGradeContext } from '../context/UserGradeContext';
 
 // firebase import=======================================================
 import { initializeApp } from "firebase/app";
-import { getFirestore, collection, getDocs, query, where, orderBy } from "firebase/firestore";
+import { getFirestore, collection, getDocs, query, where } from "firebase/firestore";
 import { firebaseConfig } from '../firebase';
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 
@@ -17,7 +17,7 @@ import { getAuth, onAuthStateChanged } from "firebase/auth";
 // Initialize Firebase ==================================================
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
-const auth = getAuth();
+const auth = getAuth(app);
 
 
 
@@ -60,7 +60,7 @@ useEffect(()=>{
   }    
   getUserInformation();
 
-});
+}, []);
 
 
 // ------------------------------------------------------------------------------------

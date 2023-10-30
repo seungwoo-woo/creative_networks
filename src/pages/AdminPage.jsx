@@ -19,7 +19,7 @@ import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft';
 import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
-import { Table, IconButton, TableHead, TableBody, TableCell, TableRow, TableFooter, TablePagination, TextField, Select, MenuItem, FormControl, InputLabel, tableCellClasses } from "@mui/material";
+import { Table, IconButton, TableHead, TableBody, TableCell, TableRow, TableFooter, TablePagination, tableCellClasses } from "@mui/material";
 import ResponsiveAppBar from '../components/ResponsiveAppBar';
 import AddOneRow from "../components/AddOneRow";
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
@@ -34,7 +34,7 @@ import { UserGradeContext } from '../context/UserGradeContext';
 // firebase import=======================================================
 import { initializeApp } from "firebase/app";
 import { firebaseConfig } from '../firebase';
-import { getAuth, signOut, onAuthStateChanged } from "firebase/auth";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { getFirestore, collection, addDoc, getDocs, query, where, orderBy} from "firebase/firestore";
 
 
@@ -116,7 +116,7 @@ function AdminPage(props) {
 
 // Initialize Variable ==================================================
 const navigate = useNavigate();
-const auth = getAuth();
+const auth = getAuth(app);
 
 const [isSellComOpen, setIsSellComOpen] = useState(false);
 const [sellComList, setSellComList] = useState([]);
@@ -137,7 +137,7 @@ const [ msg, setMsg ] = useState('');
 
 const { setUserCompanyName } = useContext(UserCompanyContext);
 const { setUserName } = useContext(UserNameContext);
-const { userGrade, setUserGrade }= useContext(UserGradeContext);
+const { setUserGrade }= useContext(UserGradeContext);
 
 
 // Table Pagination Start ----------------------------------------
@@ -446,7 +446,7 @@ useEffect(()=>{
   }    
   getUserInformation();
 
-});
+}, []);
 
 
 // useEffect 2 Start ========================================================

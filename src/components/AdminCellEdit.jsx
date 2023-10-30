@@ -13,15 +13,14 @@ import CloseIcon from '@mui/icons-material/Close';
 import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
 import Slide from '@mui/material/Slide';
-import { Dialog, DialogContent, DialogTitle, DialogActions, TextField, DialogContentText, Table, TableHead, TableBody, TableCell, TableRow, Input, Grid } from "@mui/material";
+import { Dialog, DialogContent, DialogTitle, DialogActions, TextField, Table, TableHead, TableBody, TableCell, TableRow, Input } from "@mui/material";
 
 
 
 // firebase import=======================================================
 import { initializeApp } from "firebase/app";
 import { firebaseConfig } from '../firebase';
-import { getFirestore, collection, getDoc, doc, getDocs, query, where, orderBy, updateDoc, deleteDoc } from "firebase/firestore";
-import { FormatColorReset } from '@mui/icons-material';
+import { getFirestore, getDoc, doc, updateDoc, deleteDoc } from "firebase/firestore";
 
 
 // Initialize Firebase ==================================================
@@ -44,6 +43,7 @@ function AdminCellEdit(props) {
 
 // Initialize Variable ==================================================
 const { id, getDataRefresh, editCase } = props
+
 const [isEditOpen, setIsEditOpen] = useState(false);
 const [isDeleteOpen, setIsDeleteOpen] = useState(false);
 const [isCallingPlanEditOpen, setIsCallingPlanEditOpen] = useState(false);
@@ -178,13 +178,13 @@ const handleUpdate = async (e) => {
     if (editCase === 1) {
     const docRef = await updateDoc(doc(db, "sellComName", id), {
       comName: adminEditCase.comName,
-      comNo: adminEditCase.comNo    
+      comNo: adminEditCase.comNo,    
     });}
 
     if (editCase === 2) {
       const docRef = await updateDoc(doc(db, "telComName", id), {
         comName: adminEditCase.comName,
-        comPerson: adminEditCase.comPerson
+        comPerson: adminEditCase.comPerson,
       });}
 
     if (editCase === 3) {
@@ -592,11 +592,10 @@ return (
         <Button onClick={handleUpdate}>UPDATE</Button>
       </DialogActions>
   </Dialog>
-
-
   </>
 )
 
+// Component End =========================================================
 }
 
 export default AdminCellEdit

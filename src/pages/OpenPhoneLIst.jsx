@@ -1,5 +1,5 @@
 // react & material UI import ==================================================
-import React, { useEffect, useState, useContext, createContext } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTheme } from '@emotion/react';
 import { styled } from '@mui/material/styles';
@@ -101,14 +101,10 @@ function OpenPhoneList() {
 
 // Initialize Variable ==================================================
 const navigate = useNavigate();
-const auth = getAuth();
-// const [ userCompanyName, setUserCompanyName ] = React.useState(null);
-// const [ userName, setUserName ] = React.useState(null);
-// const [ userGrade, setUserGrade ] = React.useState(null);
+const auth = getAuth(app);
 const [ openPhoneList, setOpenPhoneList ] = useState([]);
-
 const { userCompanyName, setUserCompanyName } = useContext(UserCompanyContext);
-const { userName, setUserName } = useContext(UserNameContext);
+const { setUserName } = useContext(UserNameContext);
 const { userGrade, setUserGrade }= useContext(UserGradeContext);
 
 

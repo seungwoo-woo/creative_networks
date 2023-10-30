@@ -1,5 +1,5 @@
 import { useContext } from 'react'
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import ResponsiveAppBar from '../components/ResponsiveAppBar';
 import { LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip, Legend } from 'recharts';
 import { useNavigate } from 'react-router-dom';
@@ -10,7 +10,7 @@ import { UserGradeContext } from '../context/UserGradeContext';
 
 // firebase import=======================================================
 import { initializeApp } from "firebase/app";
-import { getFirestore, collection, getDocs, query, where, orderBy } from "firebase/firestore";
+import { getFirestore, collection, getDocs, query, where } from "firebase/firestore";
 import { firebaseConfig } from '../firebase';
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 
@@ -19,7 +19,7 @@ import { getAuth, onAuthStateChanged } from "firebase/auth";
 // Initialize Firebase ==================================================
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
-const auth = getAuth();
+const auth = getAuth(app);
 
 
 // graph용 임시 data -------------------------------------------------
@@ -74,7 +74,7 @@ useEffect(()=>{
   }    
   getUserInformation();
 
-});
+}, []);
 
 
 
@@ -99,7 +99,6 @@ return (
     </div>
   </>
 );
-
 
 // Component End =========================================================
 }

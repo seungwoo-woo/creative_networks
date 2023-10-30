@@ -94,7 +94,7 @@ const handleSubmit = async (event) => {
 
   createUserWithEmailAndPassword(auth, data.get('email'), data.get('password'))
   .then((userCredential) => {
-    // Signed in 
+
     const user = userCredential.user;      
 
     const docRef = addDoc(collection(db, "comUsers"), {
@@ -199,6 +199,7 @@ return (
     </Container>
   </ThemeProvider>
 
+
   {/* SingUp alert ===========================================*/}
   <Dialog
       open={msgOpen}
@@ -215,7 +216,7 @@ return (
           계정이 정상적으로 생성되었습니다. 
         </Typography>
         <Typography sx={{color: pink[500], fontWeight: '400'}}>
-          관리자에게 권한등급조정을 요청하세요.
+          로그인 전, 관리자에게 권한등급조정을 요청하세요.
         </Typography>
       </DialogContent>
       <Divider />

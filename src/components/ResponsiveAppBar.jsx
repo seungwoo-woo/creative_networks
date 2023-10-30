@@ -13,8 +13,7 @@ import { deepOrange } from '@mui/material/colors';
 // firebase import=======================================================
 import { initializeApp } from "firebase/app";
 import { firebaseConfig } from '../firebase';
-import { getAuth, signOut, onAuthStateChanged } from "firebase/auth";
-import { getFirestore, collection, getDocs, query, where} from "firebase/firestore";
+import { getAuth, signOut } from "firebase/auth";
 import { UserCompanyContext } from '../context/UserCompanyContext';
 import { UserNameContext } from '../context/UserNameContext';
 import { UserGradeContext } from '../context/UserGradeContext';
@@ -22,7 +21,6 @@ import { UserGradeContext } from '../context/UserGradeContext';
 
 // Initialize Firebase ==================================================
 const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
 
 
 
@@ -30,11 +28,10 @@ const db = getFirestore(app);
 // Function 시작 =========================================================================
 // =======================================================================================
 function ResponsiveAppBar(props) {
-
-
+  
 // Initialize Variable ==================================================
 const navigate = useNavigate();
-const auth = getAuth();
+const auth = getAuth(app);
 
 const [ anchorElUser, setAnchorElUser ] = React.useState(null);
 

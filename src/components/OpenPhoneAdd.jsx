@@ -1,6 +1,5 @@
 // react & material UI import ==================================================
 import React, { useEffect, useState } from "react";
-import { useNavigate } from 'react-router-dom';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import AppBar from '@mui/material/AppBar';
@@ -18,13 +17,12 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
 import dayjs from "dayjs";
 import Autocomplete from '@mui/material/Autocomplete';
-import { DialogContent, DialogTitle, DialogContentText, DialogActions, Table, TableBody, TableCell, TableRow, TextField, Select, MenuItem, Box, FormControl, InputLabel } from "@mui/material";
+import { DialogContent, DialogTitle, DialogContentText, DialogActions, Table, TableBody, TableCell, TableRow, TextField, Select, MenuItem, FormControl, InputLabel } from "@mui/material";
 
 
 // firebase import=======================================================
 import { initializeApp } from "firebase/app";
 import { firebaseConfig } from '../firebase';
-import { getAuth } from "firebase/auth";
 import { getFirestore, collection, addDoc, getDocs, query, where, orderBy } from "firebase/firestore";
 
 
