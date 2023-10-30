@@ -4,9 +4,12 @@ import * as XLSX  from 'xlsx';
 import { styled } from '@mui/material/styles';
 import PropTypes from 'prop-types';
 import Box from '@mui/material/Box';
+import { pink } from '@mui/material/colors';
 import { useTheme } from '@emotion/react';
 import { useNavigate } from 'react-router-dom';
 import Paper from '@mui/material/Paper';
+import ReportIcon from '@mui/icons-material/Report';
+import Divider from '@mui/material/Divider';
 import Typography from '@mui/material/Typography';
 import NoteAltIcon from '@mui/icons-material/NoteAlt';
 import LastPageIcon from '@mui/icons-material/LastPage';
@@ -21,6 +24,8 @@ import AddOneRow from "../components/AddOneRow";
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import StoreIcon from '@mui/icons-material/Store';
 import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
+import { Dialog, DialogContent, DialogTitle, DialogActions } from "@mui/material";
+
 
 
 // firebase import=======================================================
@@ -124,6 +129,8 @@ const [isUserOpen, setIsUserOpen] = useState(false);
 const [userList, setUserList] = useState([]);
 const [jsonData, setJsonData] = useState();
 const [ editCase, setEditCase ] = useState();
+
+const [ isCompUploadDialogOpen, setIsComUpLoadDialogOpen ] = useState(false);
 
 
 // Table Pagination Start ----------------------------------------
@@ -264,6 +271,17 @@ const hdcUserOpen = () => {
   setEditCase(5);
 };
 
+
+// ----------------------------------------------------------------------
+const hdcCompUploadDialogOpen = () => {
+  setIsComUpLoadDialogOpen(true);
+}
+
+// ----------------------------------------------------------------------
+const hdcCompUploadDialogClose = () => {
+  setIsComUpLoadDialogOpen(false);
+};
+
 //----------------------------------------------------------------------- 
 const handleChangePage = (event, newPage) => {
   setPage(newPage);
@@ -304,7 +322,8 @@ const SellComUpload = () => {
         isDeleted: 0 
     });    
     });
-    alert("판매처 정보가 등록되었습니다.");
+    // alert("판매처 정보가 등록되었습니다.");
+    hdcCompUploadDialogOpen();
   } catch (e) {
     console.error("Error adding document: ", e);
   }
@@ -322,7 +341,8 @@ const TelComUpload = () => {
         isDeleted: 0 
     });    
     });
-    alert("통신사 정보가 등록되었습니다.");
+    // alert("통신사 정보가 등록되었습니다.");
+    hdcCompUploadDialogOpen();
   } catch (e) {
     console.error("Error adding document: ", e);
   }
@@ -341,12 +361,52 @@ const OpenComUpload = () => {
         isDeleted: 0 
     });    
     });
-    alert("개통처 정보가 등록되었습니다.");
+    // alert("개통처 정보가 등록되었습니다.");
+    hdcCompUploadDialogOpen();
   } catch (e) {
     console.error("Error adding document: ", e);
   }
   getDataRefresh3();
 }
+
+
+// 개통처 엑셀 업로드 ----------------------------------------------------------
+const CallingPlanUpload = () => {
+  
+  try {
+    // console.log(jsonData);
+    jsonData.map(async (item) => {
+
+      const rebate1 = [];
+      const rebate2 = [];
+      const rebate3 = [];
+      const rebate4 = [];
+
+      for (let i = 0; i < 31; i++) {
+        rebate1.push(item.신규리베이트);
+        rebate2.push(item.MNP리베이트);
+        rebate3.push(item.신규원가리베이트);
+        rebate4.push(item.MNP원가리베이트);
+      }
+
+      const docRef = await addDoc(collection(db, "callingPlanName"), {
+        planName: item.요금제,
+        openComName: item.개통처,
+        rebate1: rebate1,
+        rebate2: rebate2,
+        rebate3: rebate3,
+        rebate4: rebate4,
+        isDeleted: 0,
+    });    
+  });
+    // alert("개통처 정보가 등록되었습니다.");
+    hdcCompUploadDialogOpen();
+  } catch (e) {
+    console.error("Error adding document: ", e);
+  }
+  getDataRefresh4();
+}
+
 
 
 
@@ -604,12 +664,12 @@ return (
           <>
           <Typography sx={{ mt: 2, ml: 1, mb: 2, fontWeight: 400, display: 'flex', alignItems: 'center' }} variant="h6" >
             <StoreIcon fontSize="small" sx={{ mr: 2}} /> 개통처 정보 확인 및 수정
-              <Button sx={{ml: 69}} size='small' component="label" variant="contained" onChange={ExcelToJson} startIcon={<CloudUploadIcon />}>
-                Select Excel file
-              <VisuallyHiddenInput type="file" 
-                accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"  />
-              </Button>
-              <Button sx={{mt: 0, ml: 1}} size='small' variant="outlined" onClick={OpenComUpload}>UPLOAD</Button>
+            <Button sx={{ml: 69}} size='small' component="label" variant="contained" onChange={ExcelToJson} startIcon={<CloudUploadIcon />}>
+              Select Excel file
+            <VisuallyHiddenInput type="file" 
+              accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"  />
+            </Button>
+            <Button sx={{mt: 0, ml: 1}} size='small' variant="outlined" onClick={OpenComUpload}>UPLOAD</Button>
           </Typography>
 
           <Table stickyHeader size='small' aria-label="sticky table">        
@@ -664,12 +724,18 @@ return (
           <>
           <Typography sx={{ mt: 2, ml: 1, mb: 2, fontWeight: 400, display: 'flex', alignItems: 'center' }} variant="h6" >
             <ManageAccountsIcon fontSize="small" sx={{ mr: 2}} /> 요금제 정보 확인 및 수정
+            <Button sx={{ml: 69}} size='small' component="label" variant="contained" onChange={ExcelToJson} startIcon={<CloudUploadIcon />}>
+                Select Excel file
+            <VisuallyHiddenInput type="file" 
+              accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"  />
+            </Button>
+            <Button sx={{mt: 0, ml: 1}} size='small' variant="outlined" onClick={CallingPlanUpload}>UPLOAD</Button>
           </Typography>
 
           <Table stickyHeader size='small' aria-label="sticky table">        
             <TableHead>
               <TableRow>
-                <StyledTableCell style={{fontWeight: 400}} align='center' >No.</StyledTableCell>
+                <StyledTableCell style={{fontWeight: 400}} align='center' >Day</StyledTableCell>
                 <StyledTableCell style={{fontWeight: 400}} align='center' >요금제</StyledTableCell>
                 <StyledTableCell style={{fontWeight: 400}} align='center' >개통처</StyledTableCell>
                 <StyledTableCell style={{fontWeight: 600, color: "yellow"}} align='center' >ACTION</StyledTableCell>
@@ -768,6 +834,29 @@ return (
 
         </Paper>
     </Box>
+
+
+    <Dialog
+    open={isCompUploadDialogOpen}
+    onClose={hdcCompUploadDialogClose}
+    aria-labelledby="alert-dialog-title"
+    aria-describedby="alert-dialog-description"
+    >
+      <DialogTitle sx={{color: pink[500], fontWeight: '400', display: 'flex', alignItems: 'center'}}>
+        <ReportIcon sx={{mr: 1}}/>{" Excel File Upload "}
+      </DialogTitle>
+      <Divider />
+      <DialogContent>      
+        <Typography>
+          해당 정보가 정상적으로 업로드되었습니다.
+        </Typography>
+      </DialogContent>
+      <Divider />
+      <DialogActions>
+        <Button onClick={hdcCompUploadDialogClose}>OK</Button>
+      </DialogActions>
+    </Dialog>
+
     
   </>
 );

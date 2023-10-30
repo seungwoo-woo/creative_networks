@@ -196,12 +196,12 @@ const handleUpdate = async (e) => {
 
     if (editCase === 4) {
       const docRef = await updateDoc(doc(db, "callingPlanName", id), {
-        comName: adminEditCaseCP.planName,
+        planName: adminEditCaseCP.planName,
         openComName: adminEditCaseCP.openComName,
-        rebate1: adminEditCaseCP.rebate1,
-        rebate2: adminEditCaseCP.rebate2,
-        rebate3: adminEditCaseCP.rebate3,
-        rebate4: adminEditCaseCP.rebate4,
+        rebate1: rebate1,
+        rebate2: rebate2,
+        rebate3: rebate3,
+        rebate4: rebate4,
       });}
 
     if (editCase === 5) {
@@ -229,9 +229,16 @@ const handleValueChange = (e) => {
 };
 
 // --------------------------------------------------------------------
+const handleValueChangeCP = (e) => {
+  const keyValue = e.target.id;
+  const editCopy = {...adminEditCaseCP, [keyValue]: e.target.value };
+  setAdminEditCaseCP(editCopy);
+};
+
+// --------------------------------------------------------------------
 const handleValueChangeCP1 = (e) => {
   const editCopy = [...rebate1];
-  editCopy[e.target.name] = e.target.value;
+  editCopy[e.target.name] = Number(e.target.value);
   console.log(editCopy);
   setRebate1(editCopy);
 };
@@ -239,7 +246,7 @@ const handleValueChangeCP1 = (e) => {
 // --------------------------------------------------------------------
 const handleValueChangeCP2 = (e) => {
   const editCopy = [...rebate2];
-  editCopy[e.target.name] = e.target.value;
+  editCopy[e.target.name] = Number(e.target.value);
   console.log(editCopy);
   setRebate2(editCopy);
 };
@@ -247,7 +254,7 @@ const handleValueChangeCP2 = (e) => {
 // --------------------------------------------------------------------
 const handleValueChangeCP3 = (e) => {
   const editCopy = [...rebate3];
-  editCopy[e.target.name] = e.target.value;
+  editCopy[e.target.name] = Number(e.target.value);
   console.log(editCopy);
   setRebate3(editCopy);
 };
@@ -255,7 +262,7 @@ const handleValueChangeCP3 = (e) => {
 // --------------------------------------------------------------------
 const handleValueChangeCP4 = (e) => {
   const editCopy = [...rebate4];
-  editCopy[e.target.name] = e.target.value;
+  editCopy[e.target.name] = Number(e.target.value);
   console.log(editCopy);
   setRebate4(editCopy);
 };
@@ -285,6 +292,9 @@ const handleDelete = async (e) => {
     }
     if (editCase === 3) {
       const docRef = await deleteDoc(doc(db, "openComName", id));
+    }
+    if (editCase === 4) {
+      const docRef = await deleteDoc(doc(db, "callingPlanName", id));
     }
 
     CompletedDeletDialogOpen();
@@ -539,14 +549,15 @@ return (
       </AppBar>
 
       <DialogTitle sx={{color: pink[500], fontWeight: '600', display: 'flex', alignItems: 'center'}}>
-        <ReportIcon sx={{mr: 1}}/>{adminEditCaseCP.planName} - {adminEditCaseCP.openComName}
+        {/* <ReportIcon sx={{mr: 1}}/>{adminEditCaseCP.planName} - {adminEditCaseCP.openComName} */}
+        <ReportIcon sx={{mr: 1}}/> 요금제 - 
+        <Input id={'planName'} value={adminEditCaseCP.planName} onChange={handleValueChangeCP} type="text" disableUnderline={true} sx={{ pl: 1, width: 300, fontSize: 18, fontWeight: 600 }} variant="standard"/>
+        개통처 - <Input id={'openComName'} value={adminEditCaseCP.openComName} onChange={handleValueChangeCP} type="text" disableUnderline={true} sx={{ pl: 1, width: 300, fontSize: 18, fontWeight: 600 }} variant="standard"/>
       </DialogTitle>
 
       <DialogContent>
-
-      <Paper sx={{ mt: 1, ml: 2, mr: 4, pl: 5, pr: 5, width: 1250, height: 550 }} elevation={5} >
-        
-        <Table>
+      <Paper sx={{ mt: 1, ml: 2, mr: 4, pl: 5, pr: 5, width: 1250, height: 1100 }} elevation={5} >        
+        <Table stickyHeader aria-label="sticky table">
           <TableHead>
             <TableRow>
               <TableCell style={{fontWeight: 600}} align='center' >No.</TableCell>
@@ -571,19 +582,14 @@ return (
                 <TableCell align='center' size="small" padding="none"><Input value={rebate4[index] - rebate2[index]} type="text" disableUnderline={true} sx={{ pl: 10, width: 200 }} /></TableCell>
               </TableRow>
               )
-            })}
-              
-
-            
+            })}       
         </TableBody>
         </Table>
         </Paper>
-
       </DialogContent>
       <DialogActions>
         <Button onClick={hdcEditCloseCP}>CANCLE</Button>
-        {/* <Button onClick={handleUpdate}>UPDATE</Button> */}
-        <Button >UPDATE</Button>
+        <Button onClick={handleUpdate}>UPDATE</Button>
       </DialogActions>
   </Dialog>
 
