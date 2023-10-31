@@ -1,5 +1,5 @@
 // react & material UI import ==================================================
-import React, { useContext } from 'react'
+import React, { useContext, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
@@ -52,6 +52,7 @@ const handleJustCloseUserMenu = () => {
   setAnchorElUser(null);
 }
 
+
 //-----------------------------------------------------------------------
 const handleCloseUserMenu = () => {
   setAnchorElUser(null);
@@ -75,8 +76,8 @@ return (
         <SatelliteAltTwoToneIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
         
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-            <Typography variant="h5" component="a" href="/dashBoard"
-              sx={{ mr: 4, display: { xs: 'none', md: 'flex' }, fontWeight: 400, color: 'inherit', textDecoration: 'none' }}
+            <Typography name='menu1' variant="h5" component="a" href="/dashBoard"
+              sx={{ mr: 4, display: { xs: 'none', md: 'flex' }, fontWeight: 400, color:'inherit', textDecoration: 'none' }}
             >
               Creactive Networks
             </Typography>
@@ -93,11 +94,11 @@ return (
               정산
             </Typography>
 
-            {userGrade === 'A' ? <Typography variant="h10" component="a" href="/admin"
+            {userGrade === 'A' && <Typography variant="h10" component="a" href="/admin"
               sx={{ mr: 2, pt: 0.8, display: { xs: 'none', md: 'flex' }, fontWeight: 200, color: 'inherit', textDecoration: 'none' }}
             >
               관리자페이지
-            </Typography> : ""}
+            </Typography>}
           </Box>
 
           <Box sx={{ flexGrow: 0, display: 'flex', alignItems: 'center' }}>

@@ -24,6 +24,7 @@ import ResponsiveAppBar from '../components/ResponsiveAppBar';
 import AddOneRow from "../components/AddOneRow";
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import StoreIcon from '@mui/icons-material/Store';
+import WifiCalling3Icon from '@mui/icons-material/WifiCalling3';
 import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
 import { Dialog, DialogContent, DialogTitle, DialogActions } from "@mui/material";
 import { UserCompanyContext } from '../context/UserCompanyContext';
@@ -736,7 +737,7 @@ return (
           { isCallingPlanOpen && 
           <>
           <Typography sx={{ mt: 2, ml: 1, mb: 2, fontWeight: 400, display: 'flex', alignItems: 'center' }} variant="h6" >
-            <ManageAccountsIcon fontSize="small" sx={{ mr: 2}} /> 요금제 정보 확인 및 수정
+            <WifiCalling3Icon fontSize="small" sx={{ mr: 2}} /> 요금제 정보 확인 및 수정
             <Button sx={{ml: 69}} size='small' component="label" variant="contained" onChange={ExcelToJson} startIcon={<CloudUploadIcon />}>
                 Select Excel file
             <VisuallyHiddenInput type="file" 

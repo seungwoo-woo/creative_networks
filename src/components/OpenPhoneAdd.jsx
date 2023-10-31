@@ -11,7 +11,7 @@ import Divider from '@mui/material/Divider';
 import CloseIcon from '@mui/icons-material/Close';
 import ReportIcon from '@mui/icons-material/Report';
 import Slide from '@mui/material/Slide';
-import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
+import { DemoContainer, DemoItem } from '@mui/x-date-pickers/internals/demo';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
@@ -39,6 +39,8 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 
 
 
+
+
 //  ======================================================================================
 // Function 시작 =========================================================================
 // =======================================================================================
@@ -48,6 +50,8 @@ function OpenPhoneAdd(props) {
 // Initialize Variable ==================================================
 const getDataRefresh = props.getDataRefresh;
 const userGrade = props.userGrade;
+const userCompanyName = props.userCompanyName;
+const setOpenPhoneList = props.setOpenPhoneList;
 
 const [openPhoneCase, setOpenPhoneCase] = 
   useState({ no: '', telCom: '', openCom: '', type: '', openDate: '', openType: '', phoneModel: '', phoneSerial: '', phoneColor: '', customerName: '', phoneNo: '', birthday: '', callingPlan: '', controlNo: '', memo: '', sellCom: '', isDeleted: 0});
@@ -57,7 +61,18 @@ const [sellComNameList, setSellComNameList] = useState([]);
 const [telComNameList, setTelComNameList] = useState([]);
 const [openComNameList, setOpenComNameList] = useState([]);
 const [openCallingPlanList, setOpenCallingPlanList] = useState([]);
-const [inputValue, setInputValue] = useState('');    // sellComName
+const [inputValue, setInputValue] = useState('');            // Autocomplete sellComName
+const [findInputValue, setFindInputValue] = useState('');    // Autocomplete FindSellComName
+
+// date picker ---------------------------------
+const today = new Date();
+// const initialStartDay = new Date(today.getFullYear(), today.getMonth(), 1);
+const initialStartDay = dayjs(`${today.getFullYear()}-${today.getMonth()+1}-01`).format("YYYY-MM-DD");
+const initialEndDay = dayjs(`${today.getFullYear()}-${today.getMonth()+1}-${today.getDate()}`).format("YYYY-MM-DD");
+
+const [startDate, setStartDate] = useState(initialStartDay);
+const [endDate, setEndDate] = useState(initialEndDay);
+const [findSellCom, setFindSellCom] = useState();
 
 
 // Define subFunction ==================================================
@@ -131,6 +146,38 @@ const handleSubmit = async (e) => {
   
   handleClickClose();
 };
+
+
+// find function ------------------------------------------------
+const findFunction = async () => {
+
+  console.log(findSellCom);
+
+  let data = [];
+
+    if (userGrade === 'A' || userGrade === 'B') {
+      if (findSellCom) {
+        const querySnapshot = await getDocs(query(collection(db, "CreativeNetworks"), where("openDate", ">=", startDate), where("openDate", "<=", endDate), orderBy("openDate", "desc"), where("isDeleted", "==", 0), where("sellCom", "==", findSellCom)));
+        querySnapshot.forEach((doc) => {
+          data.push({...doc.data(), id: doc.id,})
+        });
+      } else {
+        const querySnapshot = await getDocs(query(collection(db, "CreativeNetworks"), where("openDate", ">=", startDate), where("openDate", "<=", endDate), orderBy("openDate", "desc"), where("isDeleted", "==", 0)));
+        querySnapshot.forEach((doc) => {
+          data.push({...doc.data(), id: doc.id,})
+        });
+      }
+      
+    } else {
+      const querySnapshot = await getDocs(query(collection(db, "CreativeNetworks"), where("openDate", ">=", startDate), where("openDate", "<=", endDate), orderBy("openDate", "desc"), where("isDeleted", "==", 0), where("sellCom", "==", userCompanyName)));
+      querySnapshot.forEach((doc) => {
+        data.push({...doc.data(), id: doc.id,})
+      });
+    }
+    setOpenPhoneList(data);
+
+};
+
 
 
 // useEffect 1 Start ========================================================
@@ -207,17 +254,70 @@ useEffect(()=>{
 
 return (
   <>
-  <div style={{display: 'flex',  justifyContent: 'end', paddingRight: 10 }}>      
+  <div style={{display: 'flex',  justifyContent: 'space-between', alignItems: 'flex-end', paddingRight: 10, paddingLeft: 10 }}>      
     <Typography variant="h4" 
-      sx={{ mr: 115, display: { xs: 'none', md: 'flex' }, 
+      sx={{ ml: 1, pb: 1, display: { xs: 'none', md: 'flex' }, 
       fontWeight: 100, color: '#1976D2' }}>
       Creative Networks 개통 리스트
     </Typography>
+
+
+    {/* 검색 기능 구현 --------------------------- */}
     
-    { (userGrade === 'A' || userGrade === 'B') && <Button variant='contained' color='primary' onClick={handleClickOpen}>
+    <div style={{ width: 690, display: 'flex',  justifyContent: 'space-between', alignItems: 'flex-end' }}>
+
+    {(userGrade === 'A' || userGrade === 'B') ?
+    <Autocomplete
+      value={findSellCom}
+      onChange={(event, newValue) => {
+        setFindSellCom(newValue);
+      }}  
+
+      InputValue={findInputValue}
+      onInputChange={(event, newInputValue) => {
+        setFindInputValue(newInputValue);
+      }}
+      id="controllable-states-demo"
+      options={sellComNameList}
+      sx={{ width: 210 }}
+      renderInput={(params) => <TextField {...params} label="판매처" />}
+    /> : <div style={{ width: 210 }}>  </div> }
+
+    <LocalizationProvider dateAdapter={AdapterDayjs}>
+      <DemoContainer components={['DatePicker']}>
+        <DesktopDatePicker sx={{ width: 200 }} 
+                    label={["검색 시작일"]}
+                    format="YYYY-MM-DD"
+                    id="startDate" 
+                    value={dayjs(startDate)} onChange={(newValue) => setStartDate(dayjs(newValue).format("YYYY-MM-DD"))} />
+      </DemoContainer>
+      <DemoContainer components={['DatePicker']}>
+        <DesktopDatePicker sx={{ width: 200}}
+                    label={["검색 종료일"]}
+                    format="YYYY-MM-DD"
+                    id="startDate" 
+                    value={dayjs(endDate)} onChange={(newValue) => setEndDate(dayjs(newValue).format("YYYY-MM-DD"))} />
+      </DemoContainer>
+    </LocalizationProvider> 
+
+
+    <Button sx={{height:60, width: 60}} variant='contained' color='success' onClick={findFunction}>
+      검색
+    </Button>
+
+    </div>
+    {/* 검색 기능 구현 --------------------------- */}
+
+
+
+
+    
+    {(userGrade === 'A' || userGrade === 'B') && <Button sx={{height:60}} variant='contained' color='primary' onClick={handleClickOpen}>
       신규등록
-    </Button> }
+    </Button>}
   </div>
+
+
 
   <Dialog
       fullScreen

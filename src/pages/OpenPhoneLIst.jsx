@@ -215,7 +215,7 @@ return (
   <>
   <ResponsiveAppBar />
   <div style={{marginTop: 30}}>
-    <OpenPhoneAdd getDataRefresh = {getDataRefresh} userGrade = {userGrade}/>
+    <OpenPhoneAdd getDataRefresh={getDataRefresh} userGrade={userGrade} userCompanyName={userCompanyName} setOpenPhoneList={setOpenPhoneList}/>
   </div>
 
   <Paper style={{marginTop: 10, marginLeft: 10, marginRight: 10}} elevation={3}>
