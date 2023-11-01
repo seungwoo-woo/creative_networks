@@ -263,32 +263,40 @@ const handleValueChangeCP = (e) => {
 // --------------------------------------------------------------------
 const handleValueChangeCP1 = (e) => {
   const editCopy = [...rebate1];
-  editCopy[e.target.name] = Number(e.target.value);
-  console.log(editCopy);
+  editCopy[Number(e.target.name)] = Number(e.target.value);
+    for (let i = Number(e.target.name) + 1; i < 31; i++){
+      editCopy[i] = Number(e.target.value);
+    }
   setRebate1(editCopy);
 };
 
 // --------------------------------------------------------------------
 const handleValueChangeCP2 = (e) => {
   const editCopy = [...rebate2];
-  editCopy[e.target.name] = Number(e.target.value);
-  console.log(editCopy);
+  editCopy[Number(e.target.name)] = Number(e.target.value);
+    for (let i = Number(e.target.name) + 1; i < 31; i++){
+      editCopy[i] = Number(e.target.value);
+    }
   setRebate2(editCopy);
 };
 
 // --------------------------------------------------------------------
 const handleValueChangeCP3 = (e) => {
   const editCopy = [...rebate3];
-  editCopy[e.target.name] = Number(e.target.value);
-  console.log(editCopy);
+  editCopy[Number(e.target.name)] = Number(e.target.value);
+    for (let i = Number(e.target.name) + 1; i < 31; i++){
+      editCopy[i] = Number(e.target.value);
+    }
   setRebate3(editCopy);
 };
 
 // --------------------------------------------------------------------
 const handleValueChangeCP4 = (e) => {
   const editCopy = [...rebate4];
-  editCopy[e.target.name] = Number(e.target.value);
-  console.log(editCopy);
+  editCopy[Number(e.target.name)] = Number(e.target.value);
+    for (let i = Number(e.target.name) + 1; i < 31; i++){
+      editCopy[i] = Number(e.target.value);
+    }
   setRebate4(editCopy);
 };
 
@@ -581,24 +589,24 @@ return (
       </DialogTitle>
 
       <DialogContent>      
-      <Paper sx={{ ml: 2, pl: 5, pr: 5, width: 1360, height: 1100 }} elevation={5} >        
+      <Paper sx={{ ml: 2, pl: 5, pr: 5, width: 1360, height: 1085 }} elevation={5} >        
       <Typography sx={{ mt: 2, ml: 1, mb: 2, fontWeight: 400, display: 'flex', alignItems: 'center' }} variant="h6" />
         <Table stickyHeader size='small' aria-label="sticky table">
-          <TableHead>
-            <TableRow>
-              <StyledTableCell style={{fontWeight: 600}} align='center' >No.</StyledTableCell>
-              <StyledTableCell style={{fontWeight: 600}} align='center' >신규-리베이트</StyledTableCell>
-              <StyledTableCell style={{fontWeight: 600}} align='center' >MNP-리베이트</StyledTableCell>
-              <StyledTableCell style={{fontWeight: 600}} align='center' >신규-원가리베이트</StyledTableCell>
-              <StyledTableCell style={{fontWeight: 600}} align='center' >MNP-원가리베이트</StyledTableCell>
-              <StyledTableCell style={{fontWeight: 600}} align='center' >신규-손익</StyledTableCell>
-              <StyledTableCell style={{fontWeight: 600}} align='center' >MNP-손익</StyledTableCell>
+          <TableHead >
+            <TableRow >
+              <TableCell sx={{ backgroundColor: '#1976d2', color: 'white', fontWeight: 600 }} align='center' >No.</TableCell>
+              <TableCell sx={{ backgroundColor: '#1976d2', color: 'white', fontWeight: 600 }} align='center' >신규-리베이트</TableCell>
+              <TableCell sx={{ backgroundColor: '#1976d2', color: 'white', fontWeight: 600 }} align='center' >MNP-리베이트</TableCell>
+              <TableCell sx={{ backgroundColor: '#1976d2', color: 'white', fontWeight: 600 }} align='center' >신규-원가리베이트</TableCell>
+              <TableCell sx={{ backgroundColor: '#1976d2', color: 'white', fontWeight: 600 }} align='center' >MNP-원가리베이트</TableCell>
+              <TableCell sx={{ backgroundColor: '#1976d2', color: 'white', fontWeight: 600 }} align='center' >신규-손익</TableCell>
+              <TableCell sx={{ backgroundColor: '#1976d2', color: 'white', fontWeight: 600 }} align='center' >MNP-손익</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {rebate1.map((r, index) => {
               return (
-              <StyledTableRow key = {index} sx={{padding:0}}>
+              <TableRow key = {index} sx={{padding:0, backgroundColor: '#F5F5F5' }} >
                 <TableCell align='center' size="small" padding="none">{index + 1}</TableCell>
                 <TableCell align='center' size="small" padding="none"><Input name={(index)} value={rebate1[index]} onChange={handleValueChangeCP1} type="text" disableUnderline={true} sx={{ pl: 10, width: 200 }} variant="standard" /></TableCell>
                 <TableCell align='center' size="small" padding="none"><Input name={(index)} value={rebate2[index]} onChange={handleValueChangeCP2} type="text" disableUnderline={true} sx={{ pl: 10, width: 200 }} variant="standard" /></TableCell>
@@ -606,7 +614,7 @@ return (
                 <TableCell align='center' size="small" padding="none"><Input name={(index)} value={rebate4[index]} onChange={handleValueChangeCP4} type="text" disableUnderline={true} sx={{ pl: 10, width: 200 }} variant="standard"/></TableCell>
                 <TableCell align='center' size="small" padding="none"><Input value={rebate3[index] - rebate1[index]} type="text" disableUnderline={true} sx={{ pl: 10, width: 200 }} /></TableCell>
                 <TableCell align='center' size="small" padding="none"><Input value={rebate4[index] - rebate2[index]} type="text" disableUnderline={true} sx={{ pl: 10, width: 200 }} /></TableCell>
-              </StyledTableRow>
+              </TableRow> 
               )
             })}       
         </TableBody>
