@@ -3,7 +3,6 @@ import EditCalendarTwoToneIcon from '@mui/icons-material/EditCalendarTwoTone';
 import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
 import PersonOffTwoToneIcon from '@mui/icons-material/PersonOffTwoTone';
 import { pink } from '@mui/material/colors';
-import { styled } from '@mui/material/styles';
 import ReportIcon from '@mui/icons-material/Report';
 import Paper from '@mui/material/Paper';
 import Button from '@mui/material/Button';
@@ -14,7 +13,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
 import Slide from '@mui/material/Slide';
-import { Dialog, DialogContent, DialogTitle, DialogActions, TextField, Table, TableHead, TableBody, TableCell, TableRow, Input, tableCellClasses } from "@mui/material";
+import { Dialog, DialogContent, DialogTitle, DialogActions, TextField, Table, TableHead, TableBody, TableCell, TableRow, Input } from "@mui/material";
 
 
 
@@ -59,30 +58,6 @@ const [rebate2, setRebate2] = useState([]);
 const [rebate3, setRebate3] = useState([]);
 const [rebate4, setRebate4] = useState([]);
 
-
-
-// Table style ----------------------------------------------------
-const StyledTableCell = styled(TableCell)(({ theme }) => ({
-  [`&.${tableCellClasses.head}`]: {
-    backgroundColor: '#1976d2',
-    color: theme.palette.common.white,
-    fontSize: 14,
-  },
-  [`&.${tableCellClasses.body}`]: {
-    fontSize: 14,
-  },
-}));
-
-
-// Table style ----------------------------------------------------
-const StyledTableRow = styled(TableRow)(({ theme }) => ({
-  '&:nth-of-type(odd)': {
-    backgroundColor: theme.palette.action.hover,
-  },
-  // '&:last-child td, &:last-child th': {
-  //   border: 0,
-  // },
-}));
 
 
 // Define subFunction ==================================================
