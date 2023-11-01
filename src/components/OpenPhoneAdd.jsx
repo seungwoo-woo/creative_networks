@@ -265,7 +265,7 @@ return (
   <>
   <div style={{display: 'flex',  justifyContent: 'space-between', alignItems: 'flex-end', paddingRight: 10, paddingLeft: 10 }}>      
     <Typography variant="h4" 
-      sx={{ ml: 1, pb: 1, display: { xs: 'none', md: 'flex' }, 
+      sx={{ ml: 1, display: { xs: 'none', md: 'flex' }, 
       fontWeight: 400, color: '#1976D2' }}>
       Creative Networks 개통 리스트
     </Typography>
