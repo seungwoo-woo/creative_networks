@@ -256,7 +256,7 @@ useEffect(()=>{
 
 return (
   <>
-  <div style={{display: 'flex',  justifyContent: 'end', paddingRight: 10 }}>
+  <div style={{display: 'flex',  justifyContent: 'center' }}>
     <EditCalendarTwoToneIcon cursor='pointer' variant='contained' color='primary' onClick={handleClickOpen}/>
     <DeleteTwoToneIcon cursor='pointer' variant='contained' sx={{ color: pink[500], fontSize: 26 }} onClick={handleClickDeleteOpen}/>
   </div>

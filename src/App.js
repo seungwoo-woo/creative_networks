@@ -23,16 +23,16 @@ function App() {
     <UserCompanyContext.Provider value={{userCompanyName, setUserCompanyName}}>
     <UserNameContext.Provider value={{userName, setUserName}}>
     <UserGradeContext.Provider value={{userGrade, setUserGrade}}>
-    <Router>
-      <Routes>
-        <Route path = "/" element={<SignInSide />} />
-        <Route path = "/signUp" element={<SignUp />} />
-        <Route path = "/dashBoard" element={<OpenPhoneDashBoard />} />
-        <Route path = "/openPhoneList" element={<OpenPhoneList />} />
-        <Route path = "/calculate" element={<OpenPhoneCaculation />} />
-        <Route path = "/admin" element={<AdminPage />} />
-      </Routes>
-    </Router>
+      <Router>
+        <Routes>
+          <Route path = "/" element={<SignInSide />} />
+          <Route path = "/signUp" element={<SignUp />} />
+          <Route path = "/dashBoard" element={<OpenPhoneDashBoard />} />
+          <Route path = "/openPhoneList" element={<OpenPhoneList />} />
+          <Route path = "/calculate" element={<OpenPhoneCaculation />} />
+          <Route path = "/admin" element={<AdminPage />} />
+        </Routes>
+      </Router>
     </UserGradeContext.Provider>
     </UserNameContext.Provider>
     </UserCompanyContext.Provider>

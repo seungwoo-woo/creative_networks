@@ -178,7 +178,7 @@ useEffect(()=>{
   }    
   getUserInformation();
 
-});
+}, []);
 
 
 // useEffect 2 Start ========================================================
@@ -219,27 +219,27 @@ return (
   </div>
 
   <Paper style={{marginTop: 10, marginLeft: 10, marginRight: 10}} elevation={3}>
-  <TableContainer  sx={{ maxHeight: 560 }} >
+  <TableContainer>
     <Table stickyHeader size='small' aria-label="sticky table">        
       <TableHead>
         <TableRow>
-          <StyledTableCell style={{fontWeight: 400}} align='center' rowSpan={2}>No.</StyledTableCell>
-          <StyledTableCell style={{fontWeight: 400}} align='center' rowSpan={2}>통신사</StyledTableCell>
-          <StyledTableCell style={{fontWeight: 400}} align='center' rowSpan={2}>개통처</StyledTableCell>
-          <StyledTableCell style={{fontWeight: 400}} align='center' rowSpan={2}>타입</StyledTableCell>
-          <StyledTableCell style={{fontWeight: 400}} align='center' rowSpan={2}>개통일</StyledTableCell>
-          <StyledTableCell style={{fontWeight: 400}} align='center' rowSpan={2}>유형</StyledTableCell>
+          <StyledTableCell padding='none' sx= {{paddingTop:1, paddingBottom:1, fontWeight: 400}} align='center' rowSpan={2}>No.</StyledTableCell>
+          <StyledTableCell padding='none' sx={{fontWeight: 400}} align='center' rowSpan={2}>통신사</StyledTableCell>
+          <StyledTableCell padding='none' sx={{fontWeight: 400}} align='center' rowSpan={2}>개통처</StyledTableCell>
+          <StyledTableCell padding='none' sx={{fontWeight: 400}} align='center' rowSpan={2}>타입</StyledTableCell>
+          <StyledTableCell padding='none' sx={{fontWeight: 400}} align='center' rowSpan={2}>개통일</StyledTableCell>
+          <StyledTableCell padding='none' sx={{fontWeight: 400}} align='center' rowSpan={2}>유형</StyledTableCell>
           {/* <StyledTableCell style={{fontWeight: 400}} align='center' colSpan={3}>개통모델</StyledTableCell> */}
-          <StyledTableCell style={{fontWeight: 400}} align='center' rowSpan={2}>모델명</StyledTableCell>
-          <StyledTableCell style={{fontWeight: 400}} align='center' rowSpan={2}>일련번호</StyledTableCell>
-          <StyledTableCell style={{fontWeight: 400}} align='center' rowSpan={2}>색상</StyledTableCell>
-          <StyledTableCell style={{fontWeight: 400}} align='center' rowSpan={2}>고객명</StyledTableCell>
-          <StyledTableCell style={{fontWeight: 400}} align='center' rowSpan={2}>이동번호</StyledTableCell>
+          <StyledTableCell padding='none' sx={{fontWeight: 400}} align='center' rowSpan={2}>모델명</StyledTableCell>
+          <StyledTableCell padding='none' sx={{fontWeight: 400}} align='center' rowSpan={2}>일련번호</StyledTableCell>
+          <StyledTableCell padding='none' sx={{fontWeight: 400}} align='center' rowSpan={2}>색상</StyledTableCell>
+          <StyledTableCell padding='none' sx={{fontWeight: 400}} align='center' rowSpan={2}>고객명</StyledTableCell>
+          <StyledTableCell padding='none' sx={{fontWeight: 400}} align='center' rowSpan={2}>이동번호</StyledTableCell>
           {/* <StyledTableCell style={{fontWeight: 400}} align='center' rowSpan={2}>생년월일</StyledTableCell> */}
-          <StyledTableCell style={{fontWeight: 400}} align='center' rowSpan={2}>음성요금제</StyledTableCell>
-          <StyledTableCell style={{fontWeight: 400}} align='center' rowSpan={2}>메모</StyledTableCell>
-          <StyledTableCell style={{fontWeight: 400}} align='center' rowSpan={2}>판매처</StyledTableCell>
-          { (userGrade === 'A' || userGrade === 'B') && <StyledTableCell style={{fontWeight: 600, color: "yellow"}} align='center' rowSpan={2}>ACTION</StyledTableCell> }
+          <StyledTableCell padding='none' sx={{fontWeight: 400}} align='center' rowSpan={2}>음성요금제</StyledTableCell>
+          <StyledTableCell padding='none' sx={{fontWeight: 400}} align='center' rowSpan={2}>메모</StyledTableCell>
+          <StyledTableCell padding='none' sx={{fontWeight: 400}} align='center' rowSpan={2}>판매처</StyledTableCell>
+          { (userGrade === 'A' || userGrade === 'B') && <StyledTableCell padding='none' style={{fontWeight: 600, color: "yellow"}} align='center' rowSpan={2}>ACTION</StyledTableCell> }
         </TableRow>
         {/* <TableRow>
           <StyledTableCell style={{fontWeight: 400}} align='center'>모델명</StyledTableCell>

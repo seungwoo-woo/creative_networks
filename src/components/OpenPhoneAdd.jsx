@@ -1,5 +1,6 @@
 // react & material UI import ==================================================
 import React, { useEffect, useState } from "react";
+import { styled } from '@mui/material/styles';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import AppBar from '@mui/material/AppBar';
@@ -38,6 +39,14 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 });
 
 
+
+// Table style ----------------------------------------------------
+const StyledDesktopDataPicker = styled(DesktopDatePicker)`
+.css-nxo287-MuiInputBase-input-MuiOutlinedInput-input {
+  padding-top: 9px;
+  padding-bottom: 8px;
+}
+`
 
 
 
@@ -257,7 +266,7 @@ return (
   <div style={{display: 'flex',  justifyContent: 'space-between', alignItems: 'flex-end', paddingRight: 10, paddingLeft: 10 }}>      
     <Typography variant="h4" 
       sx={{ ml: 1, pb: 1, display: { xs: 'none', md: 'flex' }, 
-      fontWeight: 100, color: '#1976D2' }}>
+      fontWeight: 400, color: '#1976D2' }}>
       Creative Networks 개통 리스트
     </Typography>
 
@@ -267,7 +276,7 @@ return (
     <div style={{ width: 690, display: 'flex',  justifyContent: 'space-between', alignItems: 'flex-end' }}>
 
     {(userGrade === 'A' || userGrade === 'B') ?
-    <Autocomplete
+    <Autocomplete size="small"
       value={findSellCom}
       onChange={(event, newValue) => {
         setFindSellCom(newValue);
@@ -285,14 +294,14 @@ return (
 
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <DemoContainer components={['DatePicker']}>
-        <DesktopDatePicker sx={{ width: 200 }} 
+        <StyledDesktopDataPicker sx={{ width: 200}}
                     label={["검색 시작일"]}
                     format="YYYY-MM-DD"
                     id="startDate" 
                     value={dayjs(startDate)} onChange={(newValue) => setStartDate(dayjs(newValue).format("YYYY-MM-DD"))} />
       </DemoContainer>
       <DemoContainer components={['DatePicker']}>
-        <DesktopDatePicker sx={{ width: 200}}
+        <StyledDesktopDataPicker sx={{ width: 200}}
                     label={["검색 종료일"]}
                     format="YYYY-MM-DD"
                     id="startDate" 
@@ -301,7 +310,7 @@ return (
     </LocalizationProvider> 
 
 
-    <Button sx={{height:60, width: 60}} variant='contained' color='success' onClick={findFunction}>
+    <Button sx={{height:'40px', width: '70px'}} variant='contained' color='success' onClick={findFunction}>
       검색
     </Button>
 
@@ -312,7 +321,7 @@ return (
 
 
     
-    {(userGrade === 'A' || userGrade === 'B') && <Button sx={{height:60}} variant='contained' color='primary' onClick={handleClickOpen}>
+    {(userGrade === 'A' || userGrade === 'B') && <Button sx={{height:'40px'}} variant='contained' color='primary' onClick={handleClickOpen}>
       신규등록
     </Button>}
   </div>

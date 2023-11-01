@@ -21,9 +21,9 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
     backgroundColor: theme.palette.action.hover,
   },
   // hide last border
-  '&:last-child td, &:last-child th': {
-    border: 0,
-  },
+  // '&:last-child td, &:last-child th': {
+  //   border: 0,
+  // },
 }));
 
 
@@ -33,23 +33,23 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 
 return (
   <StyledTableRow>
-    <TableCell>{no}</TableCell>
-    <TableCell>{telCom}</TableCell>
-    <TableCell>{openCom}</TableCell>
-    <TableCell>{type}</TableCell>
-    <TableCell>{openDate}</TableCell>
-    <TableCell>{openType}</TableCell>
-    <TableCell>{phoneModel}</TableCell>
-    <TableCell>{phoneSerial}</TableCell>
-    <TableCell>{phoneColor}</TableCell>
-    <TableCell>{customerName}</TableCell>
-    <TableCell>{phoneNo}</TableCell>
+    <TableCell padding='none' sx= {{paddingTop:0.6, paddingBottom:0.6}} align='center'>{no}</TableCell>
+    <TableCell padding='none' align='center'>{telCom}</TableCell>
+    <TableCell padding='none' align='center'>{openCom}</TableCell>
+    <TableCell padding='none' align='center'>{type}</TableCell>
+    <TableCell padding='none' align='center'>{openDate}</TableCell>
+    <TableCell padding='none' align='center'>{openType}</TableCell>
+    <TableCell padding='none' align='center'>{phoneModel}</TableCell>
+    <TableCell padding='none' align='center'>{phoneSerial}</TableCell>
+    <TableCell padding='none' align='center'>{phoneColor}</TableCell>
+    <TableCell padding='none' align='center'>{customerName}</TableCell>
+    <TableCell padding='none' align='center'>{phoneNo}</TableCell>
     {/* <TableCell>{birthday}</TableCell> */}
-    <TableCell>{callingPlan}</TableCell>
+    <TableCell padding='none' align='center'>{callingPlan}</TableCell>
     {/* <TableCell>{controlNo}</TableCell> */}
-    <TableCell>{memo}</TableCell>
-    <TableCell>{sellCom}</TableCell>
-    { (userGrade === 'A' || userGrade === 'B') && <TableCell><OpenPhoneEdit id={id} getDataRefresh={getDataRefresh}/></TableCell> }
+    <TableCell padding='none' sx={{paddingLeft:1}}>{memo}</TableCell>
+    <TableCell padding='none' align='center'>{sellCom}</TableCell>
+    { (userGrade === 'A' || userGrade === 'B') && <TableCell padding='none' align='center'><OpenPhoneEdit id={id} getDataRefresh={getDataRefresh}/></TableCell> }
   </StyledTableRow>
 );
 
