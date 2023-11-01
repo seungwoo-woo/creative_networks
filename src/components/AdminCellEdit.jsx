@@ -3,6 +3,7 @@ import EditCalendarTwoToneIcon from '@mui/icons-material/EditCalendarTwoTone';
 import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
 import PersonOffTwoToneIcon from '@mui/icons-material/PersonOffTwoTone';
 import { pink } from '@mui/material/colors';
+import { styled } from '@mui/material/styles';
 import ReportIcon from '@mui/icons-material/Report';
 import Paper from '@mui/material/Paper';
 import Button from '@mui/material/Button';
@@ -13,7 +14,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
 import Slide from '@mui/material/Slide';
-import { Dialog, DialogContent, DialogTitle, DialogActions, TextField, Table, TableHead, TableBody, TableCell, TableRow, Input } from "@mui/material";
+import { Dialog, DialogContent, DialogTitle, DialogActions, TextField, Table, TableHead, TableBody, TableCell, TableRow, Input, tableCellClasses } from "@mui/material";
 
 
 
@@ -58,6 +59,30 @@ const [rebate2, setRebate2] = useState([]);
 const [rebate3, setRebate3] = useState([]);
 const [rebate4, setRebate4] = useState([]);
 
+
+
+// Table style ----------------------------------------------------
+const StyledTableCell = styled(TableCell)(({ theme }) => ({
+  [`&.${tableCellClasses.head}`]: {
+    backgroundColor: '#1976d2',
+    color: theme.palette.common.white,
+    fontSize: 14,
+  },
+  [`&.${tableCellClasses.body}`]: {
+    fontSize: 14,
+  },
+}));
+
+
+// Table style ----------------------------------------------------
+const StyledTableRow = styled(TableRow)(({ theme }) => ({
+  '&:nth-of-type(odd)': {
+    backgroundColor: theme.palette.action.hover,
+  },
+  // '&:last-child td, &:last-child th': {
+  //   border: 0,
+  // },
+}));
 
 
 // Define subFunction ==================================================
@@ -383,7 +408,7 @@ return (
       {(editCase === 3) && <DialogTitle sx={{color: pink[500], fontWeight: '400', display: 'flex', alignItems: 'center'}}>
         <ReportIcon sx={{mr: 1}}/>개통처 정보 수정</DialogTitle>}
       {(editCase === 5) && <DialogTitle sx={{color: pink[500], fontWeight: '400', display: 'flex', alignItems: 'center'}}>
-        <ReportIcon sx={{mr: 1}}/>사용자 정보 수정 (B-개통 직원, C-판매처 직원)</DialogTitle>}
+        <ReportIcon sx={{mr: 1}}/>사용자 정보 수정 (A-관리자, B-개통 직원, C-판매처 직원)</DialogTitle>}
       <Divider />       
       <DialogContent>
         {(editCase === 1) && <TextField value={adminEditCase.comName} id="comName" label="판매처" onChange={handleValueChange} margin="dense" type="text" fullWidth variant="standard" /> }
@@ -555,32 +580,33 @@ return (
         개통처 - <Input id={'openComName'} value={adminEditCaseCP.openComName} onChange={handleValueChangeCP} type="text" disableUnderline={true} sx={{ pl: 1, width: 300, fontSize: 18, fontWeight: 600 }} variant="standard"/>
       </DialogTitle>
 
-      <DialogContent>
-      <Paper sx={{ mt: 1, ml: 2, mr: 4, pl: 5, pr: 5, width: 1250, height: 1100 }} elevation={5} >        
-        <Table stickyHeader aria-label="sticky table">
+      <DialogContent>      
+      <Paper sx={{ ml: 2, pl: 5, pr: 5, width: 1360, height: 1100 }} elevation={5} >        
+      <Typography sx={{ mt: 2, ml: 1, mb: 2, fontWeight: 400, display: 'flex', alignItems: 'center' }} variant="h6" />
+        <Table stickyHeader size='small' aria-label="sticky table">
           <TableHead>
             <TableRow>
-              <TableCell style={{fontWeight: 600}} align='center' >No.</TableCell>
-              <TableCell style={{fontWeight: 600}} align='center' >신규-리베이트</TableCell>
-              <TableCell style={{fontWeight: 600}} align='center' >MNP-리베이트</TableCell>
-              <TableCell style={{fontWeight: 600}} align='center' >신규-원가리베이트</TableCell>
-              <TableCell style={{fontWeight: 600}} align='center' >MNP-원가리베이트</TableCell>
-              <TableCell style={{fontWeight: 600}} align='center' >신규-손익</TableCell>
-              <TableCell style={{fontWeight: 600}} align='center' >MNP-손익</TableCell>
+              <StyledTableCell style={{fontWeight: 600}} align='center' >No.</StyledTableCell>
+              <StyledTableCell style={{fontWeight: 600}} align='center' >신규-리베이트</StyledTableCell>
+              <StyledTableCell style={{fontWeight: 600}} align='center' >MNP-리베이트</StyledTableCell>
+              <StyledTableCell style={{fontWeight: 600}} align='center' >신규-원가리베이트</StyledTableCell>
+              <StyledTableCell style={{fontWeight: 600}} align='center' >MNP-원가리베이트</StyledTableCell>
+              <StyledTableCell style={{fontWeight: 600}} align='center' >신규-손익</StyledTableCell>
+              <StyledTableCell style={{fontWeight: 600}} align='center' >MNP-손익</StyledTableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {rebate1.map((r, index) => {
               return (
-              <TableRow key = {index} sx={{padding:0}}>
+              <StyledTableRow key = {index} sx={{padding:0}}>
                 <TableCell align='center' size="small" padding="none">{index + 1}</TableCell>
-                <TableCell align='center' size="small" padding="none"><Input name={(index)} value={rebate1[index]} onChange={handleValueChangeCP1} type="text" disableUnderline={true} sx={{ pl: 9, width: 200 }} variant="standard" /></TableCell>
-                <TableCell align='center' size="small" padding="none"><Input name={(index)} value={rebate2[index]} onChange={handleValueChangeCP2} type="text" disableUnderline={true} sx={{ pl: 9, width: 200 }} variant="standard" /></TableCell>
-                <TableCell align='center' size="small" padding="none"><Input name={(index)} value={rebate3[index]} onChange={handleValueChangeCP3} type="text" disableUnderline={true} sx={{ pl: 9, width: 200 }} variant="standard"/></TableCell>
-                <TableCell align='center' size="small" padding="none"><Input name={(index)} value={rebate4[index]} onChange={handleValueChangeCP4} type="text" disableUnderline={true} sx={{ pl: 9, width: 200 }} variant="standard"/></TableCell>
+                <TableCell align='center' size="small" padding="none"><Input name={(index)} value={rebate1[index]} onChange={handleValueChangeCP1} type="text" disableUnderline={true} sx={{ pl: 10, width: 200 }} variant="standard" /></TableCell>
+                <TableCell align='center' size="small" padding="none"><Input name={(index)} value={rebate2[index]} onChange={handleValueChangeCP2} type="text" disableUnderline={true} sx={{ pl: 10, width: 200 }} variant="standard" /></TableCell>
+                <TableCell align='center' size="small" padding="none"><Input name={(index)} value={rebate3[index]} onChange={handleValueChangeCP3} type="text" disableUnderline={true} sx={{ pl: 10, width: 200 }} variant="standard"/></TableCell>
+                <TableCell align='center' size="small" padding="none"><Input name={(index)} value={rebate4[index]} onChange={handleValueChangeCP4} type="text" disableUnderline={true} sx={{ pl: 10, width: 200 }} variant="standard"/></TableCell>
                 <TableCell align='center' size="small" padding="none"><Input value={rebate3[index] - rebate1[index]} type="text" disableUnderline={true} sx={{ pl: 10, width: 200 }} /></TableCell>
                 <TableCell align='center' size="small" padding="none"><Input value={rebate4[index] - rebate2[index]} type="text" disableUnderline={true} sx={{ pl: 10, width: 200 }} /></TableCell>
-              </TableRow>
+              </StyledTableRow>
               )
             })}       
         </TableBody>
