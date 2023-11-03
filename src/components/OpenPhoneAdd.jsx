@@ -11,6 +11,10 @@ import { pink } from '@mui/material/colors';
 import Divider from '@mui/material/Divider';
 import CloseIcon from '@mui/icons-material/Close';
 import ReportIcon from '@mui/icons-material/Report';
+import FormLabel from '@mui/material/FormLabel';
+import RadioGroup from '@mui/material/RadioGroup';
+import Radio from '@mui/material/Radio';
+import FormControlLabel from '@mui/material/FormControlLabel';
 import Slide from '@mui/material/Slide';
 import { DemoContainer, DemoItem } from '@mui/x-date-pickers/internals/demo';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -62,8 +66,11 @@ const userGrade = props.userGrade;
 const userCompanyName = props.userCompanyName;
 const setOpenPhoneList = props.setOpenPhoneList;
 
+const today = new Date();
+const initialOpenDate = dayjs(`${today.getFullYear()}-${today.getMonth()+1}-${today.getDate()}`).format("YYYY-MM-DD");
+
 const [openPhoneCase, setOpenPhoneCase] = 
-  useState({ no: '', telCom: '', openCom: '', type: '', openDate: '', openType: '', phoneModel: '', phoneSerial: '', phoneColor: '', customerName: '', phoneNo: '', birthday: '', callingPlan: '', controlNo: '', memo: '', sellCom: '', isDeleted: 0});
+  useState({ no: '', telCom: '', openCom: '', type: '', openDate: initialOpenDate, openType: '', phoneModel: '', phoneSerial: '', phoneColor: '', customerName: '', phoneNo: '', birthday: '', callingPlan: '', controlNo: '', memo: '', sellCom: '', nationality: '내국인', isDeleted: 0});
 const [isDialogOpen, setIsDialogOpen] = useState(false);
 const [isCompSaveDialogOpen, setIsCompSaveDialogOpen] = useState(false);
 const [sellComNameList, setSellComNameList] = useState([]);
@@ -73,15 +80,16 @@ const [openCallingPlanList, setOpenCallingPlanList] = useState([]);
 const [inputValue, setInputValue] = useState('');            // Autocomplete sellComName
 const [findInputValue, setFindInputValue] = useState('');    // Autocomplete FindSellComName
 
+
 // date picker ---------------------------------
-const today = new Date();
-// const initialStartDay = new Date(today.getFullYear(), today.getMonth(), 1);
 const initialStartDay = dayjs(`${today.getFullYear()}-${today.getMonth()+1}-01`).format("YYYY-MM-DD");
 const initialEndDay = dayjs(`${today.getFullYear()}-${today.getMonth()+1}-${today.getDate()}`).format("YYYY-MM-DD");
 
 const [startDate, setStartDate] = useState(initialStartDay);
 const [endDate, setEndDate] = useState(initialEndDay);
 const [findSellCom, setFindSellCom] = useState();
+// --------------------------------------------------------
+
 
 
 // Define subFunction ==================================================
@@ -93,7 +101,7 @@ const handleClickOpen = () => {
 
 //-----------------------------------------------------------------------
 const handleClickClose = () => {
-  setOpenPhoneCase({ no: '', telCom: '', openCom: '', type: '', openDate: '', openType: '', phoneModel: '', phoneSerial: '', phoneColor: '', customerName: '', phoneNo: '', birthday: '', callingPlan: '', controlNo: '', memo: '', sellCom: '', isDeleted: 0});
+  setOpenPhoneCase({ no: '', telCom: '', openCom: '', type: '', openDate: initialOpenDate, openType: '', phoneModel: '', phoneSerial: '', phoneColor: '', customerName: '', phoneNo: '', birthday: '', callingPlan: '', controlNo: '', memo: '', sellCom: '', nationality: '내국인', isDeleted: 0});
   setIsDialogOpen(false);
 };
 
@@ -124,6 +132,14 @@ const handleSelectChange = (e) => {
 
 
 //-----------------------------------------------------------------------
+const handleRadioChange = (e) => {  
+  const openPhoneCaseCopy = {...openPhoneCase, nationality: e.target.value };
+
+  setOpenPhoneCase(openPhoneCaseCopy);
+};
+
+
+//-----------------------------------------------------------------------
 const handleSubmit = async (e) => {
   e.preventDefault();
 
@@ -144,6 +160,7 @@ const handleSubmit = async (e) => {
       controlNo: openPhoneCase.controlNo,
       memo: openPhoneCase.memo,
       sellCom: openPhoneCase.sellCom,
+      nationality: openPhoneCase.nationality,
       isDeleted: 0 
     });
 
@@ -327,7 +344,7 @@ return (
   </div>
 
 
-
+{/* 신규 등록 Dialog Open ------------------------ */}
   <Dialog
       fullScreen
       open={isDialogOpen}
@@ -407,7 +424,7 @@ return (
             <TableCell>
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <DemoContainer components={['DatePicker']}>
-                  <DesktopDatePicker label={["개통일"]}
+                  <StyledDesktopDataPicker label={["개통일"]}
                               format="YYYY-MM-DD"
                               id="openDate" 
                               value={dayjs(openPhoneCase.openDate)} onChange={(newValue) => setOpenPhoneCase({...openPhoneCase, openDate: dayjs(newValue).format("YYYY-MM-DD")})} />
@@ -458,8 +475,7 @@ return (
               <TextField id="birthday" label="생년월일" type="text" value={openPhoneCase.birthday} onChange={handleValueChange} autoFocus margin="dense" fullWidth variant="standard" />
             </TableCell>
             <TableCell>
-              {/* <TextField id="callingPlan" label="요금제" type="text" value={openPhoneCase.callingPlan} onChange={handleValueChange} autoFocus margin="dense" fullWidth variant="standard" /> */}
-              <FormControl sx={{ m: 0, minWidth: 210 }} size="small" fullWidth>
+              <FormControl size="small" fullWidth>
                   <InputLabel id="demo-simple-select">요금제</InputLabel>
                   <Select
                     labelId="demo-simple-select-label"
@@ -485,7 +501,7 @@ return (
             </TableCell>
 
             <TableCell>
-              <Autocomplete
+              <Autocomplete size="small" 
                 value={openPhoneCase.sellCom}
                 onChange={(event, newValue) => {
                   setOpenPhoneCase({...openPhoneCase, 'sellCom': newValue });
@@ -497,12 +513,26 @@ return (
                 }}
                 id="controllable-states-demo"
                 options={sellComNameList}
-                sx={{ width: 250 }}
                 renderInput={(params) => <TextField {...params} label="판매처" />}
               />
             </TableCell>
 
-          </TableRow>
+            <TableCell>            
+              <FormControl>
+                <FormLabel id="demo-controlled-radio-buttons-group">내국인 / 외국인</FormLabel>
+                <RadioGroup row
+                  aria-labelledby="demo-controlled-radio-buttons-group"
+                  name="controlled-radio-buttons-group"
+                  value={openPhoneCase.nationality}
+                  onChange={handleRadioChange}
+                >
+                  <FormControlLabel value="내국인" control={<Radio size="small"/>} label="내국인" />
+                  <FormControlLabel value="외국인" control={<Radio size="small"/>} label="외국인" />
+                </RadioGroup>
+              </FormControl>
+              </TableCell>
+            
+            </TableRow>
 
         </TableBody>
         </Table>

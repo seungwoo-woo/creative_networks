@@ -235,7 +235,7 @@ return (
           <StyledTableCell padding='none' sx={{fontWeight: 400}} align='center' rowSpan={2}>색상</StyledTableCell>
           <StyledTableCell padding='none' sx={{fontWeight: 400}} align='center' rowSpan={2}>고객명</StyledTableCell>
           <StyledTableCell padding='none' sx={{fontWeight: 400}} align='center' rowSpan={2}>이동번호</StyledTableCell>
-          {/* <StyledTableCell style={{fontWeight: 400}} align='center' rowSpan={2}>생년월일</StyledTableCell> */}
+          <StyledTableCell padding='none' sx={{fontWeight: 400}} align='center' rowSpan={2}>내/외국인</StyledTableCell>
           <StyledTableCell padding='none' sx={{fontWeight: 400}} align='center' rowSpan={2}>음성요금제</StyledTableCell>
           <StyledTableCell padding='none' sx={{fontWeight: 400}} align='center' rowSpan={2}>메모</StyledTableCell>
           <StyledTableCell padding='none' sx={{fontWeight: 400}} align='center' rowSpan={2}>판매처</StyledTableCell>
@@ -265,6 +265,7 @@ return (
                 phoneColor = {op.phoneColor}
                 customerName = {op.customerName}
                 phoneNo = {op.phoneNo}
+                nationality = {op.nationality}
                 birthday = {op.birthday}
                 callingPlan = {op.callingPlan}
                 controlNo = {op.controlNo}

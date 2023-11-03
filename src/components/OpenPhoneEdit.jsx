@@ -1,5 +1,6 @@
 // react & material UI import ==================================================
 import React, { useEffect, useState } from "react";
+import { styled } from '@mui/material/styles';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import AppBar from '@mui/material/AppBar';
@@ -8,6 +9,10 @@ import IconButton from '@mui/material/IconButton';
 import ReportIcon from '@mui/icons-material/Report';
 import Typography from '@mui/material/Typography';
 import CloseIcon from '@mui/icons-material/Close';
+import FormLabel from '@mui/material/FormLabel';
+import RadioGroup from '@mui/material/RadioGroup';
+import Radio from '@mui/material/Radio';
+import FormControlLabel from '@mui/material/FormControlLabel';
 import Slide from '@mui/material/Slide';
 import Divider from '@mui/material/Divider';
 import EditCalendarTwoToneIcon from '@mui/icons-material/EditCalendarTwoTone';
@@ -41,6 +46,13 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 });
 
 
+// Table style ----------------------------------------------------
+const StyledDesktopDataPicker = styled(DesktopDatePicker)`
+.css-nxo287-MuiInputBase-input-MuiOutlinedInput-input {
+  padding-top: 9px;
+  padding-bottom: 8px;
+}`
+
 
 //  ======================================================================================
 // Function 시작 =========================================================================
@@ -52,7 +64,7 @@ function OpenPhoneEdit(props) {
 const id = props.id
 const getDataRefresh = props.getDataRefresh
 const [openPhoneEditCase, setOpenPhoneEditCase] = 
-  useState({ no: '', telCom: '', openCom: '', type: '', openDate: '', openType: '', phoneModel: '', phoneSerial: '', phoneColor: '', customerName: '', phoneNo: '', birthday: '', callingPlan: '', controlNo: '', memo: '', sellCom: '', isDeleted: 0});
+  useState({ no: '', telCom: '', openCom: '', type: '', openDate: '', openType: '', phoneModel: '', phoneSerial: '', phoneColor: '', customerName: '', phoneNo: '', nationality: '', birthday: '', callingPlan: '', controlNo: '', memo: '', sellCom: '', isDeleted: 0});
 const [isDialogOpen, setIsDialogOpen] = useState(false);
 const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 const [isCompUpdateDialogOpen, setIsCompUpdateDialogOpen] = useState(false);
@@ -127,6 +139,14 @@ const handleSelectChange = (e) => {
   setOpenPhoneEditCase(openPhoneCaseCopy);
 };
 
+
+//-----------------------------------------------------------------------
+const handleRadioChange = (e) => {  
+  const openPhoneCaseCopy = {...openPhoneEditCase, nationality: e.target.value };
+
+  setOpenPhoneEditCase(openPhoneCaseCopy);
+};
+
 // Update Function =======================================================
 const handleUpdate = async (e) => {
   e.preventDefault();
@@ -143,6 +163,7 @@ const handleUpdate = async (e) => {
       phoneColor: openPhoneEditCase.phoneColor,
       customerName: openPhoneEditCase.customerName,
       phoneNo: openPhoneEditCase.phoneNo,
+      nationality: openPhoneEditCase.nationality,
       birthday: openPhoneEditCase.birthday,
       callingPlan: openPhoneEditCase.callingPlan,
       controlNo: openPhoneEditCase.controlNo,
@@ -346,7 +367,7 @@ return (
               {/* <TextField id="openDate" label="개통일" type="text" value={openPhoneEditCase.openDate} onChange={handleValueChange} autoFocus margin="dense" fullWidth variant="standard" /> */}
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <DemoContainer components={['DatePicker']}>
-                  <DesktopDatePicker label={["개통일"]}
+                  <StyledDesktopDataPicker label={["개통일"]}
                               format="YYYY-MM-DD"
                               id="openDate" 
                               value={dayjs(openPhoneEditCase.openDate)} onChange={(newValue) => setOpenPhoneEditCase({...openPhoneEditCase, openDate: dayjs(newValue).format("YYYY-MM-DD")})} />
@@ -425,7 +446,7 @@ return (
             </TableCell>
 
             <TableCell>
-              <Autocomplete
+              <Autocomplete size="small"
                 value={openPhoneEditCase.sellCom}
                 onChange={(event, newValue) => {
                   setOpenPhoneEditCase({...openPhoneEditCase, 'sellCom': newValue });
@@ -437,9 +458,23 @@ return (
                 }}
                 id="controllable-states-demo"
                 options={sellComNameList}
-                sx={{ width: 250 }}
                 renderInput={(params) => <TextField {...params} label="판매처" />}
               />
+            </TableCell>
+
+            <TableCell>            
+              <FormControl>
+                <FormLabel id="demo-controlled-radio-buttons-group">내국인 / 외국인</FormLabel>
+                <RadioGroup row 
+                  aria-labelledby="demo-controlled-radio-buttons-group"
+                  name="controlled-radio-buttons-group"
+                  value={openPhoneEditCase.nationality}
+                  onChange={handleRadioChange}
+                >
+                  <FormControlLabel value="내국인" control={<Radio size="small"/>} label="내국인" />
+                  <FormControlLabel value="외국인" control={<Radio size="small"/>} label="외국인" />
+                </RadioGroup>
+              </FormControl>
             </TableCell>
 
           </TableRow>
