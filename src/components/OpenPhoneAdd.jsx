@@ -44,13 +44,13 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 
 
 
-// Table style ----------------------------------------------------
-const StyledDesktopDataPicker = styled(DesktopDatePicker)`
-.css-nxo287-MuiInputBase-input-MuiOutlinedInput-input {
-  padding-top: 9px;
-  padding-bottom: 8px;
-}
-`
+// // Table style ----------------------------------------------------
+// const StyledDesktopDataPicker = styled(DesktopDatePicker)`
+// .css-nxo287-MuiInputBase-input-MuiOutlinedInput-input {
+//   padding-top: 9px;
+//   padding-bottom: 8px;
+// }
+// `
 
 
 
@@ -310,20 +310,16 @@ return (
     /> : <div style={{ width: 210 }}>  </div> }
 
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <DemoContainer components={['DatePicker']}>
-        <StyledDesktopDataPicker sx={{ width: 200}}
+        <DesktopDatePicker sx={{ width: 200, "& .MuiInputBase-input": { height: "40px", paddingTop: 0, paddingBottom: 0 }}}
                     label={["검색 시작일"]}
                     format="YYYY-MM-DD"
                     id="startDate" 
                     value={dayjs(startDate)} onChange={(newValue) => setStartDate(dayjs(newValue).format("YYYY-MM-DD"))} />
-      </DemoContainer>
-      <DemoContainer components={['DatePicker']}>
-        <StyledDesktopDataPicker sx={{ width: 200}}
+        <DesktopDatePicker sx={{ width: 200, "& .MuiInputBase-input": { height: "40px", paddingTop: 0, paddingBottom: 0 }}}
                     label={["검색 종료일"]}
                     format="YYYY-MM-DD"
                     id="startDate" 
                     value={dayjs(endDate)} onChange={(newValue) => setEndDate(dayjs(newValue).format("YYYY-MM-DD"))} />
-      </DemoContainer>
     </LocalizationProvider> 
 
 
@@ -423,12 +419,10 @@ return (
             </TableCell>
             <TableCell>
               <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <DemoContainer components={['DatePicker']}>
-                  <StyledDesktopDataPicker label={["개통일"]}
+                  <DesktopDatePicker label={["개통일"]}
                               format="YYYY-MM-DD"
                               id="openDate" 
                               value={dayjs(openPhoneCase.openDate)} onChange={(newValue) => setOpenPhoneCase({...openPhoneCase, openDate: dayjs(newValue).format("YYYY-MM-DD")})} />
-                </DemoContainer>
               </LocalizationProvider>         
             </TableCell>
           </TableRow>
