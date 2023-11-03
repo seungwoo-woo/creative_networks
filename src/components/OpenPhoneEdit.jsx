@@ -17,11 +17,11 @@ import Slide from '@mui/material/Slide';
 import Divider from '@mui/material/Divider';
 import EditCalendarTwoToneIcon from '@mui/icons-material/EditCalendarTwoTone';
 import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
+import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
 import { pink } from '@mui/material/colors';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
 import dayjs from "dayjs";
 import Autocomplete from '@mui/material/Autocomplete';
 import { DialogContent, DialogTitle, DialogContentText, DialogActions, Table, TableBody, TableCell, TableRow, TextField, Select, MenuItem, Box, FormControl, InputLabel } from "@mui/material";
@@ -47,7 +47,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 
 
 // Table style ----------------------------------------------------
-const StyledDesktopDataPicker = styled(DesktopDatePicker)`
+const StyledDesktopDatePicker = styled(DesktopDatePicker)`
 .css-nxo287-MuiInputBase-input-MuiOutlinedInput-input {
   padding-top: 9px;
   padding-bottom: 8px;
@@ -314,12 +314,12 @@ return (
           <TableRow>
             <TableCell>
               <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <DemoContainer components={['DatePicker']}>
-                  <StyledDesktopDataPicker sx={{ width: 200}} label={["개통일"]}
+                {/* <DemoContainer components={['DatePicker']}> */}
+                  <DesktopDatePicker sx={{ width: '200px', "& .MuiInputBase-root": { width: "340px"}, "& .MuiInputBase-input": { height: "42px", paddingTop: 0, paddingBottom: 0 } }} label={["개통일"]}
                               format="YYYY-MM-DD"
                               id="openDate" 
                               value={dayjs(openPhoneEditCase.openDate)} onChange={(newValue) => setOpenPhoneEditCase({...openPhoneEditCase, openDate: dayjs(newValue).format("YYYY-MM-DD")})} />
-                </DemoContainer>
+                {/* </DemoContainer> */}
               </LocalizationProvider> 
             </TableCell>
             
