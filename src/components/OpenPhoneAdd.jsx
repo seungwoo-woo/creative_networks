@@ -263,7 +263,7 @@ useEffect(()=>{
 }, [openPhoneCase.openCom]);
 
 
-  
+
 // ------------------------------------------------------------------------------------
 // return 시작 ------------------------------------------------------------------------
 // ------------------------------------------------------------------------------------
@@ -359,83 +359,85 @@ return (
 
         <Table>
           <TableBody>
+
           <TableRow>
             <TableCell>
-              <FormControl sx={{ m: 0, minWidth: 210 }} size="small" fullWidth>
-                  <InputLabel id="demo-simple-select">통신사</InputLabel>
-                  <Select
-                    labelId="demo-simple-select-label"
-                    label="통신사"
-                    name="telCom"                      
-                    value={openPhoneCase.telCom}
-                    onChange={handleSelectChange}
-                  >
-                    {telComNameList.map((com) => (
-                      <MenuItem key={com.id} value={com.comName}>{com.comName}</MenuItem>)
-                    )}
-                  </Select>
-                </FormControl>
-            </TableCell>
-            <TableCell>
-              <FormControl sx={{ m: 0, minWidth: 210 }} size="small" fullWidth>
-                  <InputLabel id="demo-simple-select">개통처</InputLabel>
-                  <Select
-                    labelId="demo-simple-select-label"
-                    label="개통처"
-                    name="openCom"                      
-                    value={openPhoneCase.openCom}
-                    onChange={handleSelectChange}
-                  >
-                    {openComNameList.map((com) => (
-                      <MenuItem key={com.id} value={com.comName}>{com.comName}</MenuItem>)
-                    )}
-                  </Select>
-                </FormControl>
-            </TableCell>
-            <TableCell>
-              <FormControl sx={{ m: 0, minWidth: 210 }} size="small" fullWidth>
-                  <InputLabel id="demo-simple-select">타입</InputLabel>
-                  <Select
-                    labelId="demo-simple-select-label"
-                    label="타입"
-                    name="type"                      
-                    value={openPhoneCase.type}
-                    onChange={handleSelectChange}
-                  >
-                    <MenuItem value={'USIM'}>USIM</MenuItem>
-                    <MenuItem value={'단말기'}>단말기</MenuItem>
-                  </Select>
-                </FormControl>
-            </TableCell>
-            <TableCell>
               <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <DesktopDatePicker label={["개통일"]}
-                              format="YYYY-MM-DD"
-                              id="openDate" 
-                              value={dayjs(openPhoneCase.openDate)} onChange={(newValue) => setOpenPhoneCase({...openPhoneCase, openDate: dayjs(newValue).format("YYYY-MM-DD")})} />
+                <DesktopDatePicker sx={{ width: '200px', "& .MuiInputBase-root": { width: "346px"}, "& .MuiInputBase-input": { height: "42px", paddingTop: 0, paddingBottom: 0 } }} label={["개통일"]}
+                            format="YYYY-MM-DD"
+                            id="openDate" 
+                            value={dayjs(openPhoneCase.openDate)} onChange={(newValue) => setOpenPhoneCase({...openPhoneCase, openDate: dayjs(newValue).format("YYYY-MM-DD")})} />
               </LocalizationProvider>         
             </TableCell>
+            <TableCell>
+              <FormControl sx={{ m: 0, minWidth: 210 }} size="small" fullWidth>
+                <InputLabel id="demo-simple-select">통신사</InputLabel>
+                <Select
+                  labelId="demo-simple-select-label"
+                  label="통신사"
+                  name="telCom"                      
+                  value={openPhoneCase.telCom}
+                  onChange={handleSelectChange}
+                >
+                  {telComNameList.map((com) => (
+                    <MenuItem key={com.id} value={com.comName}>{com.comName}</MenuItem>)
+                  )}
+                </Select>
+              </FormControl>
+            </TableCell>
+            <TableCell>
+              <FormControl sx={{ m: 0, minWidth: 210 }} size="small" fullWidth>
+                <InputLabel id="demo-simple-select">개통처</InputLabel>
+                <Select
+                  labelId="demo-simple-select-label"
+                  label="개통처"
+                  name="openCom"                      
+                  value={openPhoneCase.openCom}
+                  onChange={handleSelectChange}
+                >
+                  {openComNameList.map((com) => (
+                    <MenuItem key={com.id} value={com.comName}>{com.comName}</MenuItem>)
+                  )}
+                </Select>
+              </FormControl>
+            </TableCell>
+            <TableCell>
+              <FormControl size="small" fullWidth>
+                <InputLabel id="demo-simple-select">요금제</InputLabel>
+                <Select
+                  labelId="demo-simple-select-label"
+                  label="요금제"
+                  name="callingPlan"                      
+                  value={openPhoneCase.callingPlan}
+                  onChange={handleSelectChange}
+                >
+                  {openCallingPlanList.map((com) => (
+                    <MenuItem key={com.id} value={com.planName}>{com.planName}</MenuItem>)
+                  )}
+                </Select>
+              </FormControl>              
+            </TableCell>      
           </TableRow>
 
           <TableRow>
             <TableCell>
               <FormControl sx={{ m: 0, minWidth: 210 }} size="small" fullWidth>
-                  <InputLabel id="demo-simple-select">유형</InputLabel>
-                  <Select
-                    labelId="demo-simple-select-label"
-                    label="유형"
-                    name="openType"                      
-                    value={openPhoneCase.openType}
-                    onChange={handleSelectChange}
-                  >
-                    <MenuItem value={'MNP할부'}>MNP할부</MenuItem>
-                    <MenuItem value={'MNP현금'}>MNP현금</MenuItem>
-                    <MenuItem value={'기변할부'}>기변할부</MenuItem>
-                    <MenuItem value={'기변현금'}>기변현금</MenuItem>
-                    <MenuItem value={'신규할부'}>신규할부</MenuItem>
-                    <MenuItem value={'신규현금'}>신규현금</MenuItem>
-                  </Select>
-                </FormControl>
+                <InputLabel id="demo-simple-select">유형</InputLabel>
+                <Select
+                  labelId="demo-simple-select-label"
+                  label="유형"
+                  name="openType"                      
+                  value={openPhoneCase.openType}
+                  onChange={handleSelectChange}
+                >
+                  <MenuItem value={'MNP할부'}>MNP할부</MenuItem>
+                  <MenuItem value={'MNP현금'}>MNP현금</MenuItem>
+                  <MenuItem value={'기변할부'}>기변할부</MenuItem>
+                  <MenuItem value={'기변현금'}>기변현금</MenuItem>
+                  <MenuItem value={'신규할부'}>신규할부</MenuItem>
+                  <MenuItem value={'신규현금'}>신규현금</MenuItem>
+                </Select>
+              </FormControl>
             </TableCell>
             <TableCell>
               <TextField id="phoneModel" label="개통모델" type="text" value={openPhoneCase.phoneModel} onChange={handleValueChange} autoFocus margin="dense" fullWidth variant="standard" />
@@ -450,6 +452,21 @@ return (
 
           <TableRow>
             <TableCell>
+              <FormControl sx={{ m: 0, minWidth: 210 }} size="small" fullWidth>
+                <InputLabel id="demo-simple-select">타입</InputLabel>
+                <Select
+                  labelId="demo-simple-select-label"
+                  label="타입"
+                  name="type"                      
+                  value={openPhoneCase.type}
+                  onChange={handleSelectChange}
+                >
+                  <MenuItem value={'USIM'}>USIM</MenuItem>
+                  <MenuItem value={'단말기'}>단말기</MenuItem>
+                </Select>
+              </FormControl>
+            </TableCell>
+            <TableCell>
               <TextField id="customerName" label="고객명" type="text" value={openPhoneCase.customerName} onChange={handleValueChange} autoFocus margin="dense" fullWidth variant="standard" />
             </TableCell>
             <TableCell>
@@ -458,39 +475,15 @@ return (
             <TableCell>
               <TextField id="birthday" label="생년월일" type="text" value={openPhoneCase.birthday} onChange={handleValueChange} autoFocus margin="dense" fullWidth variant="standard" />
             </TableCell>
-            <TableCell>
-              <FormControl size="small" fullWidth>
-                  <InputLabel id="demo-simple-select">요금제</InputLabel>
-                  <Select
-                    labelId="demo-simple-select-label"
-                    label="요금제"
-                    name="callingPlan"                      
-                    value={openPhoneCase.callingPlan}
-                    onChange={handleSelectChange}
-                  >
-                    {openCallingPlanList.map((com) => (
-                      <MenuItem key={com.id} value={com.planName}>{com.planName}</MenuItem>)
-                    )}
-                  </Select>
-                </FormControl>              
-            </TableCell>
           </TableRow>
 
           <TableRow>
-            <TableCell>
-              <TextField id="controlNo" label="관리번호" type="text" value={openPhoneCase.controlNo} onChange={handleValueChange} autoFocus margin="dense" fullWidth variant="standard" />
-            </TableCell>
-            <TableCell>
-              <TextField id="memo" label="메모" type="text" value={openPhoneCase.memo} onChange={handleValueChange} autoFocus margin="dense" fullWidth variant="standard" />
-            </TableCell>
-
             <TableCell>
               <Autocomplete size="small" 
                 value={openPhoneCase.sellCom}
                 onChange={(event, newValue) => {
                   setOpenPhoneCase({...openPhoneCase, 'sellCom': newValue });
-                }}  
-
+                }}
                 inputValue={inputValue}
                 onInputChange={(event, newInputValue) => {
                   setInputValue(newInputValue);
@@ -500,23 +493,27 @@ return (
                 renderInput={(params) => <TextField {...params} label="판매처" />}
               />
             </TableCell>
-
+            <TableCell>
+              <TextField id="controlNo" label="관리번호" type="text" value={openPhoneCase.controlNo} onChange={handleValueChange} autoFocus margin="dense" fullWidth variant="standard" />
+            </TableCell>
+            <TableCell>
+              <TextField id="memo" label="메모" type="text" value={openPhoneCase.memo} onChange={handleValueChange} autoFocus margin="dense" fullWidth variant="standard" />
+            </TableCell>
             <TableCell>            
               <FormControl>
                 <FormLabel id="demo-controlled-radio-buttons-group">내국인 / 외국인</FormLabel>
-                <RadioGroup row
-                  aria-labelledby="demo-controlled-radio-buttons-group"
-                  name="controlled-radio-buttons-group"
-                  value={openPhoneCase.nationality}
-                  onChange={handleRadioChange}
-                >
-                  <FormControlLabel value="내국인" control={<Radio size="small"/>} label="내국인" />
-                  <FormControlLabel value="외국인" control={<Radio size="small"/>} label="외국인" />
-                </RadioGroup>
+                  <RadioGroup row
+                    aria-labelledby="demo-controlled-radio-buttons-group"
+                    name="controlled-radio-buttons-group"
+                    value={openPhoneCase.nationality}
+                    onChange={handleRadioChange}
+                  >
+                    <FormControlLabel value="내국인" control={<Radio size="small"/>} label="내국인" />
+                    <FormControlLabel value="외국인" control={<Radio size="small"/>} label="외국인" />
+                  </RadioGroup>
               </FormControl>
-              </TableCell>
-            
-            </TableRow>
+            </TableCell>
+          </TableRow>
 
         </TableBody>
         </Table>
