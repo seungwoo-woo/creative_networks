@@ -412,6 +412,22 @@ return (
 
           <TableRow>
             <TableCell>
+              <FormControl sx={{ m: 0, minWidth: 210 }} size="small" fullWidth>
+                <InputLabel id="demo-simple-select">타입</InputLabel>
+                <Select
+                  labelId="demo-simple-select-label"
+                  label="타입"
+                  name="type"                      
+                  value={openPhoneEditCase.type}
+                  onChange={handleSelectChange}
+                >
+                  <MenuItem value={'USIM'}>USIM</MenuItem>
+                  <MenuItem value={'단말기'}>단말기</MenuItem>
+                </Select>
+              </FormControl>
+            </TableCell>
+
+            <TableCell>
               <TextField id="customerName" label="고객명" type="text" value={openPhoneEditCase.customerName} onChange={handleValueChange} autoFocus margin="dense" fullWidth variant="standard" />
             </TableCell>
             <TableCell>
@@ -421,31 +437,11 @@ return (
               <TextField id="birthday" label="생년월일" type="text" value={openPhoneEditCase.birthday} onChange={handleValueChange} autoFocus margin="dense" fullWidth variant="standard" />
             </TableCell>
 
-            <TableCell>
-              <FormControl sx={{ m: 0, minWidth: 210 }} size="small" fullWidth>
-                  <InputLabel id="demo-simple-select">타입</InputLabel>
-                  <Select
-                    labelId="demo-simple-select-label"
-                    label="타입"
-                    name="type"                      
-                    value={openPhoneEditCase.type}
-                    onChange={handleSelectChange}
-                  >
-                    <MenuItem value={'USIM'}>USIM</MenuItem>
-                    <MenuItem value={'단말기'}>단말기</MenuItem>
-                  </Select>
-                </FormControl>
-            </TableCell>
+            
             
           </TableRow>
 
           <TableRow>
-            <TableCell>
-              <TextField id="controlNo" label="관리번호" type="text" value={openPhoneEditCase.controlNo} onChange={handleValueChange} autoFocus margin="dense" fullWidth variant="standard" />
-            </TableCell>
-            <TableCell>
-              <TextField id="memo" label="메모" type="text" value={openPhoneEditCase.memo} onChange={handleValueChange} autoFocus margin="dense" fullWidth variant="standard" />
-            </TableCell>
 
             <TableCell>
               <Autocomplete size="small"
@@ -463,6 +459,15 @@ return (
                 renderInput={(params) => <TextField {...params} label="판매처" />}
               />
             </TableCell>
+
+            <TableCell>
+              <TextField id="controlNo" label="관리번호" type="text" value={openPhoneEditCase.controlNo} onChange={handleValueChange} autoFocus margin="dense" fullWidth variant="standard" />
+            </TableCell>
+            <TableCell>
+              <TextField id="memo" label="메모" type="text" value={openPhoneEditCase.memo} onChange={handleValueChange} autoFocus margin="dense" fullWidth variant="standard" />
+            </TableCell>
+
+            
 
             <TableCell>            
               <FormControl>
