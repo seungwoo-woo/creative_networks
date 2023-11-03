@@ -315,7 +315,7 @@ return (
             <TableCell>
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <DemoContainer components={['DatePicker']}>
-                  <StyledDesktopDataPicker label={["개통일"]}
+                  <StyledDesktopDataPicker sx={{ width: 200}} label={["개통일"]}
                               format="YYYY-MM-DD"
                               id="openDate" 
                               value={dayjs(openPhoneEditCase.openDate)} onChange={(newValue) => setOpenPhoneEditCase({...openPhoneEditCase, openDate: dayjs(newValue).format("YYYY-MM-DD")})} />
@@ -381,7 +381,6 @@ return (
 
           <TableRow>
             <TableCell>
-              {/* <TextField id="openType" label="유형" type="text" value={openPhoneEditCase.openType} onChange={handleValueChange} autoFocus margin="dense" fullWidth variant="standard" /> */}
               <FormControl size="small" fullWidth>
                   <InputLabel id="demo-simple-select">유형</InputLabel>
                   <Select
