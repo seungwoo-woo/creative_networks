@@ -313,7 +313,17 @@ return (
           <TableBody>
           <TableRow>
             <TableCell>
-              {/* <TextField id="telCom" label="통신사" type="text" value={openPhoneEditCase.telCom} onChange={handleValueChange} autoFocus margin="dense" fullWidth variant="standard" /> */}
+              <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <DemoContainer components={['DatePicker']}>
+                  <StyledDesktopDataPicker label={["개통일"]}
+                              format="YYYY-MM-DD"
+                              id="openDate" 
+                              value={dayjs(openPhoneEditCase.openDate)} onChange={(newValue) => setOpenPhoneEditCase({...openPhoneEditCase, openDate: dayjs(newValue).format("YYYY-MM-DD")})} />
+                </DemoContainer>
+              </LocalizationProvider> 
+            </TableCell>
+            
+            <TableCell>
               <FormControl sx={{ m: 0, minWidth: 210 }} size="small" fullWidth>
                   <InputLabel id="demo-simple-select">통신사</InputLabel>
                   <Select
@@ -347,39 +357,32 @@ return (
                   </Select>
                 </FormControl>
             </TableCell>
+
             <TableCell>
-              {/* <TextField id="type" label="타입" type="text" value={openPhoneEditCase.type} onChange={handleValueChange} autoFocus margin="dense" fullWidth variant="standard" /> */}
               <FormControl sx={{ m: 0, minWidth: 210 }} size="small" fullWidth>
-                  <InputLabel id="demo-simple-select">타입</InputLabel>
+                  <InputLabel id="demo-simple-select">요금제</InputLabel>
                   <Select
                     labelId="demo-simple-select-label"
-                    label="타입"
-                    name="type"                      
-                    value={openPhoneEditCase.type}
+                    label="요금제"
+                    name="callingPlan"                      
+                    value={openPhoneEditCase.callingPlan}
                     onChange={handleSelectChange}
                   >
-                    <MenuItem value={'USIM'}>USIM</MenuItem>
-                    <MenuItem value={'단말기'}>단말기</MenuItem>
+                    {openCallingPlanList.map((com) => (
+                      <MenuItem key={com.id} value={com.planName}>{com.planName}</MenuItem>)
+                    )}
                   </Select>
                 </FormControl>
             </TableCell>
-            <TableCell>
-              {/* <TextField id="openDate" label="개통일" type="text" value={openPhoneEditCase.openDate} onChange={handleValueChange} autoFocus margin="dense" fullWidth variant="standard" /> */}
-              <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <DemoContainer components={['DatePicker']}>
-                  <StyledDesktopDataPicker label={["개통일"]}
-                              format="YYYY-MM-DD"
-                              id="openDate" 
-                              value={dayjs(openPhoneEditCase.openDate)} onChange={(newValue) => setOpenPhoneEditCase({...openPhoneEditCase, openDate: dayjs(newValue).format("YYYY-MM-DD")})} />
-                </DemoContainer>
-              </LocalizationProvider> 
-            </TableCell>
+
+            
+            
           </TableRow>
 
           <TableRow>
             <TableCell>
               {/* <TextField id="openType" label="유형" type="text" value={openPhoneEditCase.openType} onChange={handleValueChange} autoFocus margin="dense" fullWidth variant="standard" /> */}
-              <FormControl sx={{ m: 0, minWidth: 210 }} size="small" fullWidth>
+              <FormControl size="small" fullWidth>
                   <InputLabel id="demo-simple-select">유형</InputLabel>
                   <Select
                     labelId="demo-simple-select-label"
@@ -418,23 +421,23 @@ return (
             <TableCell>
               <TextField id="birthday" label="생년월일" type="text" value={openPhoneEditCase.birthday} onChange={handleValueChange} autoFocus margin="dense" fullWidth variant="standard" />
             </TableCell>
+
             <TableCell>
-              {/* <TextField id="callingPlan" label="요금제" type="text" value={openPhoneEditCase.callingPlan} onChange={handleValueChange} autoFocus margin="dense" fullWidth variant="standard" /> */}
               <FormControl sx={{ m: 0, minWidth: 210 }} size="small" fullWidth>
-                  <InputLabel id="demo-simple-select">요금제</InputLabel>
+                  <InputLabel id="demo-simple-select">타입</InputLabel>
                   <Select
                     labelId="demo-simple-select-label"
-                    label="요금제"
-                    name="callingPlan"                      
-                    value={openPhoneEditCase.callingPlan}
+                    label="타입"
+                    name="type"                      
+                    value={openPhoneEditCase.type}
                     onChange={handleSelectChange}
                   >
-                    {openCallingPlanList.map((com) => (
-                      <MenuItem key={com.id} value={com.planName}>{com.planName}</MenuItem>)
-                    )}
+                    <MenuItem value={'USIM'}>USIM</MenuItem>
+                    <MenuItem value={'단말기'}>단말기</MenuItem>
                   </Select>
                 </FormControl>
             </TableCell>
+            
           </TableRow>
 
           <TableRow>
