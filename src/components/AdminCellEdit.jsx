@@ -13,7 +13,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
 import Slide from '@mui/material/Slide';
-import { Dialog, DialogContent, DialogTitle, DialogActions, TextField, Table, TableHead, TableBody, TableCell, TableRow, Input } from "@mui/material";
+import { Dialog, DialogContent, DialogTitle, DialogActions, TextField, Table, TableHead, TableBody, TableCell, TableRow, Input, Container } from "@mui/material";
 
 
 
@@ -542,12 +542,13 @@ return (
       onClose={hdcEditCloseCP}
       TransitionComponent={Transition}
     >
+      <Container maxWidth='xl'>
       <AppBar sx={{ position: 'relative' }}>
         <Toolbar>
           <IconButton edge="start" color="inherit" onClick={hdcEditCloseCP} aria-label="close">
             <CloseIcon onClick={hdcEditCloseCP} />
           </IconButton>
-          <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
+          <Typography sx={{ flex: 1 }} variant="h6" component="div">
             요금제 리베이트 수정
           </Typography>
           <Button autoFocus color="inherit" onClick={handleUpdate}>
@@ -557,15 +558,14 @@ return (
       </AppBar>
 
       <DialogTitle sx={{color: pink[500], fontWeight: '600', display: 'flex', alignItems: 'center'}}>
-        {/* <ReportIcon sx={{mr: 1}}/>{adminEditCaseCP.planName} - {adminEditCaseCP.openComName} */}
         <ReportIcon sx={{mr: 1}}/> 요금제 - 
         <Input id={'planName'} value={adminEditCaseCP.planName} onChange={handleValueChangeCP} type="text" disableUnderline={true} sx={{ pl: 1, width: 300, fontSize: 18, fontWeight: 600 }} variant="standard"/>
         개통처 - <Input id={'openComName'} value={adminEditCaseCP.openComName} onChange={handleValueChangeCP} type="text" disableUnderline={true} sx={{ pl: 1, width: 300, fontSize: 18, fontWeight: 600 }} variant="standard"/>
       </DialogTitle>
 
       <DialogContent>      
-      <Paper sx={{ ml: 2, pl: 5, pr: 5, width: 1360, height: 1085 }} elevation={5} >        
-      <Typography sx={{ mt: 2, ml: 1, mb: 2, fontWeight: 400, display: 'flex', alignItems: 'center' }} variant="h6" />
+      <Paper sx={{ pl: 5, pr: 5, height: 1085 }} elevation={5} >        
+      <Typography sx={{ mt: 2, mb: 2, fontWeight: 400, display: 'flex', alignItems: 'center' }} variant="h6" />
         <Table stickyHeader size='small' aria-label="sticky table">
           <TableHead >
             <TableRow >
@@ -600,6 +600,7 @@ return (
         <Button onClick={hdcEditCloseCP}>CANCLE</Button>
         <Button onClick={handleUpdate}>UPDATE</Button>
       </DialogActions>
+      </Container>
   </Dialog>
   </>
 )
