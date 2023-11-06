@@ -559,8 +559,8 @@ return (
 
       <DialogTitle sx={{color: pink[500], fontWeight: '600', display: 'flex', alignItems: 'center'}}>
         <ReportIcon sx={{mr: 1}}/> 요금제 - 
-        <Input id={'planName'} value={adminEditCaseCP.planName} onChange={handleValueChangeCP} type="text" disableUnderline={true} sx={{ pl: 1, width: 300, fontSize: 18, fontWeight: 600 }} variant="standard"/>
-        개통처 - <Input id={'openComName'} value={adminEditCaseCP.openComName} onChange={handleValueChangeCP} type="text" disableUnderline={true} sx={{ pl: 1, width: 300, fontSize: 18, fontWeight: 600 }} variant="standard"/>
+        <Input id={'planName'} value={adminEditCaseCP.planName} onChange={handleValueChangeCP} type="text" disableUnderline={true} sx={{ pl: 1, width: 300, fontSize: 22, fontWeight: 600 }} variant="standard"/>
+        개통처 - <Input id={'openComName'} value={adminEditCaseCP.openComName} onChange={handleValueChangeCP} type="text" disableUnderline={true} sx={{ pl: 1, width: 300, fontSize: 22, fontWeight: 600 }} variant="standard"/>
       </DialogTitle>
 
       <DialogContent>      

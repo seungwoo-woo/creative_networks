@@ -240,8 +240,8 @@ const hdcSellComOpen = () => {
 
 // 통신사 Table Open ----------------------------------------------------------------
 const hdcTelComOpen = () => {
-  setIsTelComOpen(true);
   setIsSellComOpen(false);
+  setIsTelComOpen(true);  
   setIsOpenComOpen(false);
   setIsCallingPlanOpen(false);
   setIsUserOpen(false);
@@ -250,9 +250,9 @@ const hdcTelComOpen = () => {
 
 // 개통처 Table Open ----------------------------------------------------------------
 const hdcOpenComOpen = () => {
-  setIsOpenComOpen(true);
-  setIsTelComOpen(false);
   setIsSellComOpen(false);
+  setIsTelComOpen(false);  
+  setIsOpenComOpen(true);
   setIsCallingPlanOpen(false);
   setIsUserOpen(false);
   setEditCase(3);
@@ -261,21 +261,21 @@ const hdcOpenComOpen = () => {
 
 // 요금제 Table Open ----------------------------------------------------------------
 const hdcCallingPlanOpen = () => {
-  setIsCallingPlanOpen(true);
-  setIsOpenComOpen(false);
-  setIsTelComOpen(false);
   setIsSellComOpen(false);
+  setIsTelComOpen(false);
+  setIsOpenComOpen(false);
+  setIsCallingPlanOpen(true);
   setIsUserOpen(false);
   setEditCase(4);
 };
 
 // 사용자 Table Open ----------------------------------------------------------------
 const hdcUserOpen = () => {
-  setIsUserOpen(true);
-  setIsOpenComOpen(false);
-  setIsTelComOpen(false);
   setIsSellComOpen(false);
+  setIsTelComOpen(false);
+  setIsOpenComOpen(false);
   setIsCallingPlanOpen(false);
+  setIsUserOpen(true);
   setEditCase(5);
 };
 
