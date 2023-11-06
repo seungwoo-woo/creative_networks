@@ -5,6 +5,10 @@ import ResponsiveAppBar from '../components/ResponsiveAppBar';
 import { UserCompanyContext } from '../context/UserCompanyContext';
 import { UserNameContext } from '../context/UserNameContext';
 import { UserGradeContext } from '../context/UserGradeContext';
+import Container from '@mui/material/Container';
+import { Box } from '@mui/material';
+
+
 
 
 // firebase import=======================================================
@@ -67,10 +71,12 @@ useEffect(()=>{
 // return 시작 ------------------------------------------------------------------------
 // ------------------------------------------------------------------------------------
 return (
-  <>
+  <Container maxWidth='xl'>
     <ResponsiveAppBar />
-    <div>OpenPhoneCaculation</div>
-  </>
+    <Container component="main" maxWidth="sm">
+      <Box>OpenPhoneCaculation</Box>
+    </Container>
+  </Container>
 );
 
 }

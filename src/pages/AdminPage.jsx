@@ -19,7 +19,7 @@ import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft';
 import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
-import { Table, IconButton, TableHead, TableBody, TableCell, TableRow, TableFooter, TablePagination, tableCellClasses } from "@mui/material";
+import { Table, IconButton, TableHead, TableBody, TableCell, TableRow, TableFooter, TablePagination, tableCellClasses, Container } from "@mui/material";
 import ResponsiveAppBar from '../components/ResponsiveAppBar';
 import AddOneRow from "../components/AddOneRow";
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
@@ -526,15 +526,15 @@ useEffect(()=>{
 // return 시작 ------------------------------------------------------------------------
 // ------------------------------------------------------------------------------------
 return (
-  <>
+  <Container maxWidth='xl'>
     <ResponsiveAppBar />
 
-    <Typography sx={{ mt: 2, ml: 4, fontWeight: 400, display: 'flex', alignItems: 'center' }} variant="h5" >
-      <NoteAltIcon fontSize="large" sx={{ mr: 2}} /> 관리자 페이지
+    <Typography sx={{ mt: 2, fontWeight: 400, display: 'flex', alignItems: 'center' }} variant="h5" >
+      <NoteAltIcon fontSize="large"/> 관리자 페이지
     </Typography>
 
-    <Box sx={{ mt: 1, ml: 2, fontWeight: 400, display: 'flex', alignItems: 'center' }} >
-        <Paper sx={{ mt: 1, ml: 2, width: 300, height: 550, display: 'flex', justifyContent: 'center', alignItems: 'center' }} elevation={5} >
+    <Box sx={{ mt: 1, fontWeight: 400, display: 'flex', alignItems: 'center' }} >
+        <Paper sx={{ mt: 1, width: 300, height: 550, display: 'flex', justifyContent: 'center', alignItems: 'center' }} elevation={5} >
           <Stack spacing={3} >
             {isSellComOpen && <Button sx={{ width: 250}} variant="outlined" size="large" onClick={hdcSellComOpen} >판매처 관리</Button>}            
             {!isSellComOpen && <Button sx={{ width: 250}} variant="contained" size="large" onClick={hdcSellComOpen} >판매처 관리</Button>}
@@ -549,19 +549,21 @@ return (
           </Stack>
         </Paper>
 
-        <Paper sx={{ mt: 1, ml: 2, mr: 4, pl: 5, pr: 5, width: 1100, height: 550 }} elevation={5} >
+        <Paper sx={{ mt: 1, ml: 2, pl: 5, pr: 5, width: 1100, height: 550 }} elevation={5} >
           
           {/* 판매처 테이블 보이기 -------------------------------------------*/}
           { isSellComOpen && 
           <>
-          <Typography sx={{ mt: 2, ml: 1, mb: 2, fontWeight: 400, display: 'flex', alignItems: 'center' }} variant="h6" >
-            <StoreIcon fontSize="small" sx={{ mr: 2}} /> 판매처 정보 확인 및 수정
-              <Button sx={{ml: 69}} size='small' component="label" variant="contained" onChange={ExcelToJson} startIcon={<CloudUploadIcon />}>
+          <Typography sx={{ mt: 2, ml: 0, mb: 2, fontWeight: 400, display: 'flex', justifyContent: 'space-between', alignItems:'center' }} variant="h6" >
+            <div><StoreIcon fontSize="small"/> 판매처 정보 확인 및 수정</div>
+              <div>
+              <Button  size='small' component="label" variant="contained" onChange={ExcelToJson} startIcon={<CloudUploadIcon />}>
                 Select Excel file
               <VisuallyHiddenInput type="file" 
                 accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"  />
               </Button>
               <Button sx={{mt: 0, ml: 1}} size='small' variant="outlined" onClick={SellComUpload}>UPLOAD</Button>
+              </div>
           </Typography>
 
           <Table stickyHeader size='small' aria-label="sticky table">        
@@ -618,14 +620,16 @@ return (
           {/* 통신사 테이블 보이기 -------------------------------------------*/}
           { isTelComOpen && 
           <>
-          <Typography sx={{ mt: 2, ml: 1, mb: 2, fontWeight: 400, display: 'flex', alignItems: 'center' }} variant="h6" >
-            <StoreIcon fontSize="small" sx={{ mr: 2}} /> 통신사 정보 확인 및 수정
+          <Typography sx={{ mt: 2, ml: 0, mb: 2, fontWeight: 400, display: 'flex', justifyContent: 'space-between', alignItems:'center' }} variant="h6" >
+            <div><StoreIcon fontSize="small"/> 통신사 정보 확인 및 수정</div>
+              <div>
               <Button sx={{ml: 69}} size='small' component="label" variant="contained" onChange={ExcelToJson} startIcon={<CloudUploadIcon />}>
                 Select Excel file
               <VisuallyHiddenInput type="file" 
                 accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"  />
               </Button>
               <Button sx={{mt: 0, ml: 1}} size='small' variant="outlined" onClick={TelComUpload}>UPLOAD</Button>
+              </div>
           </Typography>
 
           <Table stickyHeader size='small' aria-label="sticky table">        
@@ -676,14 +680,16 @@ return (
           {/* 개통처 테이블 보이기 -------------------------------------------*/}
           { isOpenComOpen && 
           <>
-          <Typography sx={{ mt: 2, ml: 1, mb: 2, fontWeight: 400, display: 'flex', alignItems: 'center' }} variant="h6" >
-            <StoreIcon fontSize="small" sx={{ mr: 2}} /> 개통처 정보 확인 및 수정
+          <Typography sx={{ mt: 2, ml: 0, mb: 2, fontWeight: 400, display: 'flex', justifyContent: 'space-between', alignItems:'center' }} variant="h6" >
+            <div><StoreIcon fontSize="small"/> 개통처 정보 확인 및 수정</div>
+            <div>
             <Button sx={{ml: 69}} size='small' component="label" variant="contained" onChange={ExcelToJson} startIcon={<CloudUploadIcon />}>
               Select Excel file
             <VisuallyHiddenInput type="file" 
               accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"  />
             </Button>
             <Button sx={{mt: 0, ml: 1}} size='small' variant="outlined" onClick={OpenComUpload}>UPLOAD</Button>
+            </div>
           </Typography>
 
           <Table stickyHeader size='small' aria-label="sticky table">        
@@ -736,14 +742,16 @@ return (
           {/* 요금제 테이블 보이기 -------------------------------------------*/}
           { isCallingPlanOpen && 
           <>
-          <Typography sx={{ mt: 2, ml: 1, mb: 2, fontWeight: 400, display: 'flex', alignItems: 'center' }} variant="h6" >
-            <WifiCalling3Icon fontSize="small" sx={{ mr: 2}} /> 요금제 정보 확인 및 수정
+          <Typography sx={{ mt: 2, ml: 0, mb: 2, fontWeight: 400, display: 'flex', justifyContent: 'space-between', alignItems:'center' }} variant="h6" >
+            <div><WifiCalling3Icon fontSize="small"/> 요금제 정보 확인 및 수정</div>
+            <div>
             <Button sx={{ml: 69}} size='small' component="label" variant="contained" onChange={ExcelToJson} startIcon={<CloudUploadIcon />}>
                 Select Excel file
             <VisuallyHiddenInput type="file" 
               accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"  />
             </Button>
             <Button sx={{mt: 0, ml: 1}} size='small' variant="outlined" onClick={CallingPlanUpload}>UPLOAD</Button>
+            </div>
           </Typography>
 
           <Table stickyHeader size='small' aria-label="sticky table">        
@@ -794,8 +802,8 @@ return (
           {/* 사용자 테이블 보이기 -------------------------------------------*/}
           { isUserOpen && 
           <>
-          <Typography sx={{ mt: 2, ml: 1, mb: 2, fontWeight: 400, display: 'flex', alignItems: 'center' }} variant="h6" >
-            <ManageAccountsIcon fontSize="small" sx={{ mr: 2}} /> 사용자 정보 확인 및 수정
+          <Typography sx={{ mt: 2, ml: 0, mb: 2, fontWeight: 400, display: 'flex', justifyContent: 'space-between', alignItems:'center' }} variant="h6" >
+            <div><ManageAccountsIcon fontSize="small"/> 사용자 정보 확인 및 수정</div>
           </Typography>
 
           <Table stickyHeader size='small' aria-label="sticky table">        
@@ -872,7 +880,7 @@ return (
     </Dialog>
 
     
-  </>
+  </Container>
 );
 
 // Component End =========================================================

@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { useTheme } from '@emotion/react';
 import { styled } from '@mui/material/styles';
 import PropTypes from 'prop-types';
-import { Box, IconButton, Paper, TableContainer, Table, TableBody, TableCell, TableFooter, TableHead, TablePagination, TableRow, tableCellClasses } from '@mui/material';
+import { Box, IconButton, Paper, TableContainer, Table, TableBody, TableCell, TableFooter, TableHead, TablePagination, TableRow, tableCellClasses, Container } from '@mui/material';
 import LastPageIcon from '@mui/icons-material/LastPage';
 import FirstPageIcon from '@mui/icons-material/FirstPage';
 import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft';
@@ -212,13 +212,13 @@ useEffect(()=>{
 // ------------------------------------------------------------------------------------
 
 return (
-  <>
+  <Container maxWidth="xl">
   <ResponsiveAppBar />
   <div style={{marginTop: 30}}>
     <OpenPhoneAdd getDataRefresh={getDataRefresh} userGrade={userGrade} userCompanyName={userCompanyName} setOpenPhoneList={setOpenPhoneList}/>
   </div>
 
-  <Paper style={{marginTop: 10, marginLeft: 10, marginRight: 10}} elevation={3}>
+  <Paper style={{marginTop: 10, marginLeft: 0, marginRight: 0}} elevation={3}>
   <TableContainer>
     <Table stickyHeader size='small' aria-label="sticky table">        
       <TableHead>
@@ -296,7 +296,8 @@ return (
     </Table>
     </TableContainer> 
   </Paper>
-  </>
+  </Container>
+
   
 );
 

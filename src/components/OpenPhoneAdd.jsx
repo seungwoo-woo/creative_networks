@@ -22,7 +22,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
 import dayjs from "dayjs";
 import Autocomplete from '@mui/material/Autocomplete';
-import { DialogContent, DialogTitle, DialogContentText, DialogActions, Table, TableBody, TableCell, TableRow, TextField, Select, MenuItem, FormControl, InputLabel } from "@mui/material";
+import { DialogContent, DialogTitle, DialogContentText, DialogActions, Table, TableBody, TableCell, TableRow, TextField, Select, MenuItem, FormControl, InputLabel, Container } from "@mui/material";
 
 
 // firebase import=======================================================
@@ -270,9 +270,9 @@ useEffect(()=>{
 
 return (
   <>
-  <div style={{display: 'flex',  justifyContent: 'space-between', alignItems: 'flex-end', paddingRight: 10, paddingLeft: 10 }}>      
+  <div style={{display: 'flex',  justifyContent: 'space-between', alignItems: 'flex-end'}}>      
     <Typography variant="h4" 
-      sx={{ ml: 1, display: { xs: 'none', md: 'flex' }, 
+      sx={{ display: { xs: 'none', md: 'flex' }, 
       fontWeight: 400, color: '#1976D2' }}>
       Creative Networks 개통 리스트
     </Typography>
@@ -337,12 +337,13 @@ return (
       onClose={handleClickClose}
       TransitionComponent={Transition}
     >
+      <Container maxWidth='xl'>
       <AppBar sx={{ position: 'relative' }}>
         <Toolbar>
           <IconButton edge="start" color="inherit" onClick={handleClickClose} aria-label="close">
             <CloseIcon onClick={handleClickClose} />
           </IconButton>
-          <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
+          <Typography sx={{ flex: 1 }} variant="h6" component="div">
             신규 개통내역 등록
           </Typography>
           <Button autoFocus color="inherit" onClick={handleSubmit}>
@@ -362,15 +363,15 @@ return (
 
           <TableRow>
             <TableCell>
-              <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <DesktopDatePicker sx={{ width: '200px', "& .MuiInputBase-root": { width: "346px"}, "& .MuiInputBase-input": { height: "42px", paddingTop: 0, paddingBottom: 0 } }} label={["개통일"]}
+              <LocalizationProvider dateAdapter={AdapterDayjs}> 
+                <DesktopDatePicker fullWidth sx={{width: "100%", "& .MuiInputBase-input": { height: "42px", paddingTop: 0, paddingBottom: 0 } }} label={["개통일"]}
                             format="YYYY-MM-DD"
                             id="openDate" 
                             value={dayjs(openPhoneCase.openDate)} onChange={(newValue) => setOpenPhoneCase({...openPhoneCase, openDate: dayjs(newValue).format("YYYY-MM-DD")})} />
               </LocalizationProvider>         
             </TableCell>
             <TableCell>
-              <FormControl sx={{ m: 0, minWidth: 210 }} size="small" fullWidth>
+              <FormControl  size="small" fullWidth>
                 <InputLabel id="demo-simple-select">통신사</InputLabel>
                 <Select
                   labelId="demo-simple-select-label"
@@ -386,7 +387,7 @@ return (
               </FormControl>
             </TableCell>
             <TableCell>
-              <FormControl sx={{ m: 0, minWidth: 210 }} size="small" fullWidth>
+              <FormControl  size="small" fullWidth>
                 <InputLabel id="demo-simple-select">개통처</InputLabel>
                 <Select
                   labelId="demo-simple-select-label"
@@ -421,7 +422,7 @@ return (
 
           <TableRow>
             <TableCell>
-              <FormControl sx={{ m: 0, minWidth: 210 }} size="small" fullWidth>
+              <FormControl size="small" fullWidth>
                 <InputLabel id="demo-simple-select">유형</InputLabel>
                 <Select
                   labelId="demo-simple-select-label"
@@ -452,7 +453,7 @@ return (
 
           <TableRow>
             <TableCell>
-              <FormControl sx={{ m: 0, minWidth: 210 }} size="small" fullWidth>
+              <FormControl size="small" fullWidth>
                 <InputLabel id="demo-simple-select">타입</InputLabel>
                 <Select
                   labelId="demo-simple-select-label"
@@ -479,7 +480,7 @@ return (
 
           <TableRow>
             <TableCell>
-              <Autocomplete size="small" 
+              <Autocomplete size="small" fullWidth  
                 value={openPhoneCase.sellCom}
                 onChange={(event, newValue) => {
                   setOpenPhoneCase({...openPhoneCase, 'sellCom': newValue });
@@ -522,6 +523,7 @@ return (
         <Button onClick={handleClickClose}>CANCLE</Button>
         <Button onClick={handleSubmit}>SAVE</Button>
       </DialogActions>
+      </Container>
   </Dialog>
 
 

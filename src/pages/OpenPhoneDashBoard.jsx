@@ -6,6 +6,11 @@ import { useNavigate } from 'react-router-dom';
 import { UserCompanyContext } from '../context/UserCompanyContext';
 import { UserNameContext } from '../context/UserNameContext';
 import { UserGradeContext } from '../context/UserGradeContext';
+import CssBaseline from '@mui/material/CssBaseline';
+import Container from '@mui/material/Container';
+import { Box } from '@mui/material';
+
+
 
 
 // firebase import=======================================================
@@ -83,21 +88,21 @@ useEffect(()=>{
 // ------------------------------------------------------------------------------------
 
 return (
-  <>
-    <ResponsiveAppBar />
+  <Container maxWidth="xl">
+    <ResponsiveAppBar />    
 
-    <div style={{marginTop: 50, display: 'flex', justifyContent: 'center'}}>
-      <LineChart width={600} height={300} data={data} margin={{ top: 0, right: 20, bottom: 0, left: 0 }}>
-        <Line type="monotone" dataKey="uv" stroke="#8884d8" activeDot={{ r: 8 }} />
-        <Line type="monotone" dataKey="pv" stroke="#82ca9d" />
-        <CartesianGrid stroke="#ccc" strokeDasharray="5 5" />
-        <XAxis dataKey="name" />
-        <YAxis />
-        <Tooltip />
-        <Legend />
-      </LineChart>
-    </div>
-  </>
+    <LineChart width={600} height={300} data={data} >
+      <Line type="monotone" dataKey="uv" stroke="#8884d8" activeDot={{ r: 8 }} />
+      <Line type="monotone" dataKey="pv" stroke="#82ca9d" />
+      <CartesianGrid stroke="#ccc" strokeDasharray="5 5" />
+      <XAxis dataKey="name" />
+      <YAxis />
+      <Tooltip />
+      <Legend />
+    </LineChart>
+
+  </Container>
+
 );
 
 // Component End =========================================================
