@@ -526,7 +526,7 @@ useEffect(()=>{
 // return 시작 ------------------------------------------------------------------------
 // ------------------------------------------------------------------------------------
 return (
-  <Container maxWidth='xl'>
+  <Container maxWidth='false'>
     <ResponsiveAppBar />
 
     <Typography sx={{ mt: 2, fontWeight: 400, display: 'flex', alignItems: 'center' }} variant="h5" >

@@ -88,7 +88,7 @@ useEffect(()=>{
 // ------------------------------------------------------------------------------------
 
 return (
-  <Container maxWidth="xl">
+  <Container maxWidth="false">
     <ResponsiveAppBar />    
 
     <LineChart width={600} height={300} data={data} >

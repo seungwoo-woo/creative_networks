@@ -71,7 +71,7 @@ useEffect(()=>{
 // return 시작 ------------------------------------------------------------------------
 // ------------------------------------------------------------------------------------
 return (
-  <Container maxWidth='xl'>
+  <Container maxWidth='false'>
     <ResponsiveAppBar />
     <Container component="main" maxWidth="sm">
       <Box>OpenPhoneCaculation</Box>
