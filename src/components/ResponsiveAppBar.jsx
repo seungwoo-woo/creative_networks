@@ -71,7 +71,7 @@ const handleCloseUserMenu = () => {
 
 return (
   <AppBar position="relative" >
-    <Container maxWidth="xl">
+    <Container maxWidth="false">
       <Toolbar disableGutters>        
         <SatelliteAltTwoToneIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
         
