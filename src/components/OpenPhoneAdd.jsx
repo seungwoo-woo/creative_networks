@@ -337,7 +337,7 @@ return (
       onClose={handleClickClose}
       TransitionComponent={Transition}
     >
-      <Container maxWidth='xl'>
+      <Container maxWidth='false'>
       <AppBar sx={{ position: 'relative' }}>
         <Toolbar>
           <IconButton edge="start" color="inherit" onClick={handleClickClose} aria-label="close">
