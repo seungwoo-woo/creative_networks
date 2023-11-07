@@ -212,7 +212,7 @@ useEffect(()=>{
 // ------------------------------------------------------------------------------------
 
 return (
-  <Container maxWidth="xl">
+  <Container maxWidth='false'>
   <ResponsiveAppBar />
   <div style={{marginTop: 30}}>
     <OpenPhoneAdd getDataRefresh={getDataRefresh} userGrade={userGrade} userCompanyName={userCompanyName} setOpenPhoneList={setOpenPhoneList}/>
