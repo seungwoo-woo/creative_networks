@@ -314,7 +314,7 @@ return (
           <TableRow>
             <TableCell>
               <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <DesktopDatePicker sx={{ width: '200px', "& .MuiInputBase-root": { width: "340px"}, "& .MuiInputBase-input": { height: "42px", paddingTop: 0, paddingBottom: 0 } }} label={["개통일"]}
+                  <DesktopDatePicker sx={{ width: '100%', "& .MuiInputBase-input": { height: "42px", paddingTop: 0, paddingBottom: 0 } }} label={["개통일"]}
                               format="YYYY-MM-DD"
                               id="openDate" 
                               value={dayjs(openPhoneEditCase.openDate)} onChange={(newValue) => setOpenPhoneEditCase({...openPhoneEditCase, openDate: dayjs(newValue).format("YYYY-MM-DD")})} />
