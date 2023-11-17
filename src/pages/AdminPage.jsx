@@ -814,6 +814,7 @@ return (
                 <StyledTableCell style={{fontWeight: 400}} align='center' >판매처</StyledTableCell>
                 <StyledTableCell style={{fontWeight: 400}} align='center' >이메일</StyledTableCell>
                 <StyledTableCell style={{fontWeight: 400}} align='center' >권한등급</StyledTableCell>
+                <StyledTableCell style={{fontWeight: 400}} align='center' >비고</StyledTableCell>
                 <StyledTableCell style={{fontWeight: 600, color: "yellow"}} align='center' >ACTION</StyledTableCell>
               </TableRow>
             </TableHead>
@@ -829,6 +830,7 @@ return (
                       cell2 = {item.company}
                       cell3 = {item.email}
                       cell4 = {item.userGrade}
+                      cell5 = {item.note}
                       getDataRefresh={getDataRefresh5}
                       editCase={editCase}
                       />

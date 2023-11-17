@@ -19,7 +19,6 @@ import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
-import Autocomplete from '@mui/material/Autocomplete';
 
 
 // firebase import=======================================================
@@ -60,8 +59,6 @@ const [msgOpen, setMsgOpen] = React.useState(false);
 const [errMsgOpen, setErrMsgOpen] = React.useState(false);
 const [ msg, setMsg ] = React.useState('');
 const [sellComName, setSellComName ] = React.useState('');
-const [sellComNameList, setSellComNameList] = React.useState([]);
-const [inputValue, setInputValue] = React.useState('');    // sellComName
 const navigate = useNavigate();
 
 
@@ -92,8 +89,10 @@ const handleSubmit = async (event) => {
   event.preventDefault();    
   const data = new FormData(event.currentTarget);
 
-  createUserWithEmailAndPassword(auth, data.get('email'), data.get('password'))
-  .then((userCredential) => {
+  if (data.get('password') === data.get('password2')) {
+
+    createUserWithEmailAndPassword(auth, data.get('email'), data.get('password'))
+    .then((userCredential) => {
 
     const user = userCredential.user;      
 
@@ -102,13 +101,14 @@ const handleSubmit = async (event) => {
       name: data.get('firstName'),
       company: sellComName,
       email: data.get('email'),
+      note: data.get('note'),
       isDeleted: 0,
       userGrade: 'D'
     });
 
     handleSignUpMsgOpen();
-  })
-  .catch((error) => {
+    })
+    .catch((error) => {
     const errorMessage = error.message;
 
     if (errorMessage === 'Firebase: Error (auth/email-already-in-use).') {
@@ -126,23 +126,31 @@ const handleSubmit = async (event) => {
 
     handleSignUpErrMsgOpen();
     });
+
+
+  } else {
+    setMsg('password가 일치하지 않습니다. password를 다시 입력하세요.');
+    handleSignUpErrMsgOpen();
+  }
+
+  
 };
 
 
 // useEffect Start - 판매점 업체명 받아오기 ==============================================
-  React.useEffect(()=>{
+  // React.useEffect(()=>{
 
-    const getSellComName = async () => {
-      let data = [];
-      const querySnapshot = await getDocs(query(collection(db, "sellComName"), orderBy("comName", "asc"), where("isDeleted", "==", 0)));
-      querySnapshot.forEach((doc) => {
-        data.push(doc.data().comName);
-      });
-      setSellComNameList(data);
-    }    
-    getSellComName();
+  //   const getSellComName = async () => {
+  //     let data = [];
+  //     const querySnapshot = await getDocs(query(collection(db, "sellComName"), orderBy("comName", "asc"), where("isDeleted", "==", 0)));
+  //     querySnapshot.forEach((doc) => {
+  //       data.push(doc.data().comName);
+  //     });
+  //     setSellComNameList(data);
+  //   }    
+  //   getSellComName();
 
-  }, []);
+  // }, []);
 
 
 
@@ -166,7 +174,9 @@ return (
               id="firstName" label="성명" autoFocus />
           </Grid>
           <Grid item xs={12}>
-            <Autocomplete 
+            <TextField autoComplete="given-name" name="note" required fullWidth 
+              id="note" label="소속 판매점 상호" autoFocus />
+            {/* <Autocomplete 
               value={sellComName}
               onChange={(event, newValue) => { setSellComName(newValue) }}  
               inputValue={inputValue}
@@ -174,13 +184,16 @@ return (
               id="controllable-states-demo"
               options={sellComNameList}
               sx={{ width: 400 }}
-              renderInput={(params) => <TextField {...params} label="판매처" />} />
+              renderInput={(params) => <TextField {...params} label="판매처" />} /> */}
           </Grid>
           <Grid item xs={12}>
             <TextField id="email" autoComplete="email" label="Email Address" name="email" required fullWidth />
           </Grid>
           <Grid item xs={12}>
             <TextField autoComplete="new-password" name="password" label="Password" id="password" type="password" required fullWidth />
+          </Grid>
+          <Grid item xs={12}>
+            <TextField autoComplete="new-password" name="password2" label="Password 확인" id="password2" type="password" required fullWidth />
           </Grid>
           </Grid>
           <Button sx={{ mt: 3, mb: 2 }} type="submit" fullWidth variant="contained" >

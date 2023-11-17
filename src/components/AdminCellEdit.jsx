@@ -13,6 +13,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
 import Slide from '@mui/material/Slide';
+import Autocomplete from '@mui/material/Autocomplete';
 import { Dialog, DialogContent, DialogTitle, DialogActions, TextField, Table, TableHead, TableBody, TableCell, TableRow, Input, Container } from "@mui/material";
 
 
@@ -21,6 +22,8 @@ import { Dialog, DialogContent, DialogTitle, DialogActions, TextField, Table, Ta
 import { initializeApp } from "firebase/app";
 import { firebaseConfig } from '../firebase';
 import { getFirestore, getDoc, doc, updateDoc, deleteDoc } from "firebase/firestore";
+import { collection, getDocs, addDoc, query, where, orderBy} from "firebase/firestore";
+
 
 
 // Initialize Firebase ==================================================
@@ -57,6 +60,9 @@ const [rebate1, setRebate1] = useState([]);
 const [rebate2, setRebate2] = useState([]);
 const [rebate3, setRebate3] = useState([]);
 const [rebate4, setRebate4] = useState([]);
+
+const [sellComNameList, setSellComNameList] = useState([]);
+const [inputValue, setInputValue] = useState('');    // sellComName
 
 
 
@@ -369,6 +375,17 @@ useEffect(()=>{
 
   if (editCase === 5) {
     getAdminEditCase5();
+
+    const getSellComName = async () => {
+      let data = [];
+      const querySnapshot = await getDocs(query(collection(db, "sellComName"), orderBy("comName", "asc"), where("isDeleted", "==", 0)));
+      querySnapshot.forEach((doc) => {
+        data.push(doc.data().comName);
+      });
+      setSellComNameList(data);
+    }    
+    getSellComName();
+
   }
   
 }, []);
@@ -391,7 +408,7 @@ return (
       {(editCase === 3) && <DialogTitle sx={{color: pink[500], fontWeight: '400', display: 'flex', alignItems: 'center'}}>
         <ReportIcon sx={{mr: 1}}/>개통처 정보 수정</DialogTitle>}
       {(editCase === 5) && <DialogTitle sx={{color: pink[500], fontWeight: '400', display: 'flex', alignItems: 'center'}}>
-        <ReportIcon sx={{mr: 1}}/>사용자 정보 수정 (A-관리자, B-개통 직원, C-판매처 직원)</DialogTitle>}
+        <ReportIcon sx={{mr: 1}}/>사용자 정보 수정 (A-관리자, B-개통실, C-판매처)</DialogTitle>}
       <Divider />       
       <DialogContent>
         {(editCase === 1) && <TextField value={adminEditCase.comName} id="comName" label="판매처" onChange={handleValueChange} margin="dense" type="text" fullWidth variant="standard" /> }
@@ -401,9 +418,23 @@ return (
         {(editCase === 3) && <TextField value={adminEditCase.comName} id="comName" label="개통처" onChange={handleValueChange} margin="dense" type="text" fullWidth variant="standard" /> }
         {(editCase === 3) && <TextField value={adminEditCase.comPerson} id="comPerson" label="담당자" onChange={handleValueChange} margin="dense" type="text" fullWidth variant="standard" /> }
         {(editCase === 3) && <TextField value={adminEditCase.telComName} id="telComName" label="통신사" onChange={handleValueChange} margin="dense" type="text" fullWidth variant="standard" /> }
+        {/* {(editCase === 5) && <TextField value={adminEditCase.company} id="company" label="판매처" onChange={handleValueChange} margin="dense" type="text" fullWidth variant="standard" /> } */}
+        {(editCase === 5) && 
+              <Autocomplete size="small" 
+              value={adminEditCase.company}
+              onChange={(event, newValue) => {
+                setAdminEditCase({...adminEditCase, company: newValue });
+              }}  
+              inputValue={inputValue}
+              onInputChange={(event, newInputValue) => { setInputValue(newInputValue) }}
+              id="company"
+              options={sellComNameList}
+              sx={{ width: 400 }}
+              renderInput={(params) => <TextField {...params} label="판매처" />} />
+        }
         {(editCase === 5) && <TextField value={adminEditCase.name} id="name" label="사용자" onChange={handleValueChange} margin="dense" type="text" fullWidth variant="standard" /> }
-        {(editCase === 5) && <TextField value={adminEditCase.company} id="company" label="판매처" onChange={handleValueChange} margin="dense" type="text" fullWidth variant="standard" /> }
         {(editCase === 5) && <TextField value={adminEditCase.userGrade} id="userGrade" label="권한등급" onChange={handleValueChange} margin="dense" type="text" fullWidth variant="standard" /> }
+        {(editCase === 5) && <TextField value={adminEditCase.note} id="note" label="비고" onChange={handleValueChange} margin="dense" type="text" fullWidth variant="standard" /> }
       </DialogContent>
       <DialogActions>
         <Button onClick={hdcEditClose}>Cancel</Button>
