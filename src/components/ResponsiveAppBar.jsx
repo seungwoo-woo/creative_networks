@@ -79,7 +79,7 @@ return (
             <Typography name='menu1' variant="h5" component="a" href="/dashBoard"
               sx={{ mr: 4, display: { xs: 'none', md: 'flex' }, fontWeight: 400, color:'inherit', textDecoration: 'none' }}
             >
-              Creactive Networks
+              Creative Networks
             </Typography>
 
             <Typography variant="h10" component="a" href="/openPhoneList"

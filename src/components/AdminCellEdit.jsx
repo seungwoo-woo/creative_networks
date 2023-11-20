@@ -429,7 +429,7 @@ return (
               onInputChange={(event, newInputValue) => { setInputValue(newInputValue) }}
               id="company"
               options={sellComNameList}
-              sx={{ width: 400 }}
+              sx={{ width: 550 }}
               renderInput={(params) => <TextField {...params} label="판매처" />} />
         }
         {(editCase === 5) && <TextField value={adminEditCase.name} id="name" label="사용자" onChange={handleValueChange} margin="dense" type="text" fullWidth variant="standard" /> }
