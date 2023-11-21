@@ -40,9 +40,18 @@ const [ anchorElUser, setAnchorElUser ] = React.useState(null);
 
 const settings = ['Logout'];
 
+
+
 const { userCompanyName } = useContext(UserCompanyContext);
 const { userName } = useContext(UserNameContext);
 const { userGrade } = useContext(UserGradeContext);
+var pages = ['']
+
+if (userGrade === 'A') {
+  pages = ['개통 리스트', '정산', '관리자페이지'];
+} else {
+  pages = ['개통 리스트', '정산'];
+}
 
 // Define subFunction ==================================================
 //-----------------------------------------------------------------------
@@ -52,13 +61,18 @@ const handleOpenNavMenu = (event) => {
 
 //-----------------------------------------------------------------------
 const handleCloseNavMenu = (e) => { 
-  if(e.target.innerText==='출/퇴근하기'){
-    navigate('/gotoWork')
+  if(e.target.innerText==='개통 리스트'){
+    navigate('/openPhoneList')
   }
 
-  if(e.target.innerText==='출/퇴근현황'){
-    navigate('/dashBoard')
+  if(e.target.innerText==='정산'){
+    navigate('/calculate')
   }
+
+  if(e.target.innerText==='관리자페이지'){
+    navigate('/admin')
+  }
+
   setAnchorElNav(null);
   
 };
