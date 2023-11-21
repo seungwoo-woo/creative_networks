@@ -8,6 +8,8 @@ import Container from '@mui/material/Container';
 import SatelliteAltTwoToneIcon from '@mui/icons-material/SatelliteAltTwoTone';
 import { Avatar, Box, IconButton, Menu, MenuItem, Tooltip } from '@mui/material';
 import { deepOrange } from '@mui/material/colors';
+import MenuIcon from '@mui/icons-material/Menu';
+
 
 
 // firebase import=======================================================
@@ -33,6 +35,7 @@ function ResponsiveAppBar(props) {
 const navigate = useNavigate();
 const auth = getAuth(app);
 
+const [anchorElNav, setAnchorElNav] = React.useState(null);
 const [ anchorElUser, setAnchorElUser ] = React.useState(null);
 
 const settings = ['Logout'];
@@ -42,6 +45,24 @@ const { userName } = useContext(UserNameContext);
 const { userGrade } = useContext(UserGradeContext);
 
 // Define subFunction ==================================================
+//-----------------------------------------------------------------------
+const handleOpenNavMenu = (event) => {
+  setAnchorElNav(event.currentTarget);
+};
+
+//-----------------------------------------------------------------------
+const handleCloseNavMenu = (e) => { 
+  if(e.target.innerText==='출/퇴근하기'){
+    navigate('/gotoWork')
+  }
+
+  if(e.target.innerText==='출/퇴근현황'){
+    navigate('/dashBoard')
+  }
+  setAnchorElNav(null);
+  
+};
+
 //-----------------------------------------------------------------------
 const handleOpenUserMenu = (event) => {
   setAnchorElUser(event.currentTarget);
@@ -100,6 +121,66 @@ return (
               관리자페이지
             </Typography>}
           </Box>
+
+
+
+          {/* 추가 ----------------- */}
+          <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
+            <IconButton
+              size="large"
+              aria-label="account of current user"
+              aria-controls="menu-appbar"
+              aria-haspopup="true"
+              onClick={handleOpenNavMenu}
+              color="inherit"
+            >
+              <MenuIcon />
+            </IconButton>
+            <Menu
+              id="menu-appbar"
+              anchorEl={anchorElNav}
+              anchorOrigin={{
+                vertical: 'bottom',
+                horizontal: 'left',
+              }}
+              keepMounted
+              transformOrigin={{
+                vertical: 'top',
+                horizontal: 'left',
+              }}
+              open={Boolean(anchorElNav)}
+              onClose={handleCloseNavMenu}
+              sx={{
+                display: { xs: 'block', md: 'none' },
+              }}
+            >
+              {pages.map((page) => (
+                <MenuItem key={page} onClick={handleCloseNavMenu}>
+                  <Typography textAlign="center">{page}</Typography>
+                </MenuItem>
+              ))}
+            </Menu>
+          </Box>
+          <SatelliteAltTwoToneIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} />
+          <Typography
+            variant="h5"
+            noWrap
+            component="a"
+            href="/dashBoard"
+            sx={{
+              mr: 2,
+              display: { xs: 'flex', md: 'none' },
+              flexGrow: 1,
+              fontWeight: 400,
+              color: 'inherit',
+              textDecoration: 'none',
+            }}
+          >
+            Creative Networks
+          </Typography>
+          {/* 추가 ----------------- */}
+
+
 
           <Box sx={{ flexGrow: 0, display: 'flex', alignItems: 'center' }}>
             <Typography variant="h6" sx={{ mr: 3,mt: 1, fontWeight: 400, color: 'yellow'}}>
