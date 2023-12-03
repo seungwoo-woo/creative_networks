@@ -167,7 +167,8 @@ const handleSubmit = async (e) => {
 // find function ------------------------------------------------
 const findFunction = async () => {
 
-  console.log(findSellCom);
+  console.log(startDate);
+  console.log(endDate);
 
   let data = [];
 

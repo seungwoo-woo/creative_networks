@@ -14,6 +14,14 @@ import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { Box, IconButton, Paper, TableContainer, Table, TableBody, TableCell, TableFooter, TableHead, TablePagination, TableRow, tableCellClasses, Dialog, DialogTitle, Divider, DialogContent, DialogActions } from '@mui/material';
 import { pink } from '@mui/material/colors';
 import ReportIcon from '@mui/icons-material/Report';
+import LastPageIcon from '@mui/icons-material/LastPage';
+import FirstPageIcon from '@mui/icons-material/FirstPage';
+import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft';
+import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
+import { useTheme } from '@emotion/react';
+import PropTypes from 'prop-types';
+
+
 
 
 
@@ -21,7 +29,7 @@ import ReportIcon from '@mui/icons-material/Report';
 
 // firebase import=======================================================
 import { initializeApp } from "firebase/app";
-import { getFirestore, collection, addDoc, getDocs, query, where } from "firebase/firestore";
+import { getFirestore, collection, addDoc, getDocs, query, where, orderBy } from "firebase/firestore";
 import { firebaseConfig } from '../firebase';
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import CalcPhone from '../components/CalcPhone';
@@ -31,6 +39,71 @@ import CalcPhone from '../components/CalcPhone';
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const auth = getAuth(app);
+
+
+
+// Table Pagination Function Start -----------------------------------------------------
+function TablePaginationActions(props) {
+  const theme = useTheme();  
+  const { count, page, rowsPerPage, onPageChange } = props;
+
+  const handleFirstPageButtonClick = (event) => {
+    onPageChange(event, 0);
+  };
+
+  const handleBackButtonClick = (event) => {
+    onPageChange(event, page - 1);
+  };
+
+  const handleNextButtonClick = (event) => {
+    onPageChange(event, page + 1);
+  };
+
+  const handleLastPageButtonClick = (event) => {
+    onPageChange(event, Math.max(0, Math.ceil(count / rowsPerPage) - 1));
+  };
+
+  return (
+    <Box sx={{ flexShrink: 0, ml: 2.5 }}>
+      <IconButton
+        onClick={handleFirstPageButtonClick}
+        disabled={page === 0}
+        aria-label="first page"
+      >
+        {theme.direction === 'rtl' ? <LastPageIcon /> : <FirstPageIcon />}
+      </IconButton>
+      <IconButton
+        onClick={handleBackButtonClick}
+        disabled={page === 0}
+        aria-label="previous page"
+      >
+        {theme.direction === 'rtl' ? <KeyboardArrowRight /> : <KeyboardArrowLeft />}
+      </IconButton>
+      <IconButton
+        onClick={handleNextButtonClick}
+        disabled={page >= Math.ceil(count / rowsPerPage) - 1}
+        aria-label="next page"
+      >
+        {theme.direction === 'rtl' ? <KeyboardArrowLeft /> : <KeyboardArrowRight />}
+      </IconButton>
+      <IconButton
+        onClick={handleLastPageButtonClick}
+        disabled={page >= Math.ceil(count / rowsPerPage) - 1}
+        aria-label="last page"
+      >
+        {theme.direction === 'rtl' ? <FirstPageIcon /> : <LastPageIcon />}
+      </IconButton>
+    </Box>
+  );
+};
+
+TablePaginationActions.propTypes = {
+  count: PropTypes.number.isRequired,
+  onPageChange: PropTypes.func.isRequired,
+  page: PropTypes.number.isRequired,
+  rowsPerPage: PropTypes.number.isRequired,
+};
+
 
 
 
@@ -47,10 +120,25 @@ function OpenPhoneCaculation(props) {
   const { setUserGrade } = useContext(UserGradeContext);
 
   const [jsonData, setJsonData] = useState();
+  const [calcDataList, setCalcDataList] = useState([])
   const [msg, setMsg] = useState('');
   const [isCompUploadDialogOpen, setIsCompUploadDialogOpen] = useState(false)
 
 
+  // Table Pagination Start ----------------------------------------
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+
+  //----------------------------------------------------------------------- 
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  //----------------------------------------------------------------------- 
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
 
 // File Input Button style ----------------------------------------------------
   const VisuallyHiddenInput = styled('input')({
@@ -188,9 +276,28 @@ useEffect(()=>{
     }
   });    
   }    
-  getUserInformation();
+  // getUserInformation();
 
 }, []);
+
+
+// useEffect 2 Start ========================================================
+useEffect(()=>{    
+  let endDate = new Date('2023-11-01');
+
+  // 정산자료 읽어오기 --------------------------------------------------
+  const getCalcData = async () => {
+    let data = [];
+    const querySnapshot = await getDocs(query(collection(db, "calcDB"), orderBy("openDate", "desc"), orderBy("no", "desc"), where("openDate", "<=", endDate), where("isDeleted", "==", 0)));
+    querySnapshot.forEach((doc) => {
+      data.push({...doc.data(), id: doc.id,})
+      // data.push(doc.data().comName);
+    });
+    setCalcDataList(data);
+  }
+  getCalcData();
+  }, [])
+
 
 
 // ------------------------------------------------------------------------------------
@@ -235,39 +342,41 @@ return (
                 {/* <StyledTableCell padding='none' sx={{fontWeight: 400}} align='center' rowSpan={2}>메모</StyledTableCell> */}
                 <StyledTableCell padding='none' sx={{fontWeight: 400}} align='center' rowSpan={2}>판매처</StyledTableCell>
                 <StyledTableCell padding='none' sx={{fontWeight: 400}} align='center' rowSpan={2}>리베이트</StyledTableCell>
-                <StyledTableCell padding='none' sx={{fontWeight: 400}} align='center' rowSpan={2}>원가리베이트</StyledTableCell>
+                <StyledTableCell padding='none' sx={{fontWeight: 400}} align='center' rowSpan={2}>원가</StyledTableCell>
                 <StyledTableCell padding='none' sx={{fontWeight: 400}} align='center' rowSpan={2}>총수익</StyledTableCell>
               </TableRow>
             </TableHead>
 
             <TableBody>
 
-            {/* {jsonData && jsonData.map((item, index) => { 
-              if (index !== 0 && index !== 1 && index !== 2) {
+            {calcDataList && calcDataList.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+            .map((item) => {
+              let tempDate = new Date(item.openDate.seconds * 1000)
+              
               return (<CalcPhone 
-                key = {index}
-                no = {item[`__EMPTY_${1}`]}
-                telCom = {item[`__EMPTY_${2}`]}
-                openCom = {item[`__EMPTY_${3}`]}
-                type = {item[`__EMPTY_${4}`]}
-                openDate = {item[`__EMPTY_${5}`]}
-                openType = {item[`__EMPTY_${6}`]}
-                phoneModel = {item[`__EMPTY_${7}`]}
-                phoneSerial = {item[`__EMPTY_${8}`]}
-                phoneColor = {item[`__EMPTY_${9}`]}
-                customerName = {item[`__EMPTY_${10}`]}
-                phoneNo = {item[`__EMPTY_${11}`]}
-                birthday = {item[`__EMPTY_${12}`]}
-                callingPlan = {item[`__EMPTY_${13}`]}
-                controlNo = {item[`__EMPTY_${14}`]}
-                memo = {item[`__EMPTY_${15}`]}
-                sellCom = {item[`__EMPTY_${16}`]}
-                rebate = {item[`__EMPTY_${17}`]}
-                myRebate = {item[`__EMPTY_${18}`]}
-                netRebate = {item[`__EMPTY_${19}`]}
-              />)}
+                key = {item.id}
+                no = {item.no}
+                telCom = {item.telCom}
+                openCom = {item.openCom}
+                type = {item.type}
+                openDate = {`${tempDate.getFullYear()}-${tempDate.getMonth()+1}-${tempDate.getDate()}`}
+                openType = {item.openType}
+                phoneModel = {item.phoneModel}
+                phoneSerial = {item.phoneSerial}
+                phoneColor = {item.phoneColor}
+                customerName = {item.customerName}
+                phoneNo = {item.phoneNo}
+                birthday = {item.birthday}
+                callingPlan = {item.callingPlan}
+                controlNo = {item.controlNo}
+                memo = {item.memo}
+                sellCom = {item.sellCom}
+                rebate = {item.rebate}
+                myRebate = {item.myRebate}
+                netRebate = {item.netRebate}
+              />)
             })
-            } */}
+            } 
 
              {/* openPhoneList.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)              
               .map((op, index) => {
@@ -298,6 +407,21 @@ return (
               }) */}
               
       </TableBody>
+
+      <TableFooter>
+        <TableRow>
+          <TablePagination
+            rowsPerPageOptions={[5, 10, 25, { label: 'All', value: -1 }]}
+            count={calcDataList.length}
+            rowsPerPage={rowsPerPage}
+            page={page}
+            onPageChange={handleChangePage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
+            ActionsComponent={TablePaginationActions}
+          />
+        </TableRow>
+      </TableFooter>
+
 
 
 

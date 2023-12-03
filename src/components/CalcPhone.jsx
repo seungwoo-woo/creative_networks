@@ -34,24 +34,24 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 return (
   <StyledTableRow>
     <TableCell padding='none' sx= {{paddingTop:0.6, paddingBottom:0.6}} align='center'>{no}</TableCell>
-    <TableCell padding='none' align='center'>{telCom}</TableCell>
-    <TableCell padding='none' align='center'>{openCom}</TableCell>
+    <TableCell padding='none' align='left'>{telCom}</TableCell>
+    <TableCell padding='none' align='left'>{openCom}</TableCell>
     <TableCell padding='none' align='center'>{type}</TableCell>
     <TableCell padding='none' align='center'>{openDate}</TableCell>
     <TableCell padding='none' align='center'>{openType}</TableCell>
     <TableCell padding='none' align='center'>{phoneModel}</TableCell>
     {/* <TableCell padding='none' align='center'>{phoneSerial}</TableCell> */}
     {/* <TableCell padding='none' align='center'>{phoneColor}</TableCell> */}
-    <TableCell padding='none' align='center'>{customerName}</TableCell>
+    <TableCell padding='none' align='left'>{customerName}</TableCell>
     <TableCell padding='none' align='center'>{phoneNo}</TableCell>
     {/* <TableCell padding='none' align='center'>{nationality}</TableCell> */}
-    <TableCell padding='none' align='center'>{callingPlan}</TableCell>
+    <TableCell padding='none' align='left'>{callingPlan}</TableCell>
     {/* <TableCell>{controlNo}</TableCell> */}
     {/* <TableCell padding='none' sx={{paddingLeft:1}}>{memo}</TableCell> */}
-    <TableCell padding='none' align='center'>{sellCom}</TableCell> 
-    <TableCell padding='none' align='center'>{rebate}</TableCell> 
-    <TableCell padding='none' align='center'>{myRebate}</TableCell> 
-    <TableCell padding='none' align='center'>{netRebate}</TableCell>
+    <TableCell padding='none' align='left'>{sellCom}</TableCell> 
+    <TableCell padding='none' align='right'>{rebate.toLocaleString()}</TableCell> 
+    <TableCell padding='none' align='right'>{myRebate.toLocaleString()}</TableCell> 
+    <TableCell padding='none' align='right'>{netRebate.toLocaleString()}</TableCell>
     {/* { (userGrade === 'A' || userGrade === 'B') && <TableCell padding='none' align='center'><OpenPhoneEdit id={id} getDataRefresh={getDataRefresh}/></TableCell> } */}
   </StyledTableRow>
 );
