@@ -35,18 +35,16 @@ function ResponsiveAppBar(props) {
 const navigate = useNavigate();
 const auth = getAuth(app);
 
-const [anchorElNav, setAnchorElNav] = React.useState(null);
+const [ anchorElNav, setAnchorElNav ] = React.useState(null);
 const [ anchorElUser, setAnchorElUser ] = React.useState(null);
-
-const settings = ['Logout'];
-
-
 
 const { userCompanyName } = useContext(UserCompanyContext);
 const { userName } = useContext(UserNameContext);
 const { userGrade } = useContext(UserGradeContext);
-var pages = ['']
 
+const settings = ['Logout'] // 사용자 avatar menu ----
+
+let pages = ['']  // 작은화면 햄버거 menu ----
 if (userGrade === 'A') {
   pages = ['개통 리스트', '정산', '관리자페이지'];
 } else {
@@ -106,7 +104,7 @@ const handleCloseUserMenu = () => {
 
 return (
   <AppBar position="relative" >
-    <Container maxWidth="false">
+    <Container maxWidth='false'>
       <Toolbar disableGutters>        
         <SatelliteAltTwoToneIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
         
@@ -138,7 +136,7 @@ return (
 
 
 
-          {/* 추가 ----------------- */}
+          {/* 작은 화면에서 보이는 Appbar ----------------- */}
           <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
             <IconButton
               size="large"
@@ -192,7 +190,7 @@ return (
           >
             Creative Networks
           </Typography>
-          {/* 추가 ----------------- */}
+          {/* 작은 화면에서 보이는 Appbar ----------------- */}
 
 
 

@@ -33,7 +33,7 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 return (
   <StyledTableRow>
     <TableCell align='center'>{no}</TableCell>
-    <TableCell align='center'>{cell1}</TableCell>
+    <TableCell align='left'>{cell1}</TableCell>
     <TableCell align='center'>{cell2}</TableCell>
     {cell3 && <TableCell align='center'>{cell3}</TableCell>}
     {cell4 && <TableCell align='center'>{cell4}</TableCell>}

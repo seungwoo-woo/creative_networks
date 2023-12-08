@@ -138,7 +138,7 @@ const [ msg, setMsg ] = useState('');
 
 const { setUserCompanyName } = useContext(UserCompanyContext);
 const { setUserName } = useContext(UserNameContext);
-const { setUserGrade }= useContext(UserGradeContext);
+const { setUserGrade } = useContext(UserGradeContext);
 
 
 // Table Pagination Start ----------------------------------------

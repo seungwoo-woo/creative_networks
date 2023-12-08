@@ -1,14 +1,18 @@
-// react & material UI import ==================================================
+// 1. react & material UI import ==================================================
 import React, { useEffect, useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTheme } from '@emotion/react';
-import { styled } from '@mui/material/styles';
 import PropTypes from 'prop-types';
+// --------------------------------------------------------------------------------
+import { styled } from '@mui/material/styles';
 import { Box, IconButton, Paper, TableContainer, Table, TableBody, TableCell, TableFooter, TableHead, TablePagination, TableRow, tableCellClasses, Container } from '@mui/material';
 import LastPageIcon from '@mui/icons-material/LastPage';
 import FirstPageIcon from '@mui/icons-material/FirstPage';
 import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft';
 import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
+
+
+// 2. coponemts import ---------------------------------------------------------------
 import OpenPhoneAdd from '../components/OpenPhoneAdd';
 import OpenPhone from '../components/OpenPhone';
 import ResponsiveAppBar from '../components/ResponsiveAppBar';
@@ -16,19 +20,20 @@ import { UserCompanyContext } from '../context/UserCompanyContext';
 import { UserNameContext } from '../context/UserNameContext';
 import { UserGradeContext } from '../context/UserGradeContext';
 
-// firebase import=======================================================
+
+// 3. firebase import ======================================================
 import { initializeApp } from "firebase/app";
 import { getFirestore, collection, getDocs, query, where, orderBy } from "firebase/firestore";
 import { firebaseConfig } from '../firebase';
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 
-// Initialize Firebase ==================================================
+// 4. Initialize Firebase ==================================================
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
 
-// Define subFunction ================================================
+// 5. Define subFunction ================================================
 // Table Pagination Function Start -----------------------------------------------------
 function TablePaginationActions(props) {
   const theme = useTheme();  
@@ -99,16 +104,16 @@ TablePaginationActions.propTypes = {
 
 function OpenPhoneList() {
 
-// Initialize Variable ==================================================
+// 1. Initialize Variable ==================================================
 const navigate = useNavigate();
 const auth = getAuth(app);
 const [ openPhoneList, setOpenPhoneList ] = useState([]);
 const { userCompanyName, setUserCompanyName } = useContext(UserCompanyContext);
 const { setUserName } = useContext(UserNameContext);
-const { userGrade, setUserGrade }= useContext(UserGradeContext);
+const { userGrade, setUserGrade } = useContext(UserGradeContext);
 
 
-// Table Pagination Start ----------------------------------------
+// 2. Table Pagination Start ----------------------------------------
 const [page, setPage] = useState(0);
 const [rowsPerPage, setRowsPerPage] = useState(10);
 
@@ -126,8 +131,8 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
 }));
 
 
-// Define subFunction ==================================================
-//-----------------------------------------------------------------------
+// 3. Define subFunction ==================================================
+// 3-1. 개통리스트 DB에서 다시 읽어오기 --------------------------------------------
 const getDataRefresh = async () => {
   let data = [];
   const querySnapshot = await getDocs(query(collection(db, "CreativeNetworks"), orderBy("openDate", "desc"), where("isDeleted", "==", 0)));
@@ -139,12 +144,12 @@ const getDataRefresh = async () => {
   setOpenPhoneList(data);
 }
 
-//----------------------------------------------------------------------- 
+// 3-2. table pagination subfunction --------------------------------------- 
 const handleChangePage = (event, newPage) => {
   setPage(newPage);
 };
 
-//----------------------------------------------------------------------- 
+// 3-3 table pagination subfunction ----------------------------------------- 
 const handleChangeRowsPerPage = (event) => {
   setRowsPerPage(parseInt(event.target.value, 10));
   setPage(0);
@@ -152,7 +157,7 @@ const handleChangeRowsPerPage = (event) => {
 
 
 
-// useEffect 1 Start ========================================================
+// 4. useEffect 1: userData 읽어오기 ========================================================
 useEffect(()=>{
 
   const getUserInformation = () => {    
@@ -181,7 +186,7 @@ useEffect(()=>{
 }, []);
 
 
-// useEffect 2 Start ========================================================
+// 5. useEffect 2: 개통 리스트 읽어오기 ======================================================
 useEffect(()=>{
 
   const getData = async () => {
@@ -205,6 +210,7 @@ useEffect(()=>{
     getData();
 
 }, [userCompanyName, userGrade]);
+
 
 
 // ------------------------------------------------------------------------------------

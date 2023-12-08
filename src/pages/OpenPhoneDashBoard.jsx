@@ -6,9 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import { UserCompanyContext } from '../context/UserCompanyContext';
 import { UserNameContext } from '../context/UserNameContext';
 import { UserGradeContext } from '../context/UserGradeContext';
-import CssBaseline from '@mui/material/CssBaseline';
 import Container from '@mui/material/Container';
-import { Box } from '@mui/material';
 
 
 
@@ -50,7 +48,6 @@ function OpenPhoneDashBoard(props) {
   const { setUserCompanyName } = useContext(UserCompanyContext);
   const { setUserName } = useContext(UserNameContext);
   const { setUserGrade }= useContext(UserGradeContext);
-
 
 
 // useEffect 1 Start ========================================================

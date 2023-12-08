@@ -1,6 +1,5 @@
 // react & material UI import ==================================================
 import React, { useEffect, useState } from "react";
-import { styled } from '@mui/material/styles';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import AppBar from '@mui/material/AppBar';
@@ -16,7 +15,6 @@ import RadioGroup from '@mui/material/RadioGroup';
 import Radio from '@mui/material/Radio';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Slide from '@mui/material/Slide';
-import { DemoContainer, DemoItem } from '@mui/x-date-pickers/internals/demo';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
@@ -99,7 +97,7 @@ const handleClickClose = () => {
 //-----------------------------------------------------------------------
 const handleClickCompSaveDialogClose = () => {
   setIsCompSaveDialogOpen(false);
-  getDataRefresh();
+  getDataRefresh();   // 신규개통내역을 save하고, 개통리스트 다시 읽어오기 위해서 ---
 };
 
 
@@ -107,7 +105,6 @@ const handleClickCompSaveDialogClose = () => {
 const handleValueChange = (e) => {
   const keyValue = e.target.id;
   const openPhoneCaseCopy = {...openPhoneCase, [keyValue]: e.target.value };
-
   setOpenPhoneCase(openPhoneCaseCopy);
 };
 
@@ -116,7 +113,6 @@ const handleValueChange = (e) => {
 const handleSelectChange = (e) => {  
   const keyValue = e.target.name
   const openPhoneCaseCopy = {...openPhoneCase, [keyValue]: e.target.value };
-
   setOpenPhoneCase(openPhoneCaseCopy);
 };
 
@@ -124,7 +120,6 @@ const handleSelectChange = (e) => {
 //-----------------------------------------------------------------------
 const handleRadioChange = (e) => {  
   const openPhoneCaseCopy = {...openPhoneCase, nationality: e.target.value };
-
   setOpenPhoneCase(openPhoneCaseCopy);
 };
 
@@ -166,9 +161,6 @@ const handleSubmit = async (e) => {
 
 // find function ------------------------------------------------
 const findFunction = async () => {
-
-  console.log(startDate);
-  console.log(endDate);
 
   let data = [];
 
