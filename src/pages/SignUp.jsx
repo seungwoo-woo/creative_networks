@@ -137,23 +137,6 @@ const handleSubmit = async (event) => {
 };
 
 
-// useEffect Start - 판매점 업체명 받아오기 ==============================================
-  // React.useEffect(()=>{
-
-  //   const getSellComName = async () => {
-  //     let data = [];
-  //     const querySnapshot = await getDocs(query(collection(db, "sellComName"), orderBy("comName", "asc"), where("isDeleted", "==", 0)));
-  //     querySnapshot.forEach((doc) => {
-  //       data.push(doc.data().comName);
-  //     });
-  //     setSellComNameList(data);
-  //   }    
-  //   getSellComName();
-
-  // }, []);
-
-
-
 // ------------------------------------------------------------------------------------
 // return 시작 ------------------------------------------------------------------------
 // ------------------------------------------------------------------------------------
@@ -175,16 +158,7 @@ return (
           </Grid>
           <Grid item xs={12}>
             <TextField autoComplete="given-name" name="note" required fullWidth 
-              id="note" label="소속 판매점 상호" autoFocus />
-            {/* <Autocomplete 
-              value={sellComName}
-              onChange={(event, newValue) => { setSellComName(newValue) }}  
-              inputValue={inputValue}
-              onInputChange={(event, newInputValue) => { setInputValue(newInputValue) }}
-              id="controllable-states-demo"
-              options={sellComNameList}
-              sx={{ width: 400 }}
-              renderInput={(params) => <TextField {...params} label="판매처" />} /> */}
+              id="note" label="소속 판매점 상호" />
           </Grid>
           <Grid item xs={12}>
             <TextField id="email" autoComplete="email" label="Email Address" name="email" required fullWidth />
