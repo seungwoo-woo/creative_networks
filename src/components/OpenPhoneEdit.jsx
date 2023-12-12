@@ -200,7 +200,7 @@ const handleRadioChange = (e) => {
 const handleUpdate = async (e) => {
   e.preventDefault();
 
-  console.log(openPhoneEditCase.openDate.substr(0, 10))
+  // console.log(openPhoneEditCase.openDate.substr(0, 10))
 
   try{
     const res = await axios.put(`http://localhost:8800/openPhoneList/${id}`, openPhoneEditCase)
