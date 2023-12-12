@@ -55,6 +55,19 @@ app.post("/openPhoneList", (req, res)=>{
   })
 })
 
+
+
+app.get("/openPhoneList/:id", (req, res)=>{
+  const editPhoneListID = req.params.id
+  const q = "SELECT * FROM openlist WHERE id = ?"
+  db.query(q, [editPhoneListID], (err, data)=>{
+    if(err) return res.json(err)
+    return res.json(data)
+  })
+})
+
+
+
 // app.delete("/books/:id", (req, res)=>{
 //   const bookID = req.params.id
 //   const q = "DELETE FROM books WHERE id = ?"

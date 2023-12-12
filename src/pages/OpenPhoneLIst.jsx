@@ -3,6 +3,8 @@ import React, { useEffect, useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTheme } from '@emotion/react';
 import PropTypes from 'prop-types';
+import axios from 'axios'
+
 // --------------------------------------------------------------------------------
 import { styled } from '@mui/material/styles';
 import { Box, IconButton, Paper, TableContainer, Table, TableBody, TableCell, TableFooter, TableHead, TablePagination, TableRow, tableCellClasses, Container } from '@mui/material';
@@ -132,17 +134,30 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
 
 
 // 3. Define subFunction ==================================================
-// 3-1. 개통리스트 DB에서 다시 읽어오기 --------------------------------------------
+// 3-1. 개통리스트 DB에서 다시 읽어오기 (firebase DB) --------------------------------------------
+// const getDataRefresh = async () => {
+//   let data = [];
+//   const querySnapshot = await getDocs(query(collection(db, "CreativeNetworks"), orderBy("openDate", "desc"), where("isDeleted", "==", 0)));
+
+//   querySnapshot.forEach((doc) => {
+//     data.push({...doc.data(), id: doc.id,})
+//   });
+
+//   setOpenPhoneList(data);
+// }
+
+
+// 3-1. 개통리스트 DB에서 다시 읽어오기 (mysql DB) --------------------------------------------
 const getDataRefresh = async () => {
-  let data = [];
-  const querySnapshot = await getDocs(query(collection(db, "CreativeNetworks"), orderBy("openDate", "desc"), where("isDeleted", "==", 0)));
-
-  querySnapshot.forEach((doc) => {
-    data.push({...doc.data(), id: doc.id,})
-  });
-
-  setOpenPhoneList(data);
+  try{
+    const res = await axios.get("http://localhost:8800/openPhoneList")
+    setOpenPhoneList(res.data)
+    // console.log(res.data[0].openDate)
+  }catch(err){
+    console.log(err)
+  }
 }
+
 
 // 3-2. table pagination subfunction --------------------------------------- 
 const handleChangePage = (event, newPage) => {
@@ -186,30 +201,46 @@ useEffect(()=>{
 }, []);
 
 
-// 5. useEffect 2: 개통 리스트 읽어오기 ======================================================
-useEffect(()=>{
+// 5. useEffect 2: 개통 리스트 읽어오기 (firebase DB)======================================================
+// useEffect(()=>{
 
-  const getData = async () => {
+//   const getData = async () => {
 
-    let data = [];
+//     let data = [];
 
-    if (userGrade === 'A' || userGrade === 'B') {
-      const querySnapshot = await getDocs(query(collection(db, "CreativeNetworks"), orderBy("openDate", "desc"), where("isDeleted", "==", 0)));
-      querySnapshot.forEach((doc) => {
-        data.push({...doc.data(), id: doc.id,})
-      });
-    } else {
-      const querySnapshot = await getDocs(query(collection(db, "CreativeNetworks"), orderBy("openDate", "desc"), where("isDeleted", "==", 0), where("sellCom", "==", userCompanyName)));
-      querySnapshot.forEach((doc) => {
-        data.push({...doc.data(), id: doc.id,})
-      });
-    }
-    setOpenPhoneList(data);
-    }   
+//     if (userGrade === 'A' || userGrade === 'B') {
+//       const querySnapshot = await getDocs(query(collection(db, "CreativeNetworks"), orderBy("openDate", "desc"), where("isDeleted", "==", 0)));
+//       querySnapshot.forEach((doc) => {
+//         data.push({...doc.data(), id: doc.id,})
+//       });
+//     } else {
+//       const querySnapshot = await getDocs(query(collection(db, "CreativeNetworks"), orderBy("openDate", "desc"), where("isDeleted", "==", 0), where("sellCom", "==", userCompanyName)));
+//       querySnapshot.forEach((doc) => {
+//         data.push({...doc.data(), id: doc.id,})
+//       });
+//     }
+//     setOpenPhoneList(data);
+//     }   
     
-    getData();
+//     getData();
 
-}, [userCompanyName, userGrade]);
+// }, [userCompanyName, userGrade]);
+
+
+
+// 5. useEffect 2: 개통 리스트 읽어오기 (mysql DB)======================================================
+useEffect(()=>{
+  const fetchAllOpenPhoneList = async () => {
+    try{
+      const res = await axios.get("http://localhost:8800/openPhoneList")
+      setOpenPhoneList(res.data)
+      // console.log(res.data[0].openDate)
+    }catch(err){
+      console.log(err)
+    }
+  }
+  fetchAllOpenPhoneList()
+}, [])
 
 
 
@@ -264,7 +295,7 @@ return (
                 telCom = {op.telCom}
                 openCom = {op.openCom}
                 type = {op.type}
-                openDate = {op.openDate}
+                openDate = {new Date(op.openDate).toISOString().slice(0, 10)} 
                 openType = {op.openType}
                 phoneModel = {op.phoneModel}
                 phoneSerial = {op.phoneSerial}

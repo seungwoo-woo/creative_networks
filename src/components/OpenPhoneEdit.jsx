@@ -22,6 +22,7 @@ import { pink } from '@mui/material/colors';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import dayjs from "dayjs";
+import axios from 'axios'
 import Autocomplete from '@mui/material/Autocomplete';
 import { DialogContent, DialogTitle, DialogContentText, DialogActions, Table, TableBody, TableCell, TableRow, TextField, Select, MenuItem, Box, FormControl, InputLabel } from "@mui/material";
 
@@ -62,6 +63,7 @@ function OpenPhoneEdit(props) {
 // Initialize Variable ==================================================
 const id = props.id
 const getDataRefresh = props.getDataRefresh
+
 const [openPhoneEditCase, setOpenPhoneEditCase] = 
   useState({ no: '', telCom: '', openCom: '', type: '', openDate: '', openType: '', phoneModel: '', phoneSerial: '', phoneColor: '', customerName: '', phoneNo: '', nationality: '', birthday: '', callingPlan: '', controlNo: '', memo: '', sellCom: '', isDeleted: 0});
 const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -76,12 +78,27 @@ const [inputValue, setInputValue] = useState('');
 
 
 // Define subFunction ==================================================
-// Edit 대상 정보 읽어오기 ------------------------------------------------
-const getPhoneCaseEdit = async () => {
-  const querySnapshot = await getDoc(doc(db, "CreativeNetworks", id));
-  setOpenPhoneEditCase(querySnapshot.data());
+// Edit 대상 정보 읽어오기 (firebase DB)------------------------------------------------
+// const getPhoneCaseEdit = async () => {
+//   const querySnapshot = await getDoc(doc(db, "CreativeNetworks", id));
+//   setOpenPhoneEditCase(querySnapshot.data());
+// }
+
+// Edit 대상 정보 읽어오기 (mysql DB)------------------------------------------------
+const getPhoneCaseEdit = async (id) => {
+  try{
+    const res = await axios.get(`http://localhost:8800/openPhoneList/${id}`)
+    console.log(res.data)
+    setOpenPhoneEditCase(res.data[0])
+    // console.log(res.data[0].openDate)
+  }catch(err){
+    console.log(err)
+  }
 }
 
+if(openPhoneEditCase) {
+  console.log(openPhoneEditCase.telCom)
+}
 // --------------------------------------------------------------------
 const handleClickOpen = () => {
   setIsDialogOpen(true);
@@ -201,7 +218,7 @@ const handleDelete = async (e) => {
 // useEffect 1 Start ========================================================
 useEffect(()=>{
 
-  getPhoneCaseEdit();
+  getPhoneCaseEdit(id);
 
   // 통신사 리스트 읽어오기 --------------------------------------------------
   const getTelComName = async () => {
@@ -247,7 +264,7 @@ useEffect(()=>{
   }    
   getOpenComName();
 
-}, [openPhoneEditCase.telCom]);
+}, [openPhoneEditCase]);
 
 
 // useEffect 3 Start ========================================================
@@ -266,7 +283,7 @@ useEffect(()=>{
   }    
   getOpenCallingPlan();
 
-}, [openPhoneEditCase.openCom]);
+}, [openPhoneEditCase]);
 
 
 

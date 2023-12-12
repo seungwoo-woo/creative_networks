@@ -36,8 +36,6 @@ function App() {
     </UserGradeContext.Provider>
     </UserNameContext.Provider>
     </UserCompanyContext.Provider>
-
-
   );
 }
 

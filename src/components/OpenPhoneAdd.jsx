@@ -21,6 +21,7 @@ import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
 import dayjs from "dayjs";
 import Autocomplete from '@mui/material/Autocomplete';
 import { DialogContent, DialogTitle, DialogContentText, DialogActions, Table, TableBody, TableCell, TableRow, TextField, Select, MenuItem, FormControl, InputLabel, Container } from "@mui/material";
+import axios from 'axios'
 
 
 // firebase import=======================================================
@@ -124,39 +125,59 @@ const handleRadioChange = (e) => {
 };
 
 
-//-----------------------------------------------------------------------
+// 신규 개통리스트 추가 (firebase DB) -----------------------------------------------------------------------
+// const handleSubmit = async (e) => {
+//   e.preventDefault();
+
+//   try {
+//     const docRef = await addDoc(collection(db, "CreativeNetworks"), {
+//       telCom: openPhoneCase.telCom,
+//       openCom: openPhoneCase.openCom,
+//       type: openPhoneCase.type,
+//       openDate: openPhoneCase.openDate,
+//       openType: openPhoneCase.openType,
+//       phoneModel: openPhoneCase.phoneModel,
+//       phoneSerial: openPhoneCase.phoneSerial,
+//       phoneColor: openPhoneCase.phoneColor,
+//       customerName: openPhoneCase.customerName,
+//       phoneNo: openPhoneCase.phoneNo,
+//       birthday: openPhoneCase.birthday,
+//       callingPlan: openPhoneCase.callingPlan,
+//       controlNo: openPhoneCase.controlNo,
+//       memo: openPhoneCase.memo,
+//       sellCom: openPhoneCase.sellCom,
+//       nationality: openPhoneCase.nationality,
+//       isDeleted: 0 
+//     });
+
+//     setIsCompSaveDialogOpen(true);
+//     handleClickClose();
+//   } catch (e) {
+//     console.error("Error adding document: ", e);
+//   }
+  
+//   handleClickClose();
+// };
+
+
+
+// 신규 개통리스트 추가 (mysql DB) -----------------------------------------------------------------------
 const handleSubmit = async (e) => {
   e.preventDefault();
 
-  try {
-    const docRef = await addDoc(collection(db, "CreativeNetworks"), {
-      telCom: openPhoneCase.telCom,
-      openCom: openPhoneCase.openCom,
-      type: openPhoneCase.type,
-      openDate: openPhoneCase.openDate,
-      openType: openPhoneCase.openType,
-      phoneModel: openPhoneCase.phoneModel,
-      phoneSerial: openPhoneCase.phoneSerial,
-      phoneColor: openPhoneCase.phoneColor,
-      customerName: openPhoneCase.customerName,
-      phoneNo: openPhoneCase.phoneNo,
-      birthday: openPhoneCase.birthday,
-      callingPlan: openPhoneCase.callingPlan,
-      controlNo: openPhoneCase.controlNo,
-      memo: openPhoneCase.memo,
-      sellCom: openPhoneCase.sellCom,
-      nationality: openPhoneCase.nationality,
-      isDeleted: 0 
-    });
-
+  try{
+    await axios.post("http://localhost:8800/openPhoneList", openPhoneCase)
     setIsCompSaveDialogOpen(true);
     handleClickClose();
-  } catch (e) {
-    console.error("Error adding document: ", e);
+    // navigate("/")
+  }catch(err){
+    console.log(err)
   }
   
   handleClickClose();
 };
+
+
 
 
 // find function ------------------------------------------------
