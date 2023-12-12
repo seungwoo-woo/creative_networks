@@ -159,6 +159,43 @@ const handleRadioChange = (e) => {
   setOpenPhoneEditCase(openPhoneCaseCopy);
 };
 
+
+
+// Update Function =======================================================
+// const handleUpdate = async (e) => {
+//   e.preventDefault();
+
+//   try {
+//     const docRef = await updateDoc(doc(db, "CreativeNetworks", id), {
+//       telCom: openPhoneEditCase.telCom,
+//       openCom: openPhoneEditCase.openCom,
+//       type: openPhoneEditCase.type,
+//       openDate: openPhoneEditCase.openDate,
+//       openType: openPhoneEditCase.openType,
+//       phoneModel: openPhoneEditCase.phoneModel,
+//       phoneSerial: openPhoneEditCase.phoneSerial,
+//       phoneColor: openPhoneEditCase.phoneColor,
+//       customerName: openPhoneEditCase.customerName,
+//       phoneNo: openPhoneEditCase.phoneNo,
+//       nationality: openPhoneEditCase.nationality,
+//       birthday: openPhoneEditCase.birthday,
+//       callingPlan: openPhoneEditCase.callingPlan,
+//       controlNo: openPhoneEditCase.controlNo,
+//       memo: openPhoneEditCase.memo,
+//       sellCom: openPhoneEditCase.sellCom,
+//     });    
+    
+//     CompletedUpdateDialogOpen();
+//     handleClickClose();
+
+//   } catch (e) {
+//     console.error("Error adding document: ", e);
+//   }
+
+//   handleClickClose();
+// };
+
+
 // Update Function =======================================================
 const handleUpdate = async (e) => {
   e.preventDefault();
