@@ -88,17 +88,13 @@ const [inputValue, setInputValue] = useState('');
 const getPhoneCaseEdit = async (id) => {
   try{
     const res = await axios.get(`http://localhost:8800/openPhoneList/${id}`)
-    console.log(res.data)
     setOpenPhoneEditCase(res.data[0])
-    // console.log(res.data[0].openDate)
   }catch(err){
     console.log(err)
   }
 }
 
-if(openPhoneEditCase) {
-  console.log(openPhoneEditCase.telCom)
-}
+
 // --------------------------------------------------------------------
 const handleClickOpen = () => {
   setIsDialogOpen(true);
@@ -106,7 +102,7 @@ const handleClickOpen = () => {
 
 // --------------------------------------------------------------------
 const handleClickClose = () => {
-  getPhoneCaseEdit();
+  getPhoneCaseEdit(id);
   setIsDialogOpen(false);
 };
 
@@ -167,51 +163,51 @@ const handleRadioChange = (e) => {
 const handleUpdate = async (e) => {
   e.preventDefault();
 
-  try {
-    const docRef = await updateDoc(doc(db, "CreativeNetworks", id), {
-      telCom: openPhoneEditCase.telCom,
-      openCom: openPhoneEditCase.openCom,
-      type: openPhoneEditCase.type,
-      openDate: openPhoneEditCase.openDate,
-      openType: openPhoneEditCase.openType,
-      phoneModel: openPhoneEditCase.phoneModel,
-      phoneSerial: openPhoneEditCase.phoneSerial,
-      phoneColor: openPhoneEditCase.phoneColor,
-      customerName: openPhoneEditCase.customerName,
-      phoneNo: openPhoneEditCase.phoneNo,
-      nationality: openPhoneEditCase.nationality,
-      birthday: openPhoneEditCase.birthday,
-      callingPlan: openPhoneEditCase.callingPlan,
-      controlNo: openPhoneEditCase.controlNo,
-      memo: openPhoneEditCase.memo,
-      sellCom: openPhoneEditCase.sellCom,
-    });    
-    
+  console.log(openPhoneEditCase.openDate.substr(0, 10))
+
+  try{
+    const res = await axios.put(`http://localhost:8800/openPhoneList/${id}`, openPhoneEditCase)
+    console.log(res)
     CompletedUpdateDialogOpen();
     handleClickClose();
-
-  } catch (e) {
-    console.error("Error adding document: ", e);
+  }catch(err){
+    console.log(err)
   }
-
   handleClickClose();
 };
 
-// Delete Function =======================================================
+// Delete Function (firebase DB) =======================================================
+// const handleDelete = async (e) => {
+//   e.preventDefault();
+
+//   try {
+//     const docRef = await deleteDoc(doc(db, "CreativeNetworks", id));
+
+//     CompletedDeletDialogOpen();
+//     handleClickDeleteClose();
+
+//   } catch (e) {
+//     console.error("Error adding document: ", e);
+//   }
+  
+//   handleClickDeleteClose();
+// };
+
+
+// Delete Function (mysql DB) =======================================================
 const handleDelete = async (e) => {
   e.preventDefault();
 
-  try {
-    const docRef = await deleteDoc(doc(db, "CreativeNetworks", id));
-
+  try{
+    await axios.delete(`http://localhost:8800/openPhoneList/${id}`)
     CompletedDeletDialogOpen();
     handleClickDeleteClose();
-
-  } catch (e) {
-    console.error("Error adding document: ", e);
+  }catch(err){
+    console.log(err)
   }
-  
+
   handleClickDeleteClose();
+
 };
 
 
