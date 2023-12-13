@@ -20,6 +20,8 @@ import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
+import axios from 'axios'
+
 
 
 // firebase import=======================================================
@@ -82,6 +84,8 @@ const handleSubmit = (event) => {
 
   event.preventDefault();
 
+  console.log(unconfirmUserEmailList)
+
   const data = new FormData(event.currentTarget);
 
   if (unconfirmUserEmailList.includes(data.get('email'))) {
@@ -102,17 +106,38 @@ const handleSubmit = (event) => {
 
 
 
-// useEffect 1 Start ========================================================
+// useEffect 1 Start firebase DB ========================================================
+// useEffect(()=>{ 
+  
+//   // 사용자 리스트 읽어오기 --------------------------------------------------
+//   const getUser = async () => {
+//     let data = [];
+//     const querySnapshot = await getDocs(query(collection(db, "comUsers"), orderBy("name", "asc"), where("userGrade", "==", 'D')));
+//     querySnapshot.forEach((doc) => {
+//       data.push(doc.data().email);
+//     });
+//     setUnconfirmUserEmailList(data);
+//   }
+//   getUser();
+
+// }, []);
+
+
+// useEffect 1 Start mysql DB ========================================================
 useEffect(()=>{ 
   
   // 사용자 리스트 읽어오기 --------------------------------------------------
   const getUser = async () => {
-    let data = [];
-    const querySnapshot = await getDocs(query(collection(db, "comUsers"), orderBy("name", "asc"), where("userGrade", "==", 'D')));
-    querySnapshot.forEach((doc) => {
-      data.push(doc.data().email);
-    });
-    setUnconfirmUserEmailList(data);
+    let users = [];
+    try{
+      const res = await axios.get("http://localhost:8800/comUsers/Uncomfrim")
+      res.data.forEach((doc) => {
+        users.push(doc.email);
+      });
+    }catch(err){
+      console.log(err)
+    }
+    setUnconfirmUserEmailList(users);
   }
   getUser();
 

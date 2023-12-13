@@ -19,11 +19,13 @@ app.use(cors())
 
 
 
-// 전체 리스트 읽어오기 --------------------------------------------------------------------------------
 app.get("/", (req, res)=>{
   res.json("hello this is the backend")
 })
 
+
+// openPhoneList ================================================================================
+// 전체 리스트 읽어오기 --------------------------------------------------------------------------------
 app.get("/openPhoneList", (req, res)=>{
   const q = "SELECT * FROM openlist"
   db.query(q, (err, data)=>{
@@ -32,8 +34,6 @@ app.get("/openPhoneList", (req, res)=>{
   })
 })
 // 전체 리스트 읽어오기 --------------------------------------------------------------------------------
-
-
 
 
 // 신규 리스트 추가하기 --------------------------------------------------------------------------------
@@ -66,8 +66,6 @@ app.post("/openPhoneList", (req, res)=>{
 // 신규 리스트 추가하기 --------------------------------------------------------------------------------
 
 
-
-
 // 수정대상 읽어오기 --------------------------------------------------------------------------------
 app.get("/openPhoneList/:id", (req, res)=>{
   const editPhoneListID = req.params.id
@@ -78,8 +76,6 @@ app.get("/openPhoneList/:id", (req, res)=>{
   })
 })
 // 수정대상 읽어오기 --------------------------------------------------------------------------------
-
-
 
 
 // 수정하기 --------------------------------------------------------------------------------
@@ -118,7 +114,6 @@ app.put("/openPhoneList/:id", (req, res)=>{
 // ---------------------------------------------------------------------------------------
 
 
-
 // 삭제하기 --------------------------------------------------------------------------------
 app.delete("/openPhoneList/:id", (req, res)=>{
   const deletePhoneListID = req.params.id
@@ -133,7 +128,47 @@ app.delete("/openPhoneList/:id", (req, res)=>{
 
 
 
+// comUsers ================================================================================
+// 전체 user 리스트 읽어오기 --------------------------------------------------------------------------------
+app.get("/comUsers", (req, res)=>{
+  const q = "SELECT * FROM comusers"
+  db.query(q, (err, data)=>{
+    if(err) return res.json(err)
+    return res.json(data)
+  })
+})
+// 전체 user 리스트 읽어오기 --------------------------------------------------------------------------------
 
+
+// 전체 unconfirmeduser 리스트 읽어오기 --------------------------------------------------------------------------------
+app.get("/comUsers/Uncomfrim", (req, res)=>{
+  const q = "SELECT * FROM comusers WHERE userGrade = 'D'"
+  db.query(q, (err, data)=>{
+    if(err) return res.json(err)
+    return res.json(data)
+  })
+})
+// 전체 unconfirmeduser 리스트 읽어오기 --------------------------------------------------------------------------------
+
+
+// 신규 user 추가하기 --------------------------------------------------------------------------------
+app.post("/comUsers", (req, res)=>{
+  const q = "INSERT INTO comusers (`fbid`, `name`, `company`, `email`, `note`, `userGrade`) VALUES (?)"
+  const values = [
+    req.body.fbid, 
+    req.body.name,
+    req.body.company,
+    req.body.email,
+    req.body.note,
+    req.body.userGrade,
+  ]
+
+  db.query(q, [values], (err, data)=>{
+    if(err) return res.json(err)
+    return res.json("comuserList has been created successfully.")
+  })
+})
+// 신규 user 추가하기 --------------------------------------------------------------------------------
 
 
 

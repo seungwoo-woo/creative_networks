@@ -19,6 +19,8 @@ import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
+import axios from 'axios'
+
 
 
 // firebase import=======================================================
@@ -96,15 +98,28 @@ const handleSubmit = async (event) => {
 
     const user = userCredential.user;      
 
-    const docRef = addDoc(collection(db, "comUsers"), {
-      id: user.uid,
+    // firebase DB --------------------------------------------
+    // const docRef = addDoc(collection(db, "comUsers"), {
+    //   id: user.uid,
+    //   name: data.get('firstName'),
+    //   company: sellComName,
+    //   email: data.get('email'),
+    //   note: data.get('note'),
+    //   isDeleted: 0,
+    //   userGrade: 'D'
+    // });
+
+
+    // mysql DB ------------------------------------------
+    axios.post("http://localhost:8800/comUsers", {
+      fbid: user.uid,
       name: data.get('firstName'),
       company: sellComName,
       email: data.get('email'),
       note: data.get('note'),
-      isDeleted: 0,
       userGrade: 'D'
-    });
+    })
+
 
     handleSignUpMsgOpen();
     })
