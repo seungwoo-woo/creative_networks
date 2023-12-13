@@ -76,8 +76,8 @@ const getAdminEditCase1 = async () => {
 
 // Edit 대상 통신사 정보 읽어오기 ------------------------------------------------
 const getAdminEditCase2 = async () => {
-  const querySnapshot = await getDoc(doc(db, "telComName", id));
-  setAdminEditCase(querySnapshot.data());
+  const res = await axios.get(`http://localhost:8800/telComs/${id}`)
+  setAdminEditCase(res.data[0]);
 }
 
 // Edit 대상 개통처 정보 읽어오기 ------------------------------------------------
@@ -195,10 +195,10 @@ const handleUpdate = async (e) => {
     });}
 
     if (editCase === 2) {
-      const docRef = await updateDoc(doc(db, "telComName", id), {
+      await axios.put(`http://localhost:8800/telComs/${id}`,{
         comName: adminEditCase.comName,
-        comPerson: adminEditCase.comPerson,
-      });}
+        comPerson: adminEditCase.comPerson
+      })}
 
     if (editCase === 3) {
       const docRef = await updateDoc(doc(db, "openComName", id), {
@@ -228,6 +228,7 @@ const handleUpdate = async (e) => {
       name: adminEditCase.name,
       company: adminEditCase.company,
       userGrade: adminEditCase.userGrade,
+      note: adminEditCase.note,
     })}
 
   CompletedUpdateDialogOpen();
@@ -315,7 +316,7 @@ const handleDelete = async (e) => {
       const docRef = await deleteDoc(doc(db, "sellComName", id));
     }
     if (editCase === 2) {
-      const docRef = await deleteDoc(doc(db, "telComName", id));
+      await axios.delete(`http://localhost:8800/telComs/${id}`)
     }
     if (editCase === 3) {
       const docRef = await deleteDoc(doc(db, "openComName", id));

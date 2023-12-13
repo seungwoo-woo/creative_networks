@@ -187,12 +187,8 @@ const getDataRefresh = async () => {
 
 // Refresh telComList-------------------------------------------------------------
 const getDataRefresh2 = async () => {
-  let data = [];
-  const querySnapshot = await getDocs(query(collection(db, "telComName"), orderBy("comName", "asc"), where("isDeleted", "==", 0)));
-  querySnapshot.forEach((doc) => {
-    data.push({...doc.data(), id: doc.id,})
-  });
-  setTelComList(data);
+  const res = await axios.get(`http://localhost:8800/telComs`)
+  setTelComList(res.data);
 }
 
 
@@ -350,12 +346,12 @@ const SellComUpload = () => {
 const TelComUpload = () => {
   try {
     jsonData.map(async (item) => {
-      const docRef = await addDoc(collection(db, "telComName"), {
+      await axios.post("http://localhost:8800/telComs", {
         comName: item.통신사,
         comPerson: item.담당자,
-        isDeleted: 0 
-    });    
-    });
+        isDeleted: 0
+      })
+    })
     setMsg('통신사 정보가 업로드되었습니다.')
     hdcCompUploadDialogOpen();
   } catch (e) {
@@ -469,13 +465,8 @@ useEffect(()=>{
 
   // 통신사 리스트 읽어오기 --------------------------------------------------
   const getTelComName = async () => {
-    let data = [];
-    const querySnapshot = await getDocs(query(collection(db, "telComName"), orderBy("comName", "asc"), where("isDeleted", "==", 0)));
-    querySnapshot.forEach((doc) => {
-      data.push({...doc.data(), id: doc.id,})
-      // data.push(doc.data().comName);
-    });
-    setTelComList(data);
+    const res = await axios.get("http://localhost:8800/telComs")
+    setTelComList(res.data);
   }
   getTelComName();
 

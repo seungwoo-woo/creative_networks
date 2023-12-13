@@ -164,11 +164,12 @@ app.get("/comUsers/:id", (req, res)=>{
 app.put("/comUsers/:id", (req, res)=>{
   const userID = req.params.id
 
-  const q = "UPDATE comusers SET `name` = ?, `company` = ?, `userGrade` = ? WHERE fbid = ?"
+  const q = "UPDATE comusers SET `name` = ?, `company` = ?, `userGrade` = ?, `note` = ? WHERE fbid = ?"
   const values = [
     req.body.name, 
     req.body.company,
     req.body.userGrade,
+    req.body.note,
   ]
 
   db.query(q, [...values, userID], (err, data)=>{
@@ -197,9 +198,6 @@ app.put("/comUsersDisable/:id", (req, res)=>{
 // ---------------------------------------------------------------------------------------
 
 
-
-
-
 // 신규 user 추가하기 --------------------------------------------------------------------------------
 app.post("/comUsers", (req, res)=>{
   const q = "INSERT INTO comusers (`fbid`, `name`, `company`, `email`, `note`, `userGrade`) VALUES (?)"
@@ -219,6 +217,75 @@ app.post("/comUsers", (req, res)=>{
 })
 // 신규 user 추가하기 --------------------------------------------------------------------------------
 
+
+
+// telCom ================================================================================
+// 신규 telCom 추가하기 --------------------------------------------------------------------------------
+app.post("/telComs", (req, res)=>{
+  const q = "INSERT INTO telcoms (`comName`, `comPerson`, `isDeleted`) VALUES (?)"
+  const values = [
+    req.body.comName, 
+    req.body.comPerson,
+    req.body.isDeleted
+  ]
+
+  db.query(q, [values], (err, data)=>{
+    if(err) return res.json(err)
+    return res.json("telCom has been created successfully.")
+  })
+})
+// 신규 telCom 추가하기 --------------------------------------------------------------------------------
+
+// 전체 활성 telComs 리스트 읽어오기 --------------------------------------------------------------------------------
+app.get("/telComs", (req, res)=>{
+  const q = "SELECT * FROM telcoms WHERE isDeleted = 0"
+  db.query(q, (err, data)=>{
+    if(err) return res.json(err)
+    return res.json(data)
+  })
+})
+// 전체 활성 telComs 리스트 읽어오기  --------------------------------------------------------------------------------
+
+// 수정대상 user 읽어오기 --------------------------------------------------------------------------------
+app.get("/telComs/:id", (req, res)=>{
+  const telComID = req.params.id
+  const q = "SELECT * FROM telcoms WHERE id = ?"
+  db.query(q, [telComID], (err, data)=>{
+    if(err) return res.json(err)
+    return res.json(data)
+  })
+})
+// 수정대상 읽어오기 --------------------------------------------------------------------------------
+
+// 수정하기 --------------------------------------------------------------------------------
+app.put("/telComs/:id", (req, res)=>{
+  const telComID = req.params.id
+
+  const q = "UPDATE telcoms SET `comName` = ?, `comPerson` = ? WHERE id = ?"
+  const values = [
+    req.body.comName, 
+    req.body.comPerson,
+  ]
+
+  db.query(q, [...values, telComID], (err, data)=>{
+    if(err) return res.json(err)
+    return res.json("telCom's data has been updated successfully.")
+  })
+})
+// ---------------------------------------------------------------------------------------
+
+
+// 삭제하기 --------------------------------------------------------------------------------
+app.delete("/telComs/:id", (req, res)=>{
+  const deletetelComID = req.params.id
+  const q = "DELETE FROM telcoms WHERE id = ?"
+
+  db.query(q, [deletetelComID], (err, data)=>{
+    if(err) return res.json(err)
+    return res.json("telCom's data has been deleted successfully.")
+  })
+})
+// 삭제하기 --------------------------------------------------------------------------------
 
 
 // backend run --------------------------------------------------------------------------------
