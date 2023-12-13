@@ -30,6 +30,7 @@ import { Dialog, DialogContent, DialogTitle, DialogActions } from "@mui/material
 import { UserCompanyContext } from '../context/UserCompanyContext';
 import { UserNameContext } from '../context/UserNameContext';
 import { UserGradeContext } from '../context/UserGradeContext';
+import axios from 'axios'
 
 
 // firebase import=======================================================
@@ -130,7 +131,7 @@ const [callingPlanList, setCallingPlanList] = useState([]);
 const [isUserOpen, setIsUserOpen] = useState(false);
 const [userList, setUserList] = useState([]);
 
-const [jsonData, setJsonData] = useState();
+const [ jsonData, setJsonData ] = useState();
 const [ editCase, setEditCase ] = useState();
 
 const [ isCompUploadDialogOpen, setIsComUpLoadDialogOpen ] = useState(false);
@@ -217,14 +218,20 @@ const getDataRefresh4 = async () => {
 }
 
 
-// Refresh userList-------------------------------------------------------------
+// Refresh userList (firebase DB) -------------------------------------------------------------
+// const getDataRefresh5 = async () => {
+//   let data = [];
+//   const querySnapshot = await getDocs(query(collection(db, "comUsers"), orderBy("name", "asc"), where("isDeleted", "==", 0)));
+//   querySnapshot.forEach((doc) => {
+//     data.push({...doc.data(), id: doc.id,})
+//   });
+//   setUserList(data);
+// }
+
+// Refresh userList (mysql DB) -------------------------------------------------------------
 const getDataRefresh5 = async () => {
-  let data = [];
-  const querySnapshot = await getDocs(query(collection(db, "comUsers"), orderBy("name", "asc"), where("isDeleted", "==", 0)));
-  querySnapshot.forEach((doc) => {
-    data.push({...doc.data(), id: doc.id,})
-  });
-  setUserList(data);
+  const res = await axios.get(`http://localhost:8800/comUsers`)
+  setUserList(res.data);
 }
 
 
@@ -425,21 +432,15 @@ useEffect(()=>{
 
   onAuthStateChanged(auth, async (user) => {
     if (user) {
-      let userCompany = '';
-      let userName = '';
-      let userGrade = '';
-      const querySnapshot = await getDocs(query(collection(db, "comUsers"), where("id", "==", user.uid)));
-      querySnapshot.forEach((doc) => {
-      userName = (doc.data().name);
-      userCompany = (doc.data().company);
-      userGrade = (doc.data().userGrade);
-        if(userGrade !== 'A') {
-          navigate('/openPhoneList');
-        }
-      setUserName(userName);
-      setUserCompanyName(userCompany);
-      setUserGrade(userGrade);
-      });
+      const res = await axios.get(`http://localhost:8800/comUsers/${user.uid}`)
+      setUserName(res.data[0].name);
+      setUserCompanyName(res.data[0].company);
+      setUserGrade(res.data[0].userGrade);
+
+      if(res.data[0].userGrade !== 'A') {
+        navigate('/openPhoneList');
+      }
+
     } else {
       navigate('/');
     }
@@ -505,18 +506,27 @@ useEffect(()=>{
   getCallingPlanName();
 
 
-  // 사용자 리스트 읽어오기 --------------------------------------------------
+// 사용자 리스트 읽어오기 (firebase DB) --------------------------------------------------
+//   const getUser = async () => {
+//     let data = [];
+//     const querySnapshot = await getDocs(query(collection(db, "comUsers"), orderBy("name", "asc"), where("isDeleted", "==", 0)));
+//     querySnapshot.forEach((doc) => {
+//       data.push({...doc.data(), id: doc.id,})
+//       // data.push(doc.data().comName);
+//     });
+//     setUserList(data);
+//   }
+//   getUser();
+
+// }, [isSellComOpen, isTelComOpen, isSellComOpen, isCallingPlanOpen, isUserOpen]);
+
+
+  // 사용자 리스트 읽어오기 (mysql DB) --------------------------------------------------
   const getUser = async () => {
-    let data = [];
-    const querySnapshot = await getDocs(query(collection(db, "comUsers"), orderBy("name", "asc"), where("isDeleted", "==", 0)));
-    querySnapshot.forEach((doc) => {
-      data.push({...doc.data(), id: doc.id,})
-      // data.push(doc.data().comName);
-    });
-    setUserList(data);
+    const res = await axios.get(`http://localhost:8800/comUsers`)
+    setUserList(res.data);
   }
   getUser();
-
 
 }, [isSellComOpen, isTelComOpen, isSellComOpen, isCallingPlanOpen, isUserOpen]);
 
@@ -824,7 +834,7 @@ return (
                 .map((item, index) => {
                     return (<AddOneRow 
                       key = {item.id}
-                      id = {item.id} 
+                      id = {item.fbid} 
                       no = {index + 1 + (page * rowsPerPage)}
                       cell1 = {item.name}
                       cell2 = {item.company}

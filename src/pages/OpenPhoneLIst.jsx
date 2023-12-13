@@ -172,25 +172,47 @@ const handleChangeRowsPerPage = (event) => {
 
 
 
-// 4. useEffect 1: userData 읽어오기 ========================================================
+// 4. useEffect 1: userData 읽어오기 (firebase DB) ========================================================
+// useEffect(()=>{
+
+//   const getUserInformation = () => {    
+
+//   onAuthStateChanged(auth, async (user) => {
+//     if (user) {
+//       let userCompany = '';
+//       let userName = '';
+//       let userGrade = '';
+//       const querySnapshot = await getDocs(query(collection(db, "comUsers"), where("id", "==", user.uid)));
+//       querySnapshot.forEach((doc) => {
+//       userName = (doc.data().name);
+//       userCompany = (doc.data().company);
+//       userGrade = (doc.data().userGrade);
+//       setUserName(userName);
+//       setUserCompanyName(userCompany);
+//       setUserGrade(userGrade);
+//       });
+//     } else {
+//       navigate('/');
+//     }
+//   });    
+//   }    
+//   getUserInformation();
+
+// }, []);
+
+
+
+// 4. useEffect 1: userData 읽어오기 (mysql DB) ========================================================
 useEffect(()=>{
 
   const getUserInformation = () => {    
 
   onAuthStateChanged(auth, async (user) => {
     if (user) {
-      let userCompany = '';
-      let userName = '';
-      let userGrade = '';
-      const querySnapshot = await getDocs(query(collection(db, "comUsers"), where("id", "==", user.uid)));
-      querySnapshot.forEach((doc) => {
-      userName = (doc.data().name);
-      userCompany = (doc.data().company);
-      userGrade = (doc.data().userGrade);
-      setUserName(userName);
-      setUserCompanyName(userCompany);
-      setUserGrade(userGrade);
-      });
+      const res = await axios.get(`http://localhost:8800/comUsers/${user.uid}`)
+      setUserName(res.data[0].name);
+      setUserCompanyName(res.data[0].company);
+      setUserGrade(res.data[0].userGrade);
     } else {
       navigate('/');
     }
@@ -199,6 +221,7 @@ useEffect(()=>{
   getUserInformation();
 
 }, []);
+
 
 
 // 5. useEffect 2: 개통 리스트 읽어오기 (firebase DB)======================================================
@@ -234,7 +257,6 @@ useEffect(()=>{
     try{
       const res = await axios.get("http://localhost:8800/openPhoneList")
       setOpenPhoneList(res.data)
-      // console.log(res.data[0].openDate)
     }catch(err){
       console.log(err)
     }

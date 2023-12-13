@@ -15,6 +15,7 @@ import Divider from '@mui/material/Divider';
 import Slide from '@mui/material/Slide';
 import Autocomplete from '@mui/material/Autocomplete';
 import { Dialog, DialogContent, DialogTitle, DialogActions, TextField, Table, TableHead, TableBody, TableCell, TableRow, Input, Container } from "@mui/material";
+import axios from 'axios'
 
 
 
@@ -95,10 +96,16 @@ const getAdminEditCase4 = async () => {
   setAdminEditCaseCP(querySnapshot.data());
 }
 
-// Edit 대상 User 정보 읽어오기 ------------------------------------------------
+// Edit 대상 User 정보 읽어오기 (firebase DB) ------------------------------------------------
+// const getAdminEditCase5 = async () => {
+//   const querySnapshot = await getDoc(doc(db, "comUsers", id));
+//   setAdminEditCase(querySnapshot.data());
+// }
+
+// Edit 대상 User 정보 읽어오기 (mysql DB) ------------------------------------------------
 const getAdminEditCase5 = async () => {
-  const querySnapshot = await getDoc(doc(db, "comUsers", id));
-  setAdminEditCase(querySnapshot.data());
+    const res = await axios.get(`http://localhost:8800/comUsers/${id}`)
+    setAdminEditCase(res.data[0]);
 }
 
 // --------------------------------------------------------------------
@@ -210,12 +217,18 @@ const handleUpdate = async (e) => {
         rebate4: rebate4,
       });}
 
+    // if (editCase === 5) {
+    //   const docRef = await updateDoc(doc(db, "comUsers", id), {
+    //     name: adminEditCase.name,
+    //     company: adminEditCase.company,
+    //     userGrade: adminEditCase.userGrade,
+    //   });}    
     if (editCase === 5) {
-      const docRef = await updateDoc(doc(db, "comUsers", id), {
-        name: adminEditCase.name,
-        company: adminEditCase.company,
-        userGrade: adminEditCase.userGrade,
-      });}
+      await axios.put(`http://localhost:8800/comUsers/${id}`,{ 
+      name: adminEditCase.name,
+      company: adminEditCase.company,
+      userGrade: adminEditCase.userGrade,
+    })}
 
   CompletedUpdateDialogOpen();
   hdcEditClose()
@@ -335,16 +348,14 @@ const hdcDisableClose = () => {
 
 // User Disable Function =======================================================
 const handleDisable = async (e) => {
-  e.preventDefault();
+  e.preventDefault();  
 
   try {
-    const docRef = await updateDoc(doc(db, "comUsers", id), {
-      userGrade: 'D',
+    await axios.put(`http://localhost:8800/comUsersDisable/${id}`,{ 
+      userGrade: 'D'
     })
-
     CompletedDisableDialogOpen();
     hdcDisableClose();
-
   } catch (e) {
     console.error("Error adding document: ", e);
   }

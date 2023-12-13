@@ -139,7 +139,6 @@ app.get("/comUsers", (req, res)=>{
 })
 // 전체 user 리스트 읽어오기 --------------------------------------------------------------------------------
 
-
 // 전체 unconfirmeduser 리스트 읽어오기 --------------------------------------------------------------------------------
 app.get("/comUsers/Uncomfrim", (req, res)=>{
   const q = "SELECT * FROM comusers WHERE userGrade = 'D'"
@@ -149,6 +148,56 @@ app.get("/comUsers/Uncomfrim", (req, res)=>{
   })
 })
 // 전체 unconfirmeduser 리스트 읽어오기 --------------------------------------------------------------------------------
+
+// 수정대상 user 읽어오기 --------------------------------------------------------------------------------
+app.get("/comUsers/:id", (req, res)=>{
+  const userfbID = req.params.id
+  const q = "SELECT * FROM comusers WHERE fbid = ?"
+  db.query(q, [userfbID], (err, data)=>{
+    if(err) return res.json(err)
+    return res.json(data)
+  })
+})
+// 수정대상 읽어오기 --------------------------------------------------------------------------------
+
+// 수정하기 --------------------------------------------------------------------------------
+app.put("/comUsers/:id", (req, res)=>{
+  const userID = req.params.id
+
+  const q = "UPDATE comusers SET `name` = ?, `company` = ?, `userGrade` = ? WHERE fbid = ?"
+  const values = [
+    req.body.name, 
+    req.body.company,
+    req.body.userGrade,
+  ]
+
+  db.query(q, [...values, userID], (err, data)=>{
+    if(err) return res.json(err)
+    return res.json("user's data has been updated successfully.")
+  })
+})
+// ---------------------------------------------------------------------------------------
+
+// 비활성화하기 --------------------------------------------------------------------------------
+app.put("/comUsersDisable/:id", (req, res)=>{
+  const userID = req.params.id
+
+  console.log(userID)
+
+  const q = "UPDATE comusers SET `userGrade` = ? WHERE fbid = ?"
+  const values = [
+    req.body.userGrade
+  ]
+
+  db.query(q, [...values, userID], (err, data)=>{
+    if(err) return res.json(err)
+    return res.json("user's data has been updated successfully.")
+  })
+})
+// ---------------------------------------------------------------------------------------
+
+
+
 
 
 // 신규 user 추가하기 --------------------------------------------------------------------------------

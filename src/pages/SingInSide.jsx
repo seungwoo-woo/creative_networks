@@ -95,7 +95,7 @@ const handleSubmit = (event) => {
   } else {
     signInWithEmailAndPassword(auth, data.get('email'), data.get('password'))
     .then((userCredential) => {
-      navigate(`/dashBoard`);
+      navigate(`/openPhoneList`);
     })
     .catch((error) => {
       setMsg('email 또는 password에 오류가 있습니다.');
@@ -134,10 +134,10 @@ useEffect(()=>{
       res.data.forEach((doc) => {
         users.push(doc.email);
       });
+      setUnconfirmUserEmailList(users);
     }catch(err){
       console.log(err)
     }
-    setUnconfirmUserEmailList(users);
   }
   getUser();
 
