@@ -317,7 +317,8 @@ return (
                 telCom = {op.telCom}
                 openCom = {op.openCom}
                 type = {op.type}
-                openDate = {new Date(op.openDate).toISOString().slice(0, 10)} 
+                // openDate = {new Date(op.openDate).toISOString().slice(0, 10)} 
+                openDate = {new Date(op.openDate).toLocaleString("ko-KR", {timeZone: "Asia/Seoul"}).slice(0, 12)} 
                 openType = {op.openType}
                 phoneModel = {op.phoneModel}
                 phoneSerial = {op.phoneSerial}
