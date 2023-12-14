@@ -70,8 +70,8 @@ const [inputValue, setInputValue] = useState('');    // sellComName
 // Define subFunction ==================================================
 // Edit 대상 판매처 정보 읽어오기 ------------------------------------------------
 const getAdminEditCase1 = async () => {
-  const querySnapshot = await getDoc(doc(db, "sellComName", id));
-  setAdminEditCase(querySnapshot.data());
+  const res = await axios.get(`http://localhost:8800/sellComs/${id}`)
+  setAdminEditCase(res.data[0]);
 }
 
 // Edit 대상 통신사 정보 읽어오기 ------------------------------------------------
@@ -82,8 +82,8 @@ const getAdminEditCase2 = async () => {
 
 // Edit 대상 개통처 정보 읽어오기 ------------------------------------------------
 const getAdminEditCase3 = async () => {
-  const querySnapshot = await getDoc(doc(db, "openComName", id));
-  setAdminEditCase(querySnapshot.data());
+  const res = await axios.get(`http://localhost:8800/openComs/${id}`)
+  setAdminEditCase(res.data[0]);
 }
 
 // Edit 대상 요금제 정보 읽어오기 ------------------------------------------------
@@ -189,9 +189,12 @@ const handleUpdate = async (e) => {
 
   try {
     if (editCase === 1) {
-    const docRef = await updateDoc(doc(db, "sellComName", id), {
-      comName: adminEditCase.comName,
-      comNo: adminEditCase.comNo,    
+      await axios.put(`http://localhost:8800/sellComs/${id}`,{
+        comName: adminEditCase.comName,
+        comNo: adminEditCase.comNo,    
+        bank: adminEditCase.bank,    
+        acount: adminEditCase.acount,    
+        comPerson: adminEditCase.comPerson,    
     });}
 
     if (editCase === 2) {
@@ -313,13 +316,14 @@ const handleDelete = async (e) => {
 
   try {
     if (editCase === 1) {
-      const docRef = await deleteDoc(doc(db, "sellComName", id));
+      await axios.delete(`http://localhost:8800/sellComs/${id}`)
     }
     if (editCase === 2) {
       await axios.delete(`http://localhost:8800/telComs/${id}`)
     }
     if (editCase === 3) {
-      const docRef = await deleteDoc(doc(db, "openComName", id));
+      await axios.delete(`http://localhost:8800/openComs/${id}`)
+      // const docRef = await deleteDoc(doc(db, "openComName", id));
     }
     if (editCase === 4) {
       const docRef = await deleteDoc(doc(db, "callingPlanName", id));
@@ -390,13 +394,22 @@ useEffect(()=>{
 
     const getSellComName = async () => {
       let data = [];
-      const querySnapshot = await getDocs(query(collection(db, "sellComName"), orderBy("comName", "asc"), where("isDeleted", "==", 0)));
-      querySnapshot.forEach((doc) => {
-        data.push(doc.data().comName);
-      });
+      const res = await axios.get("http://localhost:8800/sellComs")
+      res.data.forEach((doc)=>{
+        data.push(doc.comName)
+      })
       setSellComNameList(data);
-    }    
+    }
     getSellComName();
+
+    // const getSellComName = async () => {
+    //   const querySnapshot = await getDocs(query(collection(db, "sellComName"), orderBy("comName", "asc"), where("isDeleted", "==", 0)));
+    //   querySnapshot.forEach((doc) => {
+    //     data.push(doc.data().comName);
+    //   });
+    //   setSellComNameList(data);
+    // }    
+    // getSellComName();
 
   }
   
@@ -425,6 +438,9 @@ return (
       <DialogContent>
         {(editCase === 1) && <TextField value={adminEditCase.comName} id="comName" label="판매처" onChange={handleValueChange} margin="dense" type="text" fullWidth variant="standard" /> }
         {(editCase === 1) && <TextField value={adminEditCase.comNo} id="comNo" label="사업자번호" onChange={handleValueChange} margin="dense" type="text" fullWidth variant="standard" /> }
+        {(editCase === 1) && <TextField value={adminEditCase.bank} id="bank" label="은행" onChange={handleValueChange} margin="dense" type="text" fullWidth variant="standard" /> }
+        {(editCase === 1) && <TextField value={adminEditCase.acount} id="acount" label="계좌번호" onChange={handleValueChange} margin="dense" type="text" fullWidth variant="standard" /> }
+        {(editCase === 1) && <TextField value={adminEditCase.comPerson} id="comPerson" label="담당자" onChange={handleValueChange} margin="dense" type="text" fullWidth variant="standard" /> }
         {(editCase === 2) && <TextField value={adminEditCase.comName} id="comName" label="통신사" onChange={handleValueChange} margin="dense" type="text" fullWidth variant="standard" /> }
         {(editCase === 2) && <TextField value={adminEditCase.comPerson} id="comPerson" label="담당자" onChange={handleValueChange} margin="dense" type="text" fullWidth variant="standard" /> }
         {(editCase === 3) && <TextField value={adminEditCase.comName} id="comName" label="개통처" onChange={handleValueChange} margin="dense" type="text" fullWidth variant="standard" /> }

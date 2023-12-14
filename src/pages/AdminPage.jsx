@@ -177,12 +177,9 @@ const VisuallyHiddenInput = styled('input')({
 // Define subFunction ==================================================
 // Refresh sellComList -------------------------------------------------------------
 const getDataRefresh = async () => {
-  let data = [];
-  const querySnapshot = await getDocs(query(collection(db, "sellComName"), orderBy("comName", "asc"), where("isDeleted", "==", 0)));
-  querySnapshot.forEach((doc) => {
-    data.push({...doc.data(), id: doc.id,})
-  });
-  setSellComList(data);}
+  const res = await axios.get(`http://localhost:8800/sellComs`)
+  setSellComList(res.data);
+}
 
 
 // Refresh telComList-------------------------------------------------------------
@@ -327,9 +324,12 @@ const ExcelToJson = (e) => {
 const SellComUpload = () => {
   try {
     jsonData.map(async (item) => {
-      const docRef = await addDoc(collection(db, "sellComName"), {
+      await axios.post("http://localhost:8800/sellComs", {
         comName: item.판매처,
         comNo: item.사업자번호,
+        bank: item.은행,
+        acount: item.계좌,
+        comPerson: item.담당자,
         isDeleted: 0 
     });    
     });
@@ -452,13 +452,8 @@ useEffect(()=>{
 
   // 판매점 리스트 읽어오기 --------------------------------------------------
   const getSellComName = async () => {
-    let data = [];
-    const querySnapshot = await getDocs(query(collection(db, "sellComName"), orderBy("comName", "asc"), where("isDeleted", "==", 0)));
-    querySnapshot.forEach((doc) => {
-      data.push({...doc.data(), id: doc.id,})
-      // data.push(doc.data().comName);
-    });
-    setSellComList(data);
+    const res = await axios.get("http://localhost:8800/sellComs")
+    setSellComList(res.data);
   }
   getSellComName();
 
@@ -589,9 +584,9 @@ return (
                       no = {index + 1 + (page * rowsPerPage)}
                       cell1 = {item.comName}
                       cell2 = {item.comNo}
-                      cell3 = '{item.cell3}'
-                      cell4 = '{item.cell4}'
-                      cell5 = '{item.cell5}'
+                      cell3 = {item.bank}
+                      cell4 = {item.acount}
+                      cell5 = {item.comPerson}
                       getDataRefresh={getDataRefresh}
                       editCase = {editCase}
                       />

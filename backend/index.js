@@ -246,7 +246,7 @@ app.get("/telComs", (req, res)=>{
 })
 // 전체 활성 telComs 리스트 읽어오기  --------------------------------------------------------------------------------
 
-// 수정대상 user 읽어오기 --------------------------------------------------------------------------------
+// 수정대상 telcom 읽어오기 --------------------------------------------------------------------------------
 app.get("/telComs/:id", (req, res)=>{
   const telComID = req.params.id
   const q = "SELECT * FROM telcoms WHERE id = ?"
@@ -286,6 +286,86 @@ app.delete("/telComs/:id", (req, res)=>{
   })
 })
 // 삭제하기 --------------------------------------------------------------------------------
+
+
+
+
+// sellCom ================================================================================
+// 신규 sellCom 추가하기 --------------------------------------------------------------------------------
+app.post("/sellComs", (req, res)=>{
+  const q = "INSERT INTO sellcoms (`comName`, `comNo`, `bank`, `acount`, `comPerson`, `isDeleted`) VALUES (?)"
+  const values = [
+    req.body.comName, 
+    req.body.comNo, 
+    req.body.bank, 
+    req.body.acount, 
+    req.body.comPerson,
+    req.body.isDeleted
+  ]
+
+  db.query(q, [values], (err, data)=>{
+    if(err) return res.json(err)
+    return res.json("sellCom has been created successfully.")
+  })
+})
+// 신규 telCom 추가하기 --------------------------------------------------------------------------------
+
+// 전체 활성 sellComs 리스트 읽어오기 --------------------------------------------------------------------------------
+app.get("/sellComs", (req, res)=>{
+  const q = "SELECT * FROM sellcoms WHERE isDeleted = 0"
+  db.query(q, (err, data)=>{
+    if(err) return res.json(err)
+    return res.json(data)
+  })
+})
+// 전체 활성 sellComs 리스트 읽어오기  --------------------------------------------------------------------------------
+
+// 수정대상 sellCom 읽어오기 --------------------------------------------------------------------------------
+app.get("/sellComs/:id", (req, res)=>{
+  const sellComID = req.params.id
+  const q = "SELECT * FROM sellcoms WHERE id = ?"
+  db.query(q, [sellComID], (err, data)=>{
+    if(err) return res.json(err)
+    return res.json(data)
+  })
+})
+// 수정대상 sellCom읽어오기 --------------------------------------------------------------------------------
+
+// 수정하기 --------------------------------------------------------------------------------
+app.put("/sellComs/:id", (req, res)=>{
+  const sellComID = req.params.id
+
+  const q = "UPDATE sellcoms SET `comName` = ?, `comNo` = ?, `bank` = ?, `acount` = ?, `comPerson` = ? WHERE id = ?"
+  const values = [
+    req.body.comName, 
+    req.body.comNo, 
+    req.body.bank, 
+    req.body.acount, 
+    req.body.comPerson,
+  ]
+
+  db.query(q, [...values, sellComID], (err, data)=>{
+    if(err) return res.json(err)
+    return res.json("sellCom's data has been updated successfully.")
+  })
+})
+// ---------------------------------------------------------------------------------------
+
+// 삭제하기 --------------------------------------------------------------------------------
+app.delete("/sellComs/:id", (req, res)=>{
+  const deletesellComID = req.params.id
+  const q = "DELETE FROM sellcoms WHERE id = ?"
+
+  db.query(q, [deletesellComID], (err, data)=>{
+    if(err) return res.json(err)
+    return res.json("sellCom's data has been deleted successfully.")
+  })
+})
+// 삭제하기 --------------------------------------------------------------------------------
+
+
+
+
 
 
 // backend run --------------------------------------------------------------------------------

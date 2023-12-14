@@ -38,7 +38,6 @@ return (
     {cell3 && <TableCell align='center'>{cell3}</TableCell>}
     {cell4 && <TableCell align='center'>{cell4}</TableCell>}
     {cell5 && <TableCell align='center'>{cell5}</TableCell>}
-    {/* <TableCell align='center'>{cell6}</TableCell> */}
     <TableCell align='center'><AdminCellEdit id={id} getDataRefresh={getDataRefresh} editCase={editCase}/></TableCell>
   </StyledTableRow>
 );
