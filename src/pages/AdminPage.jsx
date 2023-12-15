@@ -191,12 +191,15 @@ const getDataRefresh2 = async () => {
 
 // Refresh openComList-------------------------------------------------------------
 const getDataRefresh3 = async () => {
-  let data = [];
-  const querySnapshot = await getDocs(query(collection(db, "openComName"), orderBy("comName", "asc"), where("isDeleted", "==", 0)));
-  querySnapshot.forEach((doc) => {
-    data.push({...doc.data(), id: doc.id,})
-  });
-  setOpenComList(data);
+  const res = await axios.get(`http://localhost:8800/openComs`)
+  setOpenComList(res.data);
+
+  // let data = [];
+  // const querySnapshot = await getDocs(query(collection(db, "openComName"), orderBy("comName", "asc"), where("isDeleted", "==", 0)));
+  // querySnapshot.forEach((doc) => {
+  //   data.push({...doc.data(), id: doc.id,})
+  // });
+  // setOpenComList(data);
 }
 
 
@@ -365,13 +368,13 @@ const TelComUpload = () => {
 const OpenComUpload = () => {
   try {
     jsonData.map(async (item) => {
-      const docRef = await addDoc(collection(db, "openComName"), {
+      await axios.post("http://localhost:8800/openComs", {
         comName: item.개통처,
         comPerson: item.담당자,
         telComName: item.통신사,
         isDeleted: 0 
-    });    
-    });
+    })    
+    })
     setMsg('개통처 정보가 업로드되었습니다.')
     hdcCompUploadDialogOpen();
   } catch (e) {
@@ -468,13 +471,8 @@ useEffect(()=>{
 
   // 개통처 리스트 읽어오기 --------------------------------------------------
   const getOpenComName = async () => {
-    let data = [];
-    const querySnapshot = await getDocs(query(collection(db, "openComName"), orderBy("comName", "asc"), where("isDeleted", "==", 0)));
-    querySnapshot.forEach((doc) => {
-      data.push({...doc.data(), id: doc.id,})
-      // data.push(doc.data().comName);
-    });
-    setOpenComList(data);
+    const res = await axios.get("http://localhost:8800/openComs")
+    setOpenComList(res.data);
   }
   getOpenComName();
 

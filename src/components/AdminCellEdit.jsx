@@ -204,7 +204,7 @@ const handleUpdate = async (e) => {
       })}
 
     if (editCase === 3) {
-      const docRef = await updateDoc(doc(db, "openComName", id), {
+      await axios.put(`http://localhost:8800/openComs/${id}`,{
         comName: adminEditCase.comName,
         comPerson: adminEditCase.comPerson,
         telComName: adminEditCase.telComName,

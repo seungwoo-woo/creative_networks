@@ -365,6 +365,81 @@ app.delete("/sellComs/:id", (req, res)=>{
 
 
 
+// sellCom ================================================================================
+// 신규 openCom 추가하기 --------------------------------------------------------------------------------
+app.post("/openComs", (req, res)=>{
+  const q = "INSERT INTO opencoms (`comName`, `comPerson`, `telComName`, `isDeleted`) VALUES (?)"
+  const values = [
+    req.body.comName, 
+    req.body.comPerson, 
+    req.body.telComName, 
+    req.body.isDeleted
+  ]
+
+  db.query(q, [values], (err, data)=>{
+    if(err) return res.json(err)
+    return res.json("openComs has been created successfully.")
+  })
+})
+// 신규 openCom 추가하기 --------------------------------------------------------------------------------
+
+// 전체 활성 openComs 리스트 읽어오기 --------------------------------------------------------------------------------
+app.get("/openComs", (req, res)=>{
+  const q = "SELECT * FROM opencoms WHERE isDeleted = 0"
+  db.query(q, (err, data)=>{
+    if(err) return res.json(err)
+    return res.json(data)
+  })
+})
+// 전체 활성 openComs 리스트 읽어오기  --------------------------------------------------------------------------------
+
+// 수정대상 openCom 읽어오기 --------------------------------------------------------------------------------
+app.get("/openComs/:id", (req, res)=>{
+  const openComID = req.params.id
+  const q = "SELECT * FROM opencoms WHERE id = ?"
+  db.query(q, [openComID], (err, data)=>{
+    if(err) return res.json(err)
+    return res.json(data)
+  })
+})
+// 수정대상 sellCom읽어오기 --------------------------------------------------------------------------------
+
+// 수정하기 --------------------------------------------------------------------------------
+app.put("/openComs/:id", (req, res)=>{
+  const openComID = req.params.id
+
+  const q = "UPDATE opencoms SET `comName` = ?, `comPerson` = ?, `telComName` = ? WHERE id = ?"
+  const values = [
+    req.body.comName, 
+    req.body.comPerson, 
+    req.body.telComName,
+  ]
+
+  db.query(q, [...values, openComID], (err, data)=>{
+    if(err) return res.json(err)
+    return res.json("openCom's data has been updated successfully.")
+  })
+})
+// ---------------------------------------------------------------------------------------
+
+// 삭제하기 --------------------------------------------------------------------------------
+app.delete("/openComs/:id", (req, res)=>{
+  const deleteopenComID = req.params.id
+  const q = "DELETE FROM opencoms WHERE id = ?"
+
+  db.query(q, [deleteopenComID], (err, data)=>{
+    if(err) return res.json(err)
+    return res.json("openCom's data has been deleted successfully.")
+  })
+})
+// 삭제하기 --------------------------------------------------------------------------------
+
+
+
+
+
+
+
 
 
 
