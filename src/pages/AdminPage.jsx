@@ -205,12 +205,15 @@ const getDataRefresh3 = async () => {
 
 // Refresh callingPlanList-------------------------------------------------------------
 const getDataRefresh4 = async () => {
-  let data = [];
-  const querySnapshot = await getDocs(query(collection(db, "callingPlanName"), orderBy("planName", "asc"), where("isDeleted", "==", 0)));
-  querySnapshot.forEach((doc) => {
-    data.push({...doc.data(), id: doc.id,})
-  });
-  setCallingPlanList(data);
+  const res = await axios.get(`http://localhost:8800/callingPlan`)
+  console.log(res.data)
+
+  // let data = [];
+  // const querySnapshot = await getDocs(query(collection(db, "callingPlanName"), orderBy("planName", "asc"), where("isDeleted", "==", 0)));
+  // querySnapshot.forEach((doc) => {
+  //   data.push({...doc.data(), id: doc.id,})
+  // });
+  setCallingPlanList(res.data);
 }
 
 
@@ -403,14 +406,14 @@ const CallingPlanUpload = () => {
         rebate4.push(item.MNP원가리베이트);
       }
 
-      const docRef = await addDoc(collection(db, "callingPlanName"), {
+      // const docRef = await addDoc(collection(db, "callingPlanName"), {
+      await axios.post("http://localhost:8800/callingPlan", {      
         planName: item.요금제,
         openComName: item.개통처,
-        rebate1: rebate1,
-        rebate2: rebate2,
-        rebate3: rebate3,
-        rebate4: rebate4,
-        isDeleted: 0,
+        rebate1: rebate1.join(),
+        rebate2: rebate2.join(),
+        rebate3: rebate3.join(),
+        rebate4: rebate4.join(),
     });    
   });
     setMsg('요금제 정보가 업로드되었습니다.')
@@ -479,13 +482,13 @@ useEffect(()=>{
 
   // 요금제 리스트 읽어오기 --------------------------------------------------
   const getCallingPlanName = async () => {
-    let data = [];
-    const querySnapshot = await getDocs(query(collection(db, "callingPlanName"), orderBy("planName", "asc"), where("isDeleted", "==", 0)));
-    querySnapshot.forEach((doc) => {
-      data.push({...doc.data(), id: doc.id,})
-      // data.push(doc.data().comName);
-    });
-    setCallingPlanList(data);
+
+    const res = await axios.get(`http://localhost:8800/callingPlan`)
+    let temp = res.data.map((doc)=>{
+      return {...doc, rebate1: doc.rebate1.split(','), rebate2: doc.rebate2.split(','), rebate3: doc.rebate3.split(','), rebate4: doc.rebate4.split(',') }
+    })
+    // console.log(temp)
+    setCallingPlanList(temp);
   }
   getCallingPlanName();
 
@@ -751,7 +754,7 @@ return (
           <Table stickyHeader size='small' aria-label="sticky table">        
             <TableHead>
               <TableRow>
-                <StyledTableCell style={{fontWeight: 400}} align='center' >Day</StyledTableCell>
+                <StyledTableCell style={{fontWeight: 400}} align='center' >No.</StyledTableCell>
                 <StyledTableCell style={{fontWeight: 400}} align='center' >요금제</StyledTableCell>
                 <StyledTableCell style={{fontWeight: 400}} align='center' >개통처</StyledTableCell>
                 <StyledTableCell style={{fontWeight: 600, color: "yellow"}} align='center' >ACTION</StyledTableCell>

@@ -437,6 +437,47 @@ app.delete("/openComs/:id", (req, res)=>{
 
 
 
+// callingPlan ================================================================================
+// 신규 callingPlan 추가하기 --------------------------------------------------------------------------------
+app.post("/callingPlan", (req, res)=>{
+  const q = "INSERT INTO callingplan (`planName`, `openComName`, `rebate1`, `rebate2`, `rebate3`, `rebate4`) VALUES (?)"
+  const values = [
+    req.body.planName, 
+    req.body.openComName, 
+    req.body.rebate1, 
+    req.body.rebate2,
+    req.body.rebate3,
+    req.body.rebate4,
+  ]
+
+  db.query(q, [values], (err, data)=>{
+    if(err) return res.json(err)
+    return res.json("callingPlan has been created successfully.")
+  })
+})
+// 신규 callingPlan 추가하기 --------------------------------------------------------------------------------
+
+// 전체 활성 callingPlan 리스트 읽어오기 --------------------------------------------------------------------------------
+app.get("/callingPlan", (req, res)=>{
+  const q = "SELECT * FROM callingplan"
+  db.query(q, (err, data)=>{
+    if(err) return res.json(err)
+    return res.json(data)
+  })
+})
+// 전체 활성 callingPlan 리스트 읽어오기  --------------------------------------------------------------------------------
+
+// 수정대상 callingPlan 읽어오기 --------------------------------------------------------------------------------
+app.get("/callingPlan/:id", (req, res)=>{
+  const callingPlanID = req.params.id
+  const q = "SELECT * FROM callingplan WHERE id = ?"
+  db.query(q, [callingPlanID], (err, data)=>{
+    if(err) return res.json(err)
+    return res.json(data)
+  })
+})
+// 수정대상 callingPlan 읽어오기 --------------------------------------------------------------------------------
+
 
 
 

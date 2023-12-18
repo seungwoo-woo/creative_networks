@@ -88,12 +88,14 @@ const getAdminEditCase3 = async () => {
 
 // Edit 대상 요금제 정보 읽어오기 ------------------------------------------------
 const getAdminEditCase4 = async () => {
-  const querySnapshot = await getDoc(doc(db, "callingPlanName", id));
-  setRebate1(querySnapshot.data().rebate1);
-  setRebate2(querySnapshot.data().rebate2);
-  setRebate3(querySnapshot.data().rebate3);
-  setRebate4(querySnapshot.data().rebate4);
-  setAdminEditCaseCP(querySnapshot.data());
+  const res = await axios.get(`http://localhost:8800/callingPlan/${id}`)
+  const temp = {...res.data[0], rebate1: res.data[0].rebate1.split(','), rebate2: res.data[0].rebate2.split(','), rebate3: res.data[0].rebate3.split(','), rebate4: res.data[0].rebate4.split(',') }
+  // const querySnapshot = await getDoc(doc(db, "callingPlanName", id));
+  // setRebate1(querySnapshot.data().rebate1);
+  // setRebate2(querySnapshot.data().rebate2);
+  // setRebate3(querySnapshot.data().rebate3);
+  // setRebate4(querySnapshot.data().rebate4);
+  setAdminEditCaseCP(temp);
 }
 
 // Edit 대상 User 정보 읽어오기 (firebase DB) ------------------------------------------------
@@ -326,7 +328,9 @@ const handleDelete = async (e) => {
       // const docRef = await deleteDoc(doc(db, "openComName", id));
     }
     if (editCase === 4) {
-      const docRef = await deleteDoc(doc(db, "callingPlanName", id));
+      await axios.delete(`http://localhost:8800/callingPlan/${id}`)
+
+      // const docRef = await deleteDoc(doc(db, "callingPlanName", id));
     }
 
     CompletedDeletDialogOpen();
@@ -638,16 +642,16 @@ return (
             </TableRow>
           </TableHead>
           <TableBody>
-            {rebate1.map((r, index) => {
+            {adminEditCaseCP.map((doc, index) => {
               return (
               <TableRow key = {index} sx={{padding:0, backgroundColor: '#F5F5F5' }} >
                 <TableCell align='center' size="small" padding="none">{index + 1}</TableCell>
-                <TableCell align='center' size="small" padding="none"><Input name={(index)} value={rebate1[index]} onChange={handleValueChangeCP1} type="text" disableUnderline={true} sx={{ pl: 10, width: 200 }} variant="standard" /></TableCell>
-                <TableCell align='center' size="small" padding="none"><Input name={(index)} value={rebate2[index]} onChange={handleValueChangeCP2} type="text" disableUnderline={true} sx={{ pl: 10, width: 200 }} variant="standard" /></TableCell>
-                <TableCell align='center' size="small" padding="none"><Input name={(index)} value={rebate3[index]} onChange={handleValueChangeCP3} type="text" disableUnderline={true} sx={{ pl: 10, width: 200 }} variant="standard"/></TableCell>
-                <TableCell align='center' size="small" padding="none"><Input name={(index)} value={rebate4[index]} onChange={handleValueChangeCP4} type="text" disableUnderline={true} sx={{ pl: 10, width: 200 }} variant="standard"/></TableCell>
-                <TableCell align='center' size="small" padding="none"><Input value={rebate3[index] - rebate1[index]} type="text" disableUnderline={true} sx={{ pl: 10, width: 200 }} /></TableCell>
-                <TableCell align='center' size="small" padding="none"><Input value={rebate4[index] - rebate2[index]} type="text" disableUnderline={true} sx={{ pl: 10, width: 200 }} /></TableCell>
+                <TableCell align='center' size="small" padding="none"><Input name={(index)} value={doc.rebate1[index]} onChange={handleValueChangeCP1} type="text" disableUnderline={true} sx={{ pl: 10, width: 200 }} variant="standard" /></TableCell>
+                <TableCell align='center' size="small" padding="none"><Input name={(index)} value={doc.rebate2[index]} onChange={handleValueChangeCP2} type="text" disableUnderline={true} sx={{ pl: 10, width: 200 }} variant="standard" /></TableCell>
+                <TableCell align='center' size="small" padding="none"><Input name={(index)} value={doc.rebate3[index]} onChange={handleValueChangeCP3} type="text" disableUnderline={true} sx={{ pl: 10, width: 200 }} variant="standard"/></TableCell>
+                <TableCell align='center' size="small" padding="none"><Input name={(index)} value={doc.rebate4[index]} onChange={handleValueChangeCP4} type="text" disableUnderline={true} sx={{ pl: 10, width: 200 }} variant="standard"/></TableCell>
+                <TableCell align='center' size="small" padding="none"><Input value={doc.rebate3[index] - doc.rebate1[index]} type="text" disableUnderline={true} sx={{ pl: 10, width: 200 }} /></TableCell>
+                <TableCell align='center' size="small" padding="none"><Input value={doc.rebate4[index] - doc.rebate2[index]} type="text" disableUnderline={true} sx={{ pl: 10, width: 200 }} /></TableCell>
               </TableRow> 
               )
             })}       
