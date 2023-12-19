@@ -262,42 +262,42 @@ const handleValueChangeCP = (e) => {
 
 // --------------------------------------------------------------------
 const handleValueChangeCP1 = (e) => {
-  const editCopy = [...rebate1];
+  const editCopy = adminEditCaseCP.rebate1
   editCopy[Number(e.target.name)] = Number(e.target.value);
     for (let i = Number(e.target.name) + 1; i < 31; i++){
       editCopy[i] = Number(e.target.value);
-    }
-  setRebate1(editCopy);
-};
+    }  
+  setAdminEditCaseCP({...adminEditCaseCP, rebate1: editCopy });
+  };
 
 // --------------------------------------------------------------------
 const handleValueChangeCP2 = (e) => {
-  const editCopy = [...rebate2];
+  const editCopy = adminEditCaseCP.rebate2
   editCopy[Number(e.target.name)] = Number(e.target.value);
     for (let i = Number(e.target.name) + 1; i < 31; i++){
       editCopy[i] = Number(e.target.value);
     }
-  setRebate2(editCopy);
+  setAdminEditCaseCP({...adminEditCaseCP, rebate2: editCopy });
 };
 
 // --------------------------------------------------------------------
 const handleValueChangeCP3 = (e) => {
-  const editCopy = [...rebate3];
+  const editCopy = adminEditCaseCP.rebate3
   editCopy[Number(e.target.name)] = Number(e.target.value);
     for (let i = Number(e.target.name) + 1; i < 31; i++){
       editCopy[i] = Number(e.target.value);
     }
-  setRebate3(editCopy);
+  setAdminEditCaseCP({...adminEditCaseCP, rebate3: editCopy })
 };
 
 // --------------------------------------------------------------------
 const handleValueChangeCP4 = (e) => {
-  const editCopy = [...rebate4];
+  const editCopy = adminEditCaseCP.rebate4
   editCopy[Number(e.target.name)] = Number(e.target.value);
     for (let i = Number(e.target.name) + 1; i < 31; i++){
       editCopy[i] = Number(e.target.value);
     }
-  setRebate4(editCopy);
+  setAdminEditCaseCP({...adminEditCaseCP, rebate4: editCopy })
 };
 
 // --------------------------------------------------------------------
@@ -642,16 +642,16 @@ return (
             </TableRow>
           </TableHead>
           <TableBody>
-            {adminEditCaseCP.map((doc, index) => {
+            {adminEditCaseCP.rebate1.map((doc, index) => {
               return (
               <TableRow key = {index} sx={{padding:0, backgroundColor: '#F5F5F5' }} >
                 <TableCell align='center' size="small" padding="none">{index + 1}</TableCell>
-                <TableCell align='center' size="small" padding="none"><Input name={(index)} value={doc.rebate1[index]} onChange={handleValueChangeCP1} type="text" disableUnderline={true} sx={{ pl: 10, width: 200 }} variant="standard" /></TableCell>
-                <TableCell align='center' size="small" padding="none"><Input name={(index)} value={doc.rebate2[index]} onChange={handleValueChangeCP2} type="text" disableUnderline={true} sx={{ pl: 10, width: 200 }} variant="standard" /></TableCell>
-                <TableCell align='center' size="small" padding="none"><Input name={(index)} value={doc.rebate3[index]} onChange={handleValueChangeCP3} type="text" disableUnderline={true} sx={{ pl: 10, width: 200 }} variant="standard"/></TableCell>
-                <TableCell align='center' size="small" padding="none"><Input name={(index)} value={doc.rebate4[index]} onChange={handleValueChangeCP4} type="text" disableUnderline={true} sx={{ pl: 10, width: 200 }} variant="standard"/></TableCell>
-                <TableCell align='center' size="small" padding="none"><Input value={doc.rebate3[index] - doc.rebate1[index]} type="text" disableUnderline={true} sx={{ pl: 10, width: 200 }} /></TableCell>
-                <TableCell align='center' size="small" padding="none"><Input value={doc.rebate4[index] - doc.rebate2[index]} type="text" disableUnderline={true} sx={{ pl: 10, width: 200 }} /></TableCell>
+                <TableCell align='center' size="small" padding="none"><Input name={(index)} value={adminEditCaseCP.rebate1[index]} onChange={handleValueChangeCP1} type="text" disableUnderline={true} sx={{ pl: 10, width: 200 }} variant="standard" /></TableCell>
+                <TableCell align='center' size="small" padding="none"><Input name={(index)} value={adminEditCaseCP.rebate2[index]} onChange={handleValueChangeCP2} type="text" disableUnderline={true} sx={{ pl: 10, width: 200 }} variant="standard" /></TableCell>
+                <TableCell align='center' size="small" padding="none"><Input name={(index)} value={adminEditCaseCP.rebate3[index]} onChange={handleValueChangeCP3} type="text" disableUnderline={true} sx={{ pl: 10, width: 200 }} variant="standard"/></TableCell>
+                <TableCell align='center' size="small" padding="none"><Input name={(index)} value={adminEditCaseCP.rebate4[index]} onChange={handleValueChangeCP4} type="text" disableUnderline={true} sx={{ pl: 10, width: 200 }} variant="standard"/></TableCell>
+                <TableCell align='center' size="small" padding="none"><Input value={adminEditCaseCP.rebate3[index] - adminEditCaseCP.rebate1[index]} type="text" disableUnderline={true} sx={{ pl: 10, width: 200 }} /></TableCell>
+                <TableCell align='center' size="small" padding="none"><Input value={adminEditCaseCP.rebate4[index] - adminEditCaseCP.rebate2[index]} type="text" disableUnderline={true} sx={{ pl: 10, width: 200 }} /></TableCell>
               </TableRow> 
               )
             })}       
