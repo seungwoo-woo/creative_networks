@@ -478,7 +478,38 @@ app.get("/callingPlan/:id", (req, res)=>{
 })
 // 수정대상 callingPlan 읽어오기 --------------------------------------------------------------------------------
 
+// 수정하기 --------------------------------------------------------------------------------
+app.put("/callingPlan/:id", (req, res)=>{
+  const callingPlanID = req.params.id
 
+  const q = "UPDATE callingplan SET `planName` = ?, `openComName` = ?, `rebate1` = ?, `rebate2` = ?, `rebate3` = ?, `rebate4` = ? WHERE id = ?"
+  const values = [
+    req.body.planName, 
+    req.body.openComName, 
+    req.body.rebate1, 
+    req.body.rebate2,
+    req.body.rebate3,
+    req.body.rebate4,
+  ]
+
+  db.query(q, [...values, callingPlanID], (err, data)=>{
+    if(err) return res.json(err)
+    return res.json("callingPlan's data has been updated successfully.")
+  })
+})
+// ---------------------------------------------------------------------------------------
+
+// 삭제하기 --------------------------------------------------------------------------------
+app.delete("/callingPlan/:id", (req, res)=>{
+  const deletecallingPlanID = req.params.id
+  const q = "DELETE FROM callingplan WHERE id = ?"
+
+  db.query(q, [deletecallingPlanID], (err, data)=>{
+    if(err) return res.json(err)
+    return res.json("callingPlan's data has been deleted successfully.")
+  })
+})
+// 삭제하기 --------------------------------------------------------------------------------
 
 
 

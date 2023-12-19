@@ -95,6 +95,7 @@ const getAdminEditCase4 = async () => {
   // setRebate2(querySnapshot.data().rebate2);
   // setRebate3(querySnapshot.data().rebate3);
   // setRebate4(querySnapshot.data().rebate4);
+  console.log(temp.rebate1[0])
   setAdminEditCaseCP(temp);
 }
 
@@ -213,14 +214,16 @@ const handleUpdate = async (e) => {
       });}
 
     if (editCase === 4) {
-      const docRef = await updateDoc(doc(db, "callingPlanName", id), {
+      const temp = await axios.put(`http://localhost:8800/callingPlan/${id}`,{
         planName: adminEditCaseCP.planName,
         openComName: adminEditCaseCP.openComName,
-        rebate1: rebate1,
-        rebate2: rebate2,
-        rebate3: rebate3,
-        rebate4: rebate4,
-      });}
+        rebate1: adminEditCaseCP.rebate1.join(),
+        rebate2: adminEditCaseCP.rebate2.join(),
+        rebate3: adminEditCaseCP.rebate3.join(),
+        rebate4: adminEditCaseCP.rebate4.join(),
+      });
+    console.log(temp)
+    }
 
     // if (editCase === 5) {
     //   const docRef = await updateDoc(doc(db, "comUsers", id), {
@@ -329,7 +332,6 @@ const handleDelete = async (e) => {
     }
     if (editCase === 4) {
       await axios.delete(`http://localhost:8800/callingPlan/${id}`)
-
       // const docRef = await deleteDoc(doc(db, "callingPlanName", id));
     }
 
@@ -632,7 +634,7 @@ return (
         <Table stickyHeader size='small' aria-label="sticky table">
           <TableHead >
             <TableRow >
-              <TableCell sx={{ backgroundColor: '#1976d2', color: 'white', fontWeight: 600 }} align='center' >No.</TableCell>
+              <TableCell sx={{ backgroundColor: '#1976d2', color: 'white', fontWeight: 600 }} align='center' >Day</TableCell>
               <TableCell sx={{ backgroundColor: '#1976d2', color: 'white', fontWeight: 600 }} align='center' >신규-리베이트</TableCell>
               <TableCell sx={{ backgroundColor: '#1976d2', color: 'white', fontWeight: 600 }} align='center' >MNP-리베이트</TableCell>
               <TableCell sx={{ backgroundColor: '#1976d2', color: 'white', fontWeight: 600 }} align='center' >신규-원가리베이트</TableCell>
@@ -642,16 +644,16 @@ return (
             </TableRow>
           </TableHead>
           <TableBody>
-            {adminEditCaseCP.rebate1.map((doc, index) => {
+            {adminEditCaseCP.rebate1 &&  adminEditCaseCP.rebate1.map((doc, index) => {
               return (
               <TableRow key = {index} sx={{padding:0, backgroundColor: '#F5F5F5' }} >
                 <TableCell align='center' size="small" padding="none">{index + 1}</TableCell>
-                <TableCell align='center' size="small" padding="none"><Input name={(index)} value={adminEditCaseCP.rebate1[index]} onChange={handleValueChangeCP1} type="text" disableUnderline={true} sx={{ pl: 10, width: 200 }} variant="standard" /></TableCell>
-                <TableCell align='center' size="small" padding="none"><Input name={(index)} value={adminEditCaseCP.rebate2[index]} onChange={handleValueChangeCP2} type="text" disableUnderline={true} sx={{ pl: 10, width: 200 }} variant="standard" /></TableCell>
-                <TableCell align='center' size="small" padding="none"><Input name={(index)} value={adminEditCaseCP.rebate3[index]} onChange={handleValueChangeCP3} type="text" disableUnderline={true} sx={{ pl: 10, width: 200 }} variant="standard"/></TableCell>
-                <TableCell align='center' size="small" padding="none"><Input name={(index)} value={adminEditCaseCP.rebate4[index]} onChange={handleValueChangeCP4} type="text" disableUnderline={true} sx={{ pl: 10, width: 200 }} variant="standard"/></TableCell>
-                <TableCell align='center' size="small" padding="none"><Input value={adminEditCaseCP.rebate3[index] - adminEditCaseCP.rebate1[index]} type="text" disableUnderline={true} sx={{ pl: 10, width: 200 }} /></TableCell>
-                <TableCell align='center' size="small" padding="none"><Input value={adminEditCaseCP.rebate4[index] - adminEditCaseCP.rebate2[index]} type="text" disableUnderline={true} sx={{ pl: 10, width: 200 }} /></TableCell>
+                <TableCell align='center' size="small" padding="none"><Input name={index} value={adminEditCaseCP.rebate1[index]} onChange={handleValueChangeCP1} type="text" disableUnderline={true} sx={{ pl: 10, width: 200 }} variant="standard" /></TableCell>
+                <TableCell align='center' size="small" padding="none"><Input name={index} value={adminEditCaseCP.rebate2[index]} onChange={handleValueChangeCP2} type="text" disableUnderline={true} sx={{ pl: 10, width: 200 }} variant="standard" /></TableCell>
+                <TableCell align='center' size="small" padding="none"><Input name={index} value={adminEditCaseCP.rebate3[index]} onChange={handleValueChangeCP3} type="text" disableUnderline={true} sx={{ pl: 10, width: 200 }} variant="standard"/></TableCell>
+                <TableCell align='center' size="small" padding="none"><Input name={index} value={adminEditCaseCP.rebate4[index]} onChange={handleValueChangeCP4} type="text" disableUnderline={true} sx={{ pl: 10, width: 200 }} variant="standard"/></TableCell>
+                <TableCell align='center' size="small" padding="none"><Input value={Number(adminEditCaseCP.rebate3[index]) - Number(adminEditCaseCP.rebate1[index])} type="text" disableUnderline={true} sx={{ pl: 10, width: 200 }} /></TableCell>
+                <TableCell align='center' size="small" padding="none"><Input value={Number(adminEditCaseCP.rebate4[index]) - Number(adminEditCaseCP.rebate2[index])} type="text" disableUnderline={true} sx={{ pl: 10, width: 200 }} /></TableCell>
               </TableRow> 
               )
             })}       
